@@ -17,7 +17,7 @@ export const amount = new DonationAmount(
   "transaction.donationAmt",
   "transaction.donationAmt.other"
 );
-export const frequency = new DonationFrequency("transaction.recurrpay");
+export const frequency = new DonationFrequency("transaction.othamt2");
 export const form = new EnForm();
 
 // Processing Fees Event

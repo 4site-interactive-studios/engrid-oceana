@@ -47,8 +47,8 @@ export const enInput = (() => {
               targetWrapper.classList.remove("en__field__item--hidden");
               if (targetWrapper.parentNode) {
                 const lastRadioInput = targetWrapper.parentNode.querySelector(
-                  // "[name='transaction.donationAmt'][value='other' i]"
-                  ".en__field__item:nth-last-child(2) input"
+                  "input[name='transaction.donationAmt'][value='other' i]"
+                  // ".en__field__item:nth-last-child(2) input"
                 ) as HTMLInputElement;
                 lastRadioInput.checked = !0;
               }
