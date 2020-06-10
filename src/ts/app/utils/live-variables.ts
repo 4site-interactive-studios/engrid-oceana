@@ -1,34 +1,34 @@
 import DonationAmount from "../events/donation-amount";
 import DonationFrequency from "../events/donation-frequency";
-import ProcessingFees from "../events/processing-fees";
+// import ProcessingFees from "../events/processing-fees";
 
 import { amount } from "../index";
 import { frequency } from "../index";
-import { fees } from "../index";
+// import { fees } from "../index";
 import { form } from "../index";
 
 export default class LiveVariables {
   public _amount: DonationAmount;
-  public _fees: ProcessingFees;
+  // public _fees: ProcessingFees;
   private _frequency: DonationFrequency;
   private multiplier: number = 1 / 12;
 
   constructor(submitLabel: string) {
     this._amount = amount;
     this._frequency = frequency;
-    this._fees = fees;
-    amount.onAmountChange.subscribe(() => this.changeSubmitButton(submitLabel));
+    // this._fees = fees;
+    // amount.onAmountChange.subscribe(() => this.changeSubmitButton(submitLabel));
     amount.onAmountChange.subscribe(() => this.changeLiveAmount());
     amount.onAmountChange.subscribe(() => this.changeLiveUpsellAmount());
-    fees.onFeeChange.subscribe(() => this.changeLiveAmount());
-    fees.onFeeChange.subscribe(() => this.changeLiveUpsellAmount());
-    fees.onFeeChange.subscribe(() => this.changeSubmitButton(submitLabel));
+    // fees.onFeeChange.subscribe(() => this.changeLiveAmount());
+    // fees.onFeeChange.subscribe(() => this.changeLiveUpsellAmount());
+    // fees.onFeeChange.subscribe(() => this.changeSubmitButton(submitLabel));
     frequency.onFrequencyChange.subscribe(() => this.changeLiveFrequency());
-    frequency.onFrequencyChange.subscribe(() =>
-      this.changeSubmitButton(submitLabel)
-    );
-    form.onSubmit.subscribe(() => this.loadingSubmitButton());
-    form.onError.subscribe(() => this.changeSubmitButton(submitLabel));
+    // frequency.onFrequencyChange.subscribe(() =>
+    //   this.changeSubmitButton(submitLabel)
+    // );
+    // form.onSubmit.subscribe(() => this.loadingSubmitButton());
+    // form.onError.subscribe(() => this.changeSubmitButton(submitLabel));
 
     // Watch the monthly-upsell links
     document.addEventListener("click", (e: Event) => {
@@ -61,43 +61,43 @@ export default class LiveVariables {
     return amount > 0 ? amountRaw.toString() : "";
   }
 
-  public changeSubmitButton(submitLabel: string) {
-    const submit = document.querySelector(
-      ".dynamic-giving-button button"
-    ) as HTMLButtonElement;
-    const amount = this.getAmountTxt(this._amount.amount + this._fees.fee);
+  // public changeSubmitButton(submitLabel: string) {
+  //   const submit = document.querySelector(
+  //     ".dynamic-giving-button button"
+  //   ) as HTMLButtonElement;
+  //   const amount = this.getAmountTxt(this._amount.amount + this._fees.fee);
 
-    if (amount) {
-      const frequency = this._frequency.frequency == "single" ? "" : " Monthly";
-      const label =
-        amount != ""
-          ? submitLabel + " " + amount + frequency
-          : submitLabel + " Now";
-      submit.innerHTML = label;
-    }
-  }
-  public loadingSubmitButton() {
-    const submit = document.querySelector(
-      ".en__submit button"
-    ) as HTMLButtonElement;
-    let submitButtonOriginalHTML = submit.innerHTML;
-    let submitButtonProcessingHTML =
-      "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
-      submitButtonOriginalHTML +
-      "</span></span>";
-    submitButtonOriginalHTML = submit.innerHTML;
-    submit.innerHTML = submitButtonProcessingHTML;
-    return true;
-  }
+  //   if (amount) {
+  //     const frequency = this._frequency.frequency == "single" ? "" : " Monthly";
+  //     const label =
+  //       amount != ""
+  //         ? submitLabel + " " + amount + frequency
+  //         : submitLabel + " Now";
+  //     submit.innerHTML = label;
+  //   }
+  // }
+  // public loadingSubmitButton() {
+  //   const submit = document.querySelector(
+  //     ".en__submit button"
+  //   ) as HTMLButtonElement;
+  //   let submitButtonOriginalHTML = submit.innerHTML;
+  //   let submitButtonProcessingHTML =
+  //     "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
+  //     submitButtonOriginalHTML +
+  //     "</span></span>";
+  //   submitButtonOriginalHTML = submit.innerHTML;
+  //   submit.innerHTML = submitButtonProcessingHTML;
+  //   return true;
+  // }
 
   public changeLiveAmount() {
-    const value = this._amount.amount + this._fees.fee;
+    const value = this._amount.amount;
     const live_amount = document.querySelectorAll(".live-giving-amount");
     live_amount.forEach(elem => (elem.innerHTML = this.getAmountTxt(value)));
   }
 
   public changeLiveUpsellAmount() {
-    const value = (this._amount.amount + this._fees.fee) * this.multiplier;
+    const value = (this._amount.amount) * this.multiplier;
     const live_upsell_amount = document.querySelectorAll(
       ".live-giving-upsell-amount"
     );
