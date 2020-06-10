@@ -1197,8 +1197,13 @@ function EngageENDonationForm(Options)
 								EngageENDonationForm.form.removeClass(EngageENDonationForm.options.formErrorClass);
 								if (EngageENDonationForm.options.currentPageNumber === EngageENDonationForm.options.lastPageNumber)
 								{
-									EngageENDonationForm.finished = true;
-									EngageENDonationForm.form.submit();
+									// foursiteModal.openUpsell() returns true if there's no need for upsell
+									// so you can submit the form. If the modal opens, then we don't need to
+									// submit the form here, it will be handled by the modal
+									if (typeof foursiteModal === "undefined" || foursiteModal.openUpsell()) {
+										EngageENDonationForm.finished = true;
+										EngageENDonationForm.form.submit();			
+				  					}
 								}
 								else
 								{

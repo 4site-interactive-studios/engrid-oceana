@@ -2,6 +2,7 @@ declare global {
   interface Window {
     enOnSubmit: any;
     enOnError: any;
+    foursiteModal: any;
   }
 }
 export const body = document.body;
@@ -105,27 +106,27 @@ export const enInput = (() => {
 
 
 
-  // // Find the background image
-  // if (pageBackgroundImg) {
-  //   //@TODO consider moving JS into page template as it's critical to initial render
-  //   //Measure page layout to see if it's a short or tall page before applying the background image
-  //   if (contentFooter && isInViewport(contentFooter)) {
-  //     body.classList.add("footer-above-fold");
-  //   } else {
-  //     body.classList.add("footer-below-fold");
-  //   }
-  //   pageBackgroundImgSrc = pageBackgroundImg.src;
-  //   pageBackgroundImg.style.display = "none";
-  // } else if (pageBackgroundLegacyImg) {
-  //   // Support for legacy pages
-  //   pageBackgroundImgSrc = pageBackgroundLegacyImg.innerHTML;
-  //   pageBackgroundLegacyImg.style.display = "none";
-  // } else {
-  //   // Fallback Image
-  //   if (Array.isArray(bg)) {
-  //     pageBackgroundImgSrc = bg[Math.floor(Math.random() * bg.length)] as string;
-  //   }
-  // }
+// // Find the background image
+// if (pageBackgroundImg) {
+//   //@TODO consider moving JS into page template as it's critical to initial render
+//   //Measure page layout to see if it's a short or tall page before applying the background image
+//   if (contentFooter && isInViewport(contentFooter)) {
+//     body.classList.add("footer-above-fold");
+//   } else {
+//     body.classList.add("footer-below-fold");
+//   }
+//   pageBackgroundImgSrc = pageBackgroundImg.src;
+//   pageBackgroundImg.style.display = "none";
+// } else if (pageBackgroundLegacyImg) {
+//   // Support for legacy pages
+//   pageBackgroundImgSrc = pageBackgroundLegacyImg.innerHTML;
+//   pageBackgroundLegacyImg.style.display = "none";
+// } else {
+//   // Fallback Image
+//   if (Array.isArray(bg)) {
+//     pageBackgroundImgSrc = bg[Math.floor(Math.random() * bg.length)] as string;
+//   }
+// }
 
 //   // Set the background image
 //   if (pageBackground && pageBackgroundImgSrc) {
@@ -592,52 +593,17 @@ export const bindEvents = (e: Element) => {
 
 export const watchRecurrpayField = () => {
   const enFieldRecurrpay = document.querySelector(
-    ".en__field--recurrpay"
+    ".en__field--othamt2"
   ) as HTMLElement;
   const transactionRecurrpay = document.getElementsByName(
-    "transaction.recurrpay"
+    "transaction.othamt2"
   ) as NodeList;
   const enFieldRecurrpayStartingValue = document.querySelector(
-    'input[name="transaction.recurrpay"]:checked'
+    'input[name="transaction.othamt2"]:checked'
   ) as HTMLInputElement;
   let enFieldRecurrpayCurrentValue = document.querySelector(
-    'input[name="transaction.recurrpay"]:checked'
+    'input[name="transaction.othamt2"]:checked'
   ) as HTMLInputElement;
-
-  const handleEnFieldRecurrpay = (e: Event) => {
-    enFieldRecurrpayCurrentValue = document.querySelector(
-      'input[name="transaction.recurrpay"]:checked'
-    ) as HTMLInputElement;
-    if (enFieldRecurrpayCurrentValue.value.toLowerCase() == "y") {
-      enGrid.classList.remove("has-give-once");
-      enGrid.classList.add("has-give-monthly");
-    } else if (enFieldRecurrpayCurrentValue.value.toLowerCase() == "n") {
-      enGrid.classList.remove("has-give-monthly");
-      enGrid.classList.add("has-give-once");
-    }
-  };
-
-  // Check Giving Frequency on page load
-  if (enFieldRecurrpay) {
-    enFieldRecurrpayCurrentValue = document.querySelector(
-      'input[name="transaction.recurrpay"]:checked'
-    ) as HTMLInputElement;
-    if (enFieldRecurrpayCurrentValue.value.toLowerCase() == "y") {
-      enGrid.classList.remove("has-give-once");
-      enGrid.classList.add("has-give-monthly");
-    } else if (enFieldRecurrpayCurrentValue.value.toLowerCase() == "n") {
-      enGrid.classList.add("has-give-once");
-      enGrid.classList.remove("has-give-monthly");
-    }
-  }
-
-  // Watch each Giving Frequency radio input for a change
-  if (transactionRecurrpay) {
-    Array.from(transactionRecurrpay).forEach(e => {
-      let element = e as HTMLInputElement;
-      element.addEventListener("change", handleEnFieldRecurrpay);
-    });
-  }
 };
 
 // // @TODO Refactor (low priority)

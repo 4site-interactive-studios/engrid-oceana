@@ -127,7 +127,7 @@ export default class LiveVariables {
   private upsold(e: Event) {
     // Find and select monthly giving
     const enFieldRecurrpay = document.querySelector(
-      ".en__field--recurrpay input[value='Y']"
+      ".en__field--othamt2 input[value='Y']"
     ) as HTMLInputElement;
     if (enFieldRecurrpay) {
       enFieldRecurrpay.checked = true;
@@ -135,7 +135,7 @@ export default class LiveVariables {
 
     // Find the hidden radio select that needs to be selected when entering an "Other" amount
     const enFieldOtherAmountRadio = document.querySelector(
-      ".en__field--donationAmt input[value='other']"
+      ".en__field--donationAmt input[value='other' i]"
     ) as HTMLInputElement;
     if (enFieldOtherAmountRadio) {
       enFieldOtherAmountRadio.checked = true;

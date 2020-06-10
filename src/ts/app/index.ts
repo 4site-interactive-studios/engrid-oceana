@@ -69,6 +69,8 @@ export const run = (opts: Object) => {
     form.dispatchError();
   };
 
+  window.foursiteModal = new Modal();
+
   // // Iframe Code Start
   // const inIframe = () => {
   //   try {
@@ -123,8 +125,8 @@ export const run = (opts: Object) => {
   new LiveVariables(options.submitLabel);
 
   // Modal
-  const modal = new Modal();
-  modal.debug = true; // Comment it out to disable debug
+  //const modal = new Modal();
+  //modal.debug = true; // Comment it out to disable debug
 
   // On the end of the script, after all subscribers defined, let's load the current value
   amount.load();

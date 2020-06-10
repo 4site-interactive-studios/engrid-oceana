@@ -5,9 +5,9 @@ import { form } from "../index";
 
 export default class Modal {
   public debug: boolean = false;
-  private overlay: HTMLDivElement;
-  private upsellModal: HTMLElement | null;
-  private exitModal: HTMLElement | null;
+  public overlay: HTMLDivElement;
+  public upsellModal: HTMLElement | null;
+  public exitModal: HTMLElement | null;
 
   constructor() {
     this.upsellModal = document.getElementById("upsellModal");
@@ -53,7 +53,7 @@ export default class Modal {
       });
     }
   }
-  private openUpsell() {
+  public openUpsell() {
     if (this.debug) console.log("Upsell Triggered");
     const freq = frequency.frequency;
     // Only open Upsell Modal if Frequency == Single & if the Modal is closed
@@ -70,7 +70,7 @@ export default class Modal {
       return true;
     }
   }
-  private open(modal: HTMLElement | null) {
+  public open(modal: HTMLElement | null) {
     // If we can't find modal, get out
     if (!modal) return;
     const hideModal = cookie.get("hide_upsellModal"); // Get cookie
@@ -92,7 +92,7 @@ export default class Modal {
     // Show Modal
     this.overlay.classList.remove("is-hidden");
   }
-  private close(e: Event) {
+  public close(e: Event) {
     e.preventDefault();
     if (this.overlay.classList.contains("exitModal")) {
       this.open(this.upsellModal);
