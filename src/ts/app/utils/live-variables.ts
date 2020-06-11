@@ -11,7 +11,7 @@ export default class LiveVariables {
   public _amount: DonationAmount;
   // public _fees: ProcessingFees;
   private _frequency: DonationFrequency;
-  private multiplier: number = 1 / 12;
+  private multiplier: number = 1;
 
   constructor(submitLabel: string) {
     this._amount = amount;
@@ -52,13 +52,55 @@ export default class LiveVariables {
   }
 
   private getUpsellAmountTxt(amount: number = 0) {
-    const amountTxt = "$" + Math.ceil(amount / 5) * 5;
+    const amountTxt = "$" + this.getUpsellAmountRaw(amount);
+    console.log("getUpsellAmountTxt: Amount: ", amount);
     return amount > 0 ? amountTxt : "";
   }
 
   private getUpsellAmountRaw(amount: number = 0) {
-    const amountRaw = Math.ceil(amount / 5) * 5;
-    return amount > 0 ? amountRaw.toString() : "";
+    console.log("getUpsellAmountRaw: Amount: ", amount);
+    // const amountRaw = Math.ceil(amount / 5) * 5;
+    // return amount > 0 ? amountRaw.toString() : "";
+    let suggestion = 0;
+    switch (true) {
+      case (amount <= 0):
+        suggestion = 0;
+        break;
+      case (amount <= 15):
+        suggestion = 20;
+        break;
+      case (amount <= 25):
+        suggestion = 25;
+        break;
+      case (amount <= 35):
+        suggestion = 30;
+        break;
+      case (amount <= 45):
+        suggestion = 40;
+        break;
+      case (amount <= 59):
+        suggestion = 50;
+        break;
+      case (amount <= 100):
+        suggestion = 75;
+        break;
+      case (amount <= 199):
+        suggestion = 125;
+        break;
+      case (amount <= 299):
+        suggestion = 175;
+        break;
+      case (amount <= 399):
+        suggestion = 250;
+        break;
+      case (amount <= 499):
+        suggestion = 325;
+        break;
+      default:
+        suggestion = 400;
+        break;
+    }
+    return suggestion.toString();
   }
 
   // public changeSubmitButton(submitLabel: string) {

@@ -1,3 +1,9 @@
+@keyframes ellipsis {
+  to {
+    width: 25px;    
+  }
+}
+
 #enModal{
   position: fixed;
   top: 0;
@@ -15,6 +21,10 @@
   align-items: center;
   overflow: hidden;
 
+  .submitting-message{
+    display: none;
+  }
+
   &.upsellModal .button-close {
     &::before,
     &::after {
@@ -26,6 +36,33 @@
   &.is-hidden {
     top: -100vh;
     transition: none; /* When the modal gains the "is-hidden" class it will dissapear instantly */
+  }
+
+  &.is-submitting{
+    .submitting-message{
+      width: 100%;
+      display: block;
+      
+      p{
+        display: inline-block;
+        padding-right: 20px;
+        position: relative;
+      }
+    }
+
+    .submitting-message p:after {
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: bottom;  
+      animation: ellipsis steps(4,end) 900ms infinite;
+      content: "\2026"; /* ascii code for the ellipsis character */
+      width: 0px;
+      position: absolute;
+    }
+
+    .cta{
+      visibility: hidden;
+    }
   }
 
   .button-close {

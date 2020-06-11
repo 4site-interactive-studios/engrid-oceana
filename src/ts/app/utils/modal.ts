@@ -1,4 +1,4 @@
-import * as cookie from "./cookie";
+// import * as cookie from "./cookie";
 import { amount } from "../index";
 import { frequency } from "../index";
 import { form } from "../index";
@@ -73,9 +73,9 @@ export default class Modal {
   public open(modal: HTMLElement | null) {
     // If we can't find modal, get out
     if (!modal) return;
-    const hideModal = cookie.get("hide_upsellModal"); // Get cookie
+    // const hideModal = cookie.get("hide_upsellModal"); // Get cookie
     // If we have a cookie AND no Debug, get out
-    if (hideModal && !this.debug) return;
+    // if (hideModal && !this.debug) return;
     const overlayContent = this.overlay.querySelector(
       "#enModalContent"
     ) as HTMLDivElement;
@@ -97,7 +97,7 @@ export default class Modal {
     if (this.overlay.classList.contains("exitModal")) {
       this.open(this.upsellModal);
     } else {
-      cookie.set("hide_upsellModal", "1", { expires: 1 }); // Create one day cookie
+      // cookie.set("hide_upsellModal", "1", { expires: 1 }); // Create one day cookie
       this.overlay.classList.add("is-hidden");
     }
   }
