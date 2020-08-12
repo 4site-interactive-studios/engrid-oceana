@@ -62,43 +62,30 @@ export default class LiveVariables {
     // const amountRaw = Math.ceil(amount / 5) * 5;
     // return amount > 0 ? amountRaw.toString() : "";
     let suggestion = 0;
-    switch (true) {
-      case (amount <= 0):
-        suggestion = 0;
-        break;
-      case (amount <= 15):
-        suggestion = 20;
-        break;
-      case (amount <= 25):
-        suggestion = 25;
-        break;
-      case (amount <= 35):
-        suggestion = 30;
-        break;
-      case (amount <= 45):
-        suggestion = 40;
-        break;
-      case (amount <= 59):
-        suggestion = 50;
-        break;
-      case (amount <= 100):
-        suggestion = 75;
-        break;
-      case (amount <= 199):
-        suggestion = 125;
-        break;
-      case (amount <= 299):
-        suggestion = 175;
-        break;
-      case (amount <= 399):
-        suggestion = 250;
-        break;
-      case (amount <= 499):
-        suggestion = 325;
-        break;
-      default:
-        suggestion = 400;
-        break;
+    if(amount >= 25 || amount < 500){
+      switch (true) {
+        case (amount <= 49):
+          suggestion = 8;
+          break;
+        case (amount <= 99):
+          suggestion = 12;
+          break;
+        case (amount <= 149):
+          suggestion = 15;
+          break;
+        case (amount <= 199):
+          suggestion = 20;
+          break;
+        case (amount <= 299):
+          suggestion = 32;
+          break;
+        case (amount <= 399):
+          suggestion = 42;
+          break;
+        default:
+          suggestion = 50;
+          break;
+      }
     }
     return suggestion.toString();
   }
