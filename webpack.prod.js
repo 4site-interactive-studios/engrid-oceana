@@ -9,15 +9,15 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = merge(common, {
   mode: "production",
   output: {
-    filename: "[name].js",
-    path: path.resolve(__dirname, "dist")
+    filename: "4site-modal.js",
+    path: path.resolve(__dirname, "dist"),
   },
   optimization: {
-    minimizer: [new OptimizeCssAssetsPlugin(), new TerserPlugin()]
+    minimizer: [new OptimizeCssAssetsPlugin(), new TerserPlugin()],
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: "[name].css" }),
-    new CleanWebpackPlugin()
+    new MiniCssExtractPlugin({ filename: "4site-modal.css" }),
+    new CleanWebpackPlugin(),
   ],
   module: {
     rules: [
@@ -30,12 +30,12 @@ module.exports = merge(common, {
             loader: "postcss-loader", // 2. Add Autoprefixer to CSS
             options: {
               ident: "postcss",
-              plugins: [require("autoprefixer")]
-            }
+              plugins: [require("autoprefixer")],
+            },
           },
-          "sass-loader" // 1. From SASS to CSS
-        ]
-      }
-    ]
-  }
+          "sass-loader", // 1. From SASS to CSS
+        ],
+      },
+    ],
+  },
 });

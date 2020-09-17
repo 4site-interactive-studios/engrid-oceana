@@ -62,7 +62,7 @@ export default class LiveVariables {
     // const amountRaw = Math.ceil(amount / 5) * 5;
     // return amount > 0 ? amountRaw.toString() : "";
     let suggestion = 0;
-    if(amount >= 25 || amount < 500){
+    if (amount >= 25 || amount < 500) {
       switch (true) {
         case (amount <= 49):
           suggestion = 8;
@@ -175,6 +175,16 @@ export default class LiveVariables {
       "input[name='transaction.donationAmt.other']"
     ) as HTMLInputElement;
     if (enFieldOtherAmount) {
+
+      // Try to set the Original Donation Amount field
+      const enFieldOriginalAmount = document.querySelector(
+        "input[name='transaction.othamt1']"
+      ) as HTMLInputElement;
+
+      if (enFieldOriginalAmount) {
+        enFieldOriginalAmount.value = this._amount.amount.toString();
+      }
+
       // @TODO Needs to use getUpsellAmountRaw to set value
 
       enFieldOtherAmount.value = this.getUpsellAmountRaw(
