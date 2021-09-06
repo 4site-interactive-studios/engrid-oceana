@@ -7,7 +7,5 @@
 			"path": "../engrid-scripts"
 		}
 	],
-	"settings": {
-		"liveServer.settings.multiRootWorkspaceName": "engrid"
-	}
+	"settings": {}
 }
