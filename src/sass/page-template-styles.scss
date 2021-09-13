@@ -1,7 +1,8 @@
 // The most broadly used CSS Custom Properties for quick theming.
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
-[data-engrid-theme="oceana"]{
+
+[data-engrid-theme="engrid-oceana"]{
     // TYPOGRAPHY DEFAULT
     // --default_font-family: var(--native-fonts__sans-serif);
     // --default_color: initial;
@@ -55,15 +56,15 @@
     // --input_box-shadow_hover: --input_box-shadow;
 
     // TYPOGRAPHY BUTTON
-    // --button_font-family: var(--default_font-family);
-    // --button_color: var(--color_white);
-    // --button_font-size: var(--root_font-size);
-    // --button_font-weight: initial;
-    // --button_line-height: initial;
-    // --button_background-color: #535b61;
-    // --button_border-width: 1px;
-    // --button_border-color: var(--color_black);
-    // --button_border-radius: 6px;
+    --button_font-family: var(--default_font-family);
+    --button_color: var(--color_white);
+    --button_font-size: var(--root_font-size);
+    --button_font-weight: initial;
+    --button_line-height: initial;
+    --button_background-color: ##ccc84a;
+    --button_border-width: 1px;
+    --button_border-color: var(--color_black);
+    --button_border-radius: 6px;
 
     // TYPOGRAPHY BUTTON:HOVER
     // --button_color_hover: var(--button_color);
