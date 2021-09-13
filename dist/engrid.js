@@ -2,8 +2,8 @@
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Monday, September 6, 2021 @ 15:06:48 ET
- * By: bryancasler
+ * Date: Monday, September 13, 2021 @ 15:38:28 ET
+ * By: maansacdalan
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
  *
@@ -12,7 +12,7 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 210:
+/***/ 747:
 /***/ (() => {
 
 // Loads client theme scripts as soon as possible, but never before DOMContentLoaded
@@ -2107,6 +2107,7 @@ const OptionsDefaults = {
   NeverBounceDateField: null,
   NeverBounceStatusField: null,
   ProgressBar: false,
+  AutoYear: false,
   Debug: false
 };
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/interfaces/upsell-options.js
@@ -2898,7 +2899,11 @@ class App extends engrid_ENGrid {
 
     if (this.options.applePay) new ApplePay(); // Capitalize Fields
 
-    if (this.options.CapitalizeFields) new CapitalizeFields(); // Ecard Class
+    if (this.options.CapitalizeFields) new CapitalizeFields(); // Auto Year Class
+
+    if (this.options.AutoYear) new AutoYear(); // Autocomplete Class
+
+    new Autocomplete(); // Ecard Class
 
     new Ecard(); // Click To Expand
 
@@ -3150,8 +3155,8 @@ class ApplePay {
     return __awaiter(this, void 0, void 0, function* () {
       const pageform = document.querySelector("form.en__component--page");
 
-      if (!this.applePay || !window.hasOwnProperty('ApplePaySession')) {
-        if (engrid_ENGrid.debug) console.log('Apple Pay DISABLED');
+      if (!this.applePay || !window.hasOwnProperty("ApplePaySession")) {
+        if (engrid_ENGrid.debug) console.log("Apple Pay DISABLED");
         return false;
       }
 
@@ -3170,15 +3175,15 @@ class ApplePay {
           this._form.onSubmit.subscribe(() => this.onPayClicked());
         }
       });
-      if (engrid_ENGrid.debug) console.log('applePayEnabled', applePayEnabled);
-      let applePayWrapper = this.applePay.closest('.en__field__item');
+      if (engrid_ENGrid.debug) console.log("applePayEnabled", applePayEnabled);
+      let applePayWrapper = this.applePay.closest(".en__field__item");
 
       if (applePayEnabled) {
         // Set Apple Pay Class
-        applePayWrapper === null || applePayWrapper === void 0 ? void 0 : applePayWrapper.classList.add('applePayWrapper');
+        applePayWrapper === null || applePayWrapper === void 0 ? void 0 : applePayWrapper.classList.add("applePayWrapper");
       } else {
         // Hide Apple Pay Wrapper
-        if (applePayWrapper) applePayWrapper.style.display = 'none';
+        if (applePayWrapper) applePayWrapper.style.display = "none";
       }
 
       return applePayEnabled;
@@ -3195,24 +3200,24 @@ class ApplePay {
       merchantSession.epochTimestamp = merchantEpochTimestamp;
       merchantSession.signature = merchantSignature;
       var validationData = "&merchantIdentifier=" + merchantIdentifier + "&merchantDomain=" + merchantDomainName + "&displayName=" + merchantDisplayName;
-      var validationUrl = '/ea-dataservice/rest/applepay/validateurl?url=' + url + validationData;
+      var validationUrl = "/ea-dataservice/rest/applepay/validateurl?url=" + url + validationData;
       var xhr = new XMLHttpRequest();
 
       xhr.onload = function () {
         var data = JSON.parse(this.responseText);
-        if (engrid_ENGrid.debug) console.log('Apple Pay Validation', data);
+        if (engrid_ENGrid.debug) console.log("Apple Pay Validation", data);
         resolve(data);
       };
 
       xhr.onerror = reject;
-      xhr.open('GET', validationUrl);
+      xhr.open("GET", validationUrl);
       xhr.send();
     });
   }
 
   log(name, msg) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', '/ea-dataservice/rest/applepay/log?name=' + name + '&msg=' + msg);
+    xhr.open("GET", "/ea-dataservice/rest/applepay/log?name=" + name + "&msg=" + msg);
     xhr.send();
   }
 
@@ -3227,7 +3232,7 @@ class ApplePay {
     const applePayToken = document.getElementById("applePayToken");
     const formClass = this._form; // Only work if Payment Type is Apple Pay
 
-    if (enFieldPaymentType.value == 'applepay' && applePayToken.value == '') {
+    if (enFieldPaymentType.value == "applepay" && applePayToken.value == "") {
       try {
         let donationAmount = this._amount.amount;
         var request = {
@@ -3245,21 +3250,21 @@ class ApplePay {
 
         session.onvalidatemerchant = function (event) {
           thisClass.performValidation(event.validationURL).then(function (merchantSession) {
-            if (engrid_ENGrid.debug) console.log('Apple Pay merchantSession', merchantSession);
+            if (engrid_ENGrid.debug) console.log("Apple Pay merchantSession", merchantSession);
             session.completeMerchantValidation(merchantSession);
           });
         };
 
         session.onpaymentauthorized = function (event) {
           thisClass.sendPaymentToken(event.payment.token).then(function (success) {
-            if (engrid_ENGrid.debug) console.log('Apple Pay Token', event.payment.token);
+            if (engrid_ENGrid.debug) console.log("Apple Pay Token", event.payment.token);
             document.getElementById("applePayToken").value = JSON.stringify(event.payment.token);
             formClass.submitForm();
           });
         };
 
         session.oncancel = function (event) {
-          if (engrid_ENGrid.debug) console.log('Cancelled', event);
+          if (engrid_ENGrid.debug) console.log("Cancelled", event);
           alert("You cancelled. Sorry it didn't work out.");
           formClass.dispatchError();
         };
@@ -3301,6 +3306,76 @@ class CapitalizeFields {
     }
 
     return true;
+  }
+
+}
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/auto-year.js
+// This class changes the Credit Card Expiration Year Field Options to
+// include the current year and the next 19 years.
+class AutoYear {
+  constructor() {
+    this.yearField = document.querySelector("select[name='transaction.ccexpire']:not(#en__field_transaction_ccexpire)");
+    this.years = 20;
+    this.yearLength = 2;
+
+    if (this.yearField) {
+      this.clearFieldOptions();
+
+      for (let i = 0; i < this.years; i++) {
+        const year = new Date().getFullYear() + i;
+        const newOption = document.createElement("option");
+        const optionText = document.createTextNode(year.toString());
+        newOption.appendChild(optionText);
+        newOption.value = this.yearLength == 2 ? year.toString().substr(-2) : year.toString();
+        this.yearField.appendChild(newOption);
+      }
+    }
+  }
+
+  clearFieldOptions() {
+    if (this.yearField) {
+      this.yearLength = this.yearField.options[this.yearField.options.length - 1].value.length;
+
+      while (this.yearField.options.length > 1) {
+        this.yearField.remove(1);
+      }
+    }
+  }
+
+}
+;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/autocomplete.js
+// This class adds the autocomplete attribute to
+// the most common input elements
+
+class Autocomplete {
+  constructor() {
+    this.debug = engrid_ENGrid.debug;
+    this.autoCompleteField('[name="supporter.firstName"]', "given-name");
+    this.autoCompleteField('[name="supporter.lastName"]', "family-name");
+    this.autoCompleteField('[name="transaction.ccnumber"]', "cc-number");
+    this.autoCompleteField("#en__field_transaction_ccexpire", "cc-exp-month");
+    this.autoCompleteField('[name="transaction.ccexpire"]:not(#en__field_transaction_ccexpire)', "cc-exp-year");
+    this.autoCompleteField('[name="transaction.ccvv"]', "cc-csc");
+    this.autoCompleteField('[name="supporter.emailAddress"]', "email");
+    this.autoCompleteField('[name="supporter.phoneNumber"]', "tel");
+    this.autoCompleteField('[name="supporter.country"]', "country");
+    this.autoCompleteField('[name="supporter.address1"]', "address-line1");
+    this.autoCompleteField('[name="supporter.address2"]', "address-line2");
+    this.autoCompleteField('[name="supporter.city"]', "address-level2");
+    this.autoCompleteField('[name="supporter.region"]', "address-level1");
+    this.autoCompleteField('[name="supporter.postcode"]', "postal-code");
+  }
+
+  autoCompleteField(querySelector, autoCompleteValue) {
+    let field = document.querySelector(querySelector);
+
+    if (field) {
+      field.autocomplete = autoCompleteValue;
+      return true;
+    }
+
+    if (this.debug) console.log("AutoComplete: Field Not Found", querySelector);
+    return false;
   }
 
 }
@@ -4521,7 +4596,12 @@ class LiveVariables {
     if (recurrpay && recurrpay.type != "radio") {
       recurrpay.value = this._frequency.frequency == "onetime" ? "N" : "Y";
       this._frequency.recurring = recurrpay.value;
-      if (engrid_ENGrid.getOption("Debug")) console.log("Recurpay Changed!");
+      if (engrid_ENGrid.getOption("Debug")) console.log("Recurpay Changed!"); // Trigger the onChange event for the field
+
+      const event = new Event("change", {
+        bubbles: true
+      });
+      recurrpay.dispatchEvent(event);
     }
   }
 
@@ -5492,11 +5572,13 @@ class ProgressBar {
 
 
 
+
+
  // Events
 
 
 // EXTERNAL MODULE: ./src/scripts/main.js
-var main = __webpack_require__(210);
+var main = __webpack_require__(747);
 ;// CONCATENATED MODULE: ./src/index.ts
 // import { Options, App } from "@4site/engrid-common"; // Uses ENGrid via NPM
  // Uses ENGrid via Visual Studio Workspace
