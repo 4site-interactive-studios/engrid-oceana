@@ -2,7 +2,7 @@
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Monday, September 6, 2021 @ 13:26:22 ET
+ * Date: Monday, September 6, 2021 @ 15:06:48 ET
  * By: bryancasler
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
@@ -11,6 +11,26 @@
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
+
+/***/ 210:
+/***/ (() => {
+
+// Loads client theme scripts as soon as possible, but never before DOMContentLoaded
+if (document.readyState !== "loading") {
+  clientScripts();
+} else {
+  document.addEventListener("DOMContentLoaded", () => {
+    clientScripts();
+  });
+}
+
+;
+
+function clientScripts() {
+  console.log("ENGrid client theme main.js scripts are executing"); // Add your client theme functions and scripts here
+}
+
+/***/ }),
 
 /***/ 110:
 /***/ ((__unused_webpack_module, exports) => {
@@ -1993,26 +2013,6 @@ __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_p
 __webpack_unused_export__ = ({ enumerable: true, get: function () { return ste_promise_simple_events_1.NonUniformPromiseSimpleEventList; } });
 
 
-/***/ }),
-
-/***/ 210:
-/***/ (function() {
-
-// Loads client theme scripts as soon as possible, but never before DOMContentLoaded
-if (document.readyState !== "loading") {
-  this.run();
-} else {
-  document.addEventListener("DOMContentLoaded", () => {
-    this.run();
-  });
-}
-
-;
-
-function run() {
-  console.log("ENGrid client theme main.js scripts are executing"); // Add your client theme functions and scripts here
-}
-
 /***/ })
 
 /******/ 	});
@@ -2035,7 +2035,7 @@ function run() {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
