@@ -63,11 +63,12 @@
         
     // TYPOGRAPHY H2
     --theme-typography-h2-font-family: var(--theme-typography-h1-font-family);
-    --theme-typography-h2-color: initial;
+    --theme-typography-h2-color: #0686e5;
     --theme-typography-h2-font-size: calc(var(--theme-root-font-size) * var(--scale-up-80pct));
-    --theme-typography-h2-font-weight: initial;
+    --theme-typography-h2-font-weight: bold;
     --theme-typography-h2-line-height: initial;
-        
+    --theme-typography-h2-text-transform: uppercase;
+           
     // TYPOGRAPHY H3
     --theme-typography-h3-font-family: var(--theme-typography-h1-font-family);
     --theme-typography-h3-color: initial;
