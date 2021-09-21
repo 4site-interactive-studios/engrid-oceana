@@ -1,18 +1,18 @@
 
 
 @charset "UTF-8";
-
 /*!
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Monday, September 13, 2021 @ 15:38:28 ET
+ * Date: Monday, September 20, 2021 @ 16:06:29 ET
  * By: maansacdalan
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
  *
  * *************************************************
  */
+@import url(https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap);
 
 *,:after,:before{
   box-sizing:border-box;
@@ -303,17 +303,18 @@ template{
   --theme-typography-default-font-weight:initial;
   --theme-typography-default-line-height:initial;
   --theme-typography-h1-font-family:"ff-good-headline-web-pro-con", sans-serif;
-  --theme-typography-h1-color:initial;
+  --theme-typography-h1-color:#0686e5;
   --theme-typography-h1-font-size:calc(var(--theme-root-font-size)*var(--scale-up-160pct));
-  --theme-typography-h1-font-weight:initial;
+  --theme-typography-h1-font-weight:700;
   --theme-typography-h1-line-height:initial;
   --theme-typography-h2-font-family:var(--theme-typography-h1-font-family);
-  --theme-typography-h2-color:initial;
+  --theme-typography-h2-color:var(--theme-typography-h1-font-color);
   --theme-typography-h2-font-size:calc(var(--theme-root-font-size)*var(--scale-up-80pct));
-  --theme-typography-h2-font-weight:initial;
+  --theme-typography-h2-font-weight:var(--theme-typography-h1-font-weight);
   --theme-typography-h2-line-height:initial;
+  --theme-typography-h2-text-transform:uppercase;
   --theme-typography-h3-font-family:var(--theme-typography-h1-font-family);
-  --theme-typography-h3-color:initial;
+  --theme-typography-h3-color:var(--theme-typography-h1-font-color);
   --theme-typography-h3-font-size:calc(var(--theme-root-font-size)*var(--scale-up-40pct));
   --theme-typography-h3-font-weight:initial;
   --theme-typography-h3-line-height:initial;
@@ -353,8 +354,11 @@ template{
   --theme-typography-radio-background-color:var(--color-white);
   --theme-typography-radio-border-width:1px;
   --theme-typography-radio-border-color:var(--color-black);
-  --theme-typography-radio-border-radius:50%;
-  --theme-typography-radio-focus-hover-color:var(--theme-typography-radio-color);
+  --theme-typography-radio-border-radius:50%
+ 
+    // TYPOGRAPHY RADIO INPUT:FOCUS
+    // TYPOGRAPHY RADIO INPUT:HOVER
+    --theme-typography-radio-focus-hover-color: var(--theme-typography-radio-color);
   --theme-typography-radio-focus-hover-background-color:var(--theme-typography-radio-background-color);
   --theme-typography-radio-focus-hover-border-color:var(--theme-typography-radio-border-color);
   --theme-typography-radio-selected-color:var(--theme-typography-radio-background-color);
@@ -434,8 +438,6 @@ template{
   --theme-typography-a-text-decoration:underline;
   --theme-typography-a-focus-hover-color:var(--theme-typography-a-color);
   --theme-typography-a-focus-hover-text-decoration:initial;
-  --theme-cta:#0686e5;
-  --theme-cta-hover:#0686e5;
   --theme-page-background-color:var(--color-transparent);
   --theme-content-background-color:var(--theme-cta);
   --theme-body-background-color:var(--color-white);
@@ -535,6 +537,7 @@ template{
   --theme-image-attribution-overlay-margin:0;
   --theme-image-attribution-overlay-padding:1.25ch 1.5ch;
   --theme-image-attribution-overlay-background-color:#000c;
+  --submit__button_border-color:var(--submit__button_background-color);
 }
 body[data-engrid-debug]:before{
   background-color:#fcf8e3;
@@ -722,12 +725,12 @@ body[data-engrid-debug]:before{
 }
 
 .en__button--ajax--inprogress{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_loading.gif) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_loading.gif) 50% no-repeat;
   background-size:1.875rem 1.875rem;
 }
 
 .en__button--ajax--done{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en__end--30.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en__end--30.png) 50% no-repeat;
   background-size:1.875rem 1.875rem;
 }
 
@@ -792,12 +795,12 @@ body[data-engrid-debug]:before{
 }
 
 .en__ticket__plus{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_plus.png) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_plus.png) center center no-repeat var(--color_white);
   margin-left:.3125rem;
 }
 
 .en__ticket__minus{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_minus.png) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_minus.png) center center no-repeat var(--color_white);
   margin-right:.3125rem;
 }
 
@@ -913,7 +916,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__eventOccurrencesDateSelector__label{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/calendar.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/calendar.svg) 0 no-repeat;
   display:block;
   height:1.5rem;
   line-height:1.5rem;
@@ -984,11 +987,11 @@ body[data-engrid-debug]:before{
 }
 
 .en__eventOccurrencesPagination__control--back{
-  background-image:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_prev.png);
+  background-image:url(https://e-activist.com/pageassets/images/en_prev.png);
 }
 
 .en__eventOccurrencesPagination__control--forward{
-  background-image:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_next.png);
+  background-image:url(https://e-activist.com/pageassets/images/en_next.png);
 }
 
 .en__eventOccurrencesPagination--end .en__eventOccurrencesPagination__control--forward,.en__eventOccurrencesPagination--start .en__eventOccurrencesPagination__control--back{
@@ -1141,24 +1144,24 @@ body[data-engrid-debug]:before{
 }
 
 .en__share__button--twitter{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_share--twitter.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_share--twitter.png) 50% no-repeat;
 }
 
 .en__share__button--facebook{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_share--facebook.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_share--facebook.png) 50% no-repeat;
 }
 
 .en__share__button--gplus{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_share--gplus.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_share--gplus.png) 50% no-repeat;
 }
 
 .en__share__button--small.en__share__button--twitter{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_twitter--small.png) center 1px no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_twitter--small.png) center 1px no-repeat;
   width:auto;
 }
 
 .en__share__button--large.en__share__button--twitter{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_twitter--large.png) top no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_twitter--large.png) top no-repeat;
 }
 
 .en__socialShare{
@@ -1186,7 +1189,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__contact__image.en__brokenImage{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_contactPlaceholder.png) top no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_contactPlaceholder.png) top no-repeat;
 }
 
 .en__contactMessage,.en__contactSubject{
@@ -1215,7 +1218,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__contact__toggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_open.png) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_open.png) center center no-repeat var(--color_white);
   border-bottom-left-radius:var(--input_border-radius);
   border-bottom-right-radius:var(--input_border-radius);
   cursor:pointer;
@@ -1225,7 +1228,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__contact--open .en__contact__toggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_close.png) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_close.png) center center no-repeat var(--color_white);
 }
 
 .en__singleMessage{
@@ -1238,17 +1241,17 @@ body[data-engrid-debug]:before{
 }
 
 .en__contactDetails__background{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_background.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_background.png) 50% no-repeat #dfdfdf;
   height:2.8125rem;
   width:2.8125rem;
 }
 
 .en__contact--showBackground .en__contactDetails__background{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_message.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_message.png) 50% no-repeat #dfdfdf;
 }
 
 .en__contacts--singleMessageMode .en__contact--showBackground .en__contactDetails__background{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_backgroundClose.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_backgroundClose.png) 50% no-repeat #dfdfdf;
 }
 
 .en__contactBackground{
@@ -1280,11 +1283,11 @@ body[data-engrid-debug]:before{
 }
 
 .en__contactBackground__cycle--next{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_next.png) center right no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_next.png) center right no-repeat var(--color_white);
 }
 
 .en__contactBackground__cycle--prev{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_prev.png) center left no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_prev.png) center left no-repeat var(--color_white);
 }
 
 .en__contactSection__content--uneditable,.en__contactSection__label{
@@ -1321,7 +1324,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__twitterTarget__image:before{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_twitter_fallback.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_twitter_fallback.png) 50% no-repeat #dfdfdf;
   content:" ";
   height:3.75rem;
   width:3.75rem;
@@ -1353,7 +1356,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__tweetContact .en__tweetBackgroundToggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_background.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_background.png) 50% no-repeat #dfdfdf;
   height:2.8125rem;
   margin:.625rem .625rem 0 0;
   width:2.8125rem;
@@ -1365,7 +1368,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__tweetContact--showBackground .en__tweetBackgroundToggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_backgroundClose.png) 50% no-repeat #dfdfdf;
+  background:url(https://e-activist.com/pageassets/images/en_backgroundClose.png) 50% no-repeat #dfdfdf;
 }
 
 .en__component.en__component--ecardblock{
@@ -1515,7 +1518,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__hubOverlay__loading{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_loading.gif) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_loading.gif) center center no-repeat var(--color_white);
   opacity:.8;
 }
 
@@ -1561,7 +1564,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__hubOverlay__header a{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_huboverlay_close.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_huboverlay_close.png) 50% no-repeat;
   text-indent:-500vw;
   width:2rem;
 }
@@ -1624,7 +1627,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__myImpact__hubCopy span{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_search.png) 100% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_search.png) 100% no-repeat;
   border-radius:var(--input_border-radius);
   padding:.75rem 0;
 }
@@ -1645,7 +1648,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__hubOverlay__impact .en__hubOverlay__content>div{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_thumbsup.png) no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_thumbsup.png) no-repeat;
   padding:0 0 0 11.25rem;
 }
 
@@ -1667,7 +1670,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__p2phub__site .en__p2phub__login{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_lockopen-24.png) 100% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_lockopen-24.png) 100% no-repeat;
 }
 
 @media (max-width:768px){
@@ -1942,7 +1945,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__memtyperenew__or{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/dot.jpg) 50% repeat-x;
+  background:url(https://e-activist.com/pageassets/images/dot.jpg) 50% repeat-x;
 }
 
 .en__memtyperenew__orText{
@@ -1957,13 +1960,13 @@ body[data-engrid-debug]:before{
 }
 
 .en__member__row{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_background.png) left 10px center no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_background.png) left 10px center no-repeat;
   min-height:3.25rem;
   padding:0 1.25rem 0 3.25rem;
 }
 
 .en__member__toggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_close.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_close.png) 50% no-repeat;
   height:1rem;
   width:1rem;
 }
@@ -1991,7 +1994,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__member--closed .en__member__toggle{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_open.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_open.png) 50% no-repeat;
 }
 
 .en__overlay{
@@ -2006,7 +2009,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__overlay__loading{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_loading.gif) center center no-repeat var(--color_white);
+  background:url(https://e-activist.com/pageassets/images/en_loading.gif) center center no-repeat var(--color_white);
   border-radius:.0625rem;
   opacity:.8;
 }
@@ -2041,7 +2044,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__overlay__header a{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_huboverlay_close.png) 50% no-repeat;
+  background:url(https://e-activist.com/pageassets/images/en_huboverlay_close.png) 50% no-repeat;
   text-indent:-500vw;
   width:2rem;
 }
@@ -2109,7 +2112,7 @@ body[data-engrid-debug]:before{
 }
 
 .en__stripeButtons__preview .en__stripeButtons__previewIcon{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/stripe-icon.png) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/stripe-icon.png) 0 no-repeat;
   height:1.375rem;
   margin:0 0 0 .3125rem;
   top:-.6875rem;
@@ -2132,13 +2135,13 @@ body[data-engrid-debug]:before{
 }
 
 .en__paypalTouch__preview .en__paypalTouch__previewIcon{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-icon-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-icon-svg.svg) 0 no-repeat;
   background-size:.8125rem;
   width:1rem;
 }
 
 .en__paypalTouch__preview .en__paypalTouch__previewIcon2{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-text-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-text-svg.svg) 0 no-repeat;
   background-size:3.75rem;
   width:3.75rem;
 }
@@ -2148,12 +2151,12 @@ body[data-engrid-debug]:before{
 }
 
 .en__paypalTouch__preview.blue .en__paypalTouch__previewIcon{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-icon-white-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-icon-white-svg.svg) 0 no-repeat;
   background-size:.8125rem;
 }
 
 .en__paypalTouch__preview.blue .en__paypalTouch__previewIcon2{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-text-white-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-text-white-svg.svg) 0 no-repeat;
   background-size:3.75rem;
 }
 
@@ -2167,12 +2170,12 @@ body[data-engrid-debug]:before{
 }
 
 .en__paypalTouch__preview.black .en__paypalTouch__previewIcon{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-icon-white-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-icon-white-svg.svg) 0 no-repeat;
   background-size:.8125rem;
 }
 
 .en__paypalTouch__preview.black .en__paypalTouch__previewIcon2{
-  background:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/gateways/buttons/paypal-text-white-svg.svg) 0 no-repeat;
+  background:url(https://e-activist.com/pageassets/images/gateways/buttons/paypal-text-white-svg.svg) 0 no-repeat;
   background-size:3.75rem;
 }
 
@@ -3129,7 +3132,7 @@ body{
 
 [data-engrid-theme]{
   --click-to-expand__copy-area_height:450px;
-  --click-to-expand__cta-image_url:url(https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_open.png);
+  --click-to-expand__cta-image_url:url(https://e-activist.com/pageassets/images/en_open.png);
   --click-to-expand__cta-image_width:16px;
   --click-to-expand__cta-image_height:16px;
 }
@@ -4150,10 +4153,6 @@ button.en__eventOccurrence__select>label{
     padding-right:0;
   }
 }
-[data-engrid-errors=fancy] .en__component--formblock .en__field.en__field--validationFailed,[data-engrid-errors=fancy] .en__component--svblock .en__field.en__field--validationFailed{
-  margin-bottom:calc(var(--fields_spacing-block)*2);
-}
-
 [data-engrid-errors=fancy] .en__field__error{
   background-color:var(--error__color);
   border-radius:var(--input_border-radius);
@@ -4253,8 +4252,8 @@ picture.grayscale-image,video.grayscale-video{
 .loader{
   height:1.5rem;
   margin-left:-2rem;
-  margin-right:.5rem;
-  margin-top:-3px;
+  margin-right:.6rem;
+  margin-top:2px;
   position:relative;
   width:1.5rem;
 }
@@ -4407,6 +4406,10 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
   visibility:hidden;
 }
 
+[data-engrid-has-lightbox]{
+  overflow:hidden;
+}
+
 #enModal{
   align-items:center;
   background-color:#000000d9;
@@ -4497,6 +4500,10 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
   #goMonthly .background{
     display:none;
   }
+}
+
+#goMonthly h1{
+  margin-top:0;
 }
 
 #goMonthly h1 .upsell_suggestion{
@@ -5442,7 +5449,7 @@ body:not(#en__pagebuilder)[data-engrid-does-not-have-body-banner] .en__component
 }
 @media screen and (min-width:900px){
   [data-engrid-layout=centercenter2col] #engrid>.en__component--advrow,[data-engrid-layout=centercenter2col] form>.en__component--advrow{
-    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 140px) [lcc-end bc-start lbc-start] minmax(450px, 500px) [lbc-end rbc-start] minmax(450px, 500px) [rbc-end bc-end rcc-start] minmax(0, 140px) [rcc-end cc-end rpc-start] minmax(0, 1fr) [rpc-end pc-end];
+    grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 140px) [lcc-end bc-start lbc-start] minmax(450px, 300px) [lbc-end rbc-start] minmax(450px, 780px) [rbc-end bc-end rcc-start] minmax(0, 140px) [rcc-end cc-end rpc-start] minmax(0, 1fr) [rpc-end pc-end];
   }
   [data-engrid-layout=centercenter2col] form>.en__component--advrow>*{
     grid-template-columns:[pc-start lpc-start] minmax(0, 1fr) [lpc-end cc-start lcc-start] minmax(0, 140px) [lcc-end bc-start lbc-start] minmax(0, 500px) [lbc-end rbc-start] minmax(0, 500px) [rbc-end bc-end rcc-start] minmax(0, 140px) [rcc-end cc-end rpc-start] minmax(0, 1fr) [rpc-end pc-end];
@@ -6615,8 +6622,8 @@ body[data-engrid-debug]:before{
 [data-engrid-debug] #debug-bar #buttons-wrapper .button,[data-engrid-debug] #debug-bar #buttons-wrapper button{
   --button_font-family:Arial, sans-serif;
   --button_color:#fff;
-  --button_font-size:16px
-        --button_font-weight: initial;
+  --button_font-size:16px;
+  --button_font-weight:initial;
   --button_line-height:normal;
   --button_background-color:#000;
   --button_border-width:0px;
@@ -6976,45 +6983,50 @@ body:not([data-engrid-debug]) #debug-bar{
 #en__pagebuilder video[data-src]{
   background-image:url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIj48cGF0aCBmaWxsPSIjY2NjIiBkPSJNMCAwaDQwMHYzMDBIMHoiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9Im1vbm9zcGFjZSIgZm9udC1zaXplPSIyNiIgZmlsbD0iIzMzMyI+TGF6eSBMb2FkZWQgVmlkZW88L3RleHQ+PC9zdmc+);
 }
-@font-face{
-  font-family:Lato;
-  font-style:normal;
-  font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format("woff2");
-  unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
-}
-@font-face{
-  font-family:Lato;
-  font-style:normal;
-  font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format("woff2");
-  unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
-}
-@font-face{
-  font-family:Lato;
-  font-style:normal;
-  font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format("woff2");
-  unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
-}
-@font-face{
-  font-family:Lato;
-  font-style:normal;
-  font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format("woff2");
-  unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
-}
-
 [data-engrid-theme=engrid-oceana]{
+  --default_font-family:"Lato", sans-serif;
+  --default_color:initial;
+  --default_font-size:var(--root_font-size);
+  --default_font-weight:initial;
+  --default_line-height:initial;
+  --h1_font-family:"ff-good-headline-web-pro-con", sans-serif;
+  --h1_color:#0686e5;
+  --h1_font-size:calc(var(--root_font-size)*var(--scale-up_160pct));
+  --h1_font-weight:bold;
+  --h1_line-height:initial;
+  --h1_text-transform:uppercase;
+  --p_font-family:"Lato", sans-serif;
+  --p_color:initial;
+  --p_font-size:var(--root_font-size);
+  --p_font-weight:initial;
+  --p_line-height:initial;
+  --a_font-family:var(--default_font-family);
+  --a_color:initial;
+  --a_text-decoration:underline;
+  --a_color_hover:var(--a_color);
+  --a_text-decoration_hover:initial;
+  --input_font-family:var(--default_font-family);
+  --input_color:#000;
+  --input_font-size:16px;
+  --input_font-weight:400;
+  --input_line-height:initial;
+  --input_background-color:#fff;
+  --input_border-width:3px;
+  --input_border-color:#999;
+  --input_border-radius:0px;
   --button_font-family:var(--default_font-family);
   --button_color:var(--color_white);
   --button_font-size:var(--root_font-size);
   --button_font-weight:initial;
   --button_line-height:initial;
   --button_background-color:#ccc84a;
-  --button_border-width:1px;
-  --button_border-color:var(--color_black);
-  --button_border-radius:6px;
+  --button_border-width:3px;
+  --button_border-color:#ccc84a;
+  --button_border-radius:0px;
+  --theme-cta:#0686e5;
+  --theme-cta-hover:#0686e5;
+  --error__color:#c30d02;
+  --error__color_faded:#f3373726;
 }
 body{
   opacity:1;

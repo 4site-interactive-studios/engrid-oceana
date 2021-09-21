@@ -2,7 +2,7 @@
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Monday, September 13, 2021 @ 15:38:28 ET
+ * Date: Monday, September 20, 2021 @ 16:06:29 ET
  * By: maansacdalan
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
@@ -2482,8 +2482,14 @@ class engrid_ENGrid {
 
 
   static setBodyData(dataName, value) {
-    const body = document.querySelector("body");
-    body.setAttribute(`data-engrid-${dataName}`, value);
+    const body = document.querySelector("body"); // If value is boolean
+
+    if (typeof value === "boolean" && value === false) {
+      body.removeAttribute(`data-engrid-${dataName}`);
+      return;
+    }
+
+    body.setAttribute(`data-engrid-${dataName}`, value.toString());
   } // Get body engrid data attributes
 
 
@@ -2540,6 +2546,33 @@ class engrid_ENGrid {
     }
 
     return s.join(dec);
+  }
+
+  static disableSubmit(label = "") {
+    const submit = document.querySelector(".en__submit button");
+    submit.dataset.originalText = submit.innerText;
+    let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" + label + "</span></span>";
+
+    if (submit) {
+      submit.disabled = true;
+      submit.innerHTML = submitButtonProcessingHTML;
+      return true;
+    }
+
+    return false;
+  }
+
+  static enableSubmit() {
+    const submit = document.querySelector(".en__submit button");
+
+    if (submit.dataset.originalText) {
+      submit.disabled = false;
+      submit.innerText = submit.dataset.originalText;
+      delete submit.dataset.originalText;
+      return true;
+    }
+
+    return false;
   }
 
 }
@@ -4680,6 +4713,7 @@ class UpsellLightbox {
     this.overlay = document.createElement("div");
     this._form = EnForm.getInstance();
     this._amount = DonationAmount.getInstance();
+    this._fees = ProcessingFees.getInstance();
     this._frequency = DonationFrequency.getInstance();
     let options = "EngridUpsell" in window ? window.EngridUpsell : {};
     this.options = Object.assign(Object.assign({}, UpsellOptionsDefaults), options);
@@ -4775,7 +4809,7 @@ class UpsellLightbox {
     // const hideModal = cookie.get("hideUpsell"); // Get cookie
     // if it's a first page of a Donation page
     return (// !hideModal &&
-      'EngridUpsell' in window && !!window.pageJson && window.pageJson.pageNumber == 1 && ['donation', 'premiumgift'].includes(window.pageJson.pageType)
+      "EngridUpsell" in window && !!window.pageJson && window.pageJson.pageNumber == 1 && ["donation", "premiumgift"].includes(window.pageJson.pageType)
     );
   }
 
@@ -4786,18 +4820,20 @@ class UpsellLightbox {
     const live_upsell_amount = document.querySelectorAll("#upsellYesButton .upsell_suggestion");
 
     if (!isNaN(value) && value > 0) {
-      live_upsell_amount.forEach(elem => elem.innerHTML = "$" + value.toFixed(2));
+      live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(value));
     } else {
-      live_upsell_amount.forEach(elem => elem.innerHTML = "$" + this.getUpsellAmount().toFixed(2));
+      live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(this.getUpsellAmount()));
     }
   }
 
   liveAmounts() {
     const live_upsell_amount = document.querySelectorAll(".upsell_suggestion");
     const live_amount = document.querySelectorAll(".upsell_amount");
-    const suggestedAmount = this.getUpsellAmount();
-    live_upsell_amount.forEach(elem => elem.innerHTML = "$" + suggestedAmount.toFixed(2));
-    live_amount.forEach(elem => elem.innerHTML = "$" + this._amount.amount.toFixed(2));
+
+    const suggestedAmount = this.getUpsellAmount() + this._fees.fee;
+
+    live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(suggestedAmount));
+    live_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(this._amount.amount + this._fees.fee));
   } // Return the Suggested Upsell Amount
 
 
@@ -4819,9 +4855,9 @@ class UpsellLightbox {
       if (upsellAmount == 0 && amount <= val.max) {
         upsellAmount = val.suggestion;
 
-        if (typeof upsellAmount !== 'number') {
+        if (typeof upsellAmount !== "number") {
           const suggestionMath = upsellAmount.replace("amount", amount.toFixed(2));
-          upsellAmount = parseFloat(Function('"use strict";return (' + suggestionMath + ')')());
+          upsellAmount = parseFloat(Function('"use strict";return (' + suggestionMath + ")")());
         }
 
         break;
@@ -4857,9 +4893,9 @@ class UpsellLightbox {
     if (!this.shouldOpen()) {
       // In the circumstance when the form fails to validate via server-side validation, the page will reload
       // When that happens, we should place the original amount saved in sessionStorage into the upsell original amount field
-      let original = window.sessionStorage.getItem('original');
+      let original = window.sessionStorage.getItem("original");
 
-      if (original && document.querySelectorAll('.en__errorList .en__error').length > 0) {
+      if (original && document.querySelectorAll(".en__errorList .en__error").length > 0) {
         this.setOriginalAmount(original);
       } // Returning true will give the "go ahead" to submit the form
 
@@ -4871,6 +4907,7 @@ class UpsellLightbox {
     this.liveAmounts();
     this.overlay.classList.remove("is-hidden");
     this._form.submit = false;
+    engrid_ENGrid.setBodyData("has-lightbox", "");
     return false;
   } // Set the original amount into a hidden field using the upsellOriginalGiftAmountFieldName, if provided
 
@@ -4886,7 +4923,7 @@ class UpsellLightbox {
           let input = document.createElement("input");
           input.setAttribute("type", "hidden");
           input.setAttribute("name", this.options.upsellOriginalGiftAmountFieldName);
-          input.classList.add('en__field__input', 'en__field__input--hidden');
+          input.classList.add("en__field__input", "en__field__input--hidden");
           pageform.appendChild(input);
           enFieldUpsellOriginalAmount = document.querySelector('.en__field__input.en__field__input--hidden[name="' + this.options.upsellOriginalGiftAmountFieldName + '"]');
         }
@@ -4894,7 +4931,7 @@ class UpsellLightbox {
 
       if (enFieldUpsellOriginalAmount) {
         // save it to a session variable just in case this page reloaded due to server-side validation error
-        window.sessionStorage.setItem('original', original);
+        window.sessionStorage.setItem("original", original);
         enFieldUpsellOriginalAmount.setAttribute("value", original);
       }
     }
@@ -4915,8 +4952,8 @@ class UpsellLightbox {
 
       this._amount.setAmount(upsoldAmount);
     } else {
-      this.setOriginalAmount('');
-      window.sessionStorage.removeItem('original');
+      this.setOriginalAmount("");
+      window.sessionStorage.removeItem("original");
     }
 
     this._form.submitForm();
@@ -4927,12 +4964,24 @@ class UpsellLightbox {
     e.preventDefault(); // cookie.set("hideUpsell", "1", { expires: 1 }); // Create one day cookie
 
     this.overlay.classList.add("is-hidden");
+    engrid_ENGrid.setBodyData("has-lightbox", false);
 
     if (this.options.submitOnClose) {
       this._form.submitForm();
     } else {
       this._form.dispatchError();
     }
+  }
+
+  getAmountTxt(amount = 0) {
+    var _a, _b, _c, _d;
+
+    const symbol = (_a = engrid_ENGrid.getOption("CurrencySymbol")) !== null && _a !== void 0 ? _a : "$";
+    const dec_separator = (_b = engrid_ENGrid.getOption("DecimalSeparator")) !== null && _b !== void 0 ? _b : ".";
+    const thousands_separator = (_c = engrid_ENGrid.getOption("ThousandsSeparator")) !== null && _c !== void 0 ? _c : "";
+    const dec_places = amount % 1 == 0 ? 0 : (_d = engrid_ENGrid.getOption("DecimalPlaces")) !== null && _d !== void 0 ? _d : 2;
+    const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
+    return amount > 0 ? symbol + amountTxt : "";
   }
 
 }
@@ -5305,7 +5354,7 @@ class NeverBounce {
       acceptedMessage: "Email validated!",
       feedback: false
     };
-    engrid_ENGrid.loadJS('https://cdn.neverbounce.com/widget/dist/NeverBounce.js');
+    engrid_ENGrid.loadJS("https://cdn.neverbounce.com/widget/dist/NeverBounce.js");
     this.init();
     this.form.onValidate.subscribe(() => this.form.validate = this.validate());
   }
@@ -5316,16 +5365,16 @@ class NeverBounce {
     if (this.statusField && document.getElementsByName(this.statusField).length) this.nbStatus = document.querySelector("[name='" + this.statusField + "']");
 
     if (!this.emailField) {
-      if (engrid_ENGrid.debug) console.log('Engrid Neverbounce: E-mail Field Not Found');
+      if (engrid_ENGrid.debug) console.log("Engrid Neverbounce: E-mail Field Not Found");
       return;
     }
 
     if (!this.emailField) {
-      if (engrid_ENGrid.debug) console.log('Engrid Neverbounce: E-mail Field Not Found', this.emailField);
+      if (engrid_ENGrid.debug) console.log("Engrid Neverbounce: E-mail Field Not Found", this.emailField);
       return;
     }
 
-    if (engrid_ENGrid.debug) console.log('Engrid Neverbounce External Script Loaded');
+    if (engrid_ENGrid.debug) console.log("Engrid Neverbounce External Script Loaded");
     this.wrap(this.emailField, document.createElement("div"));
     const parentNode = this.emailField.parentNode;
     parentNode.id = "nb-wrapper"; // Define HTML structure for a Custom NB Message and insert it after Email field
@@ -5336,10 +5385,14 @@ class NeverBounce {
     const NBClass = this;
     window.addEventListener("load", function () {
       document.getElementsByTagName("body")[0].addEventListener("nb:registered", function (event) {
-        const field = document.querySelector('[data-nb-id="' + event.detail.id + '"]'); // Never Bounce: Do work when input changes or when API responds with an error
+        const field = document.querySelector('[data-nb-id="' + event.detail.id + '"]');
+        field.addEventListener("nb:loading", function (e) {
+          engrid_ENGrid.disableSubmit("Validating Your Email");
+        }); // Never Bounce: Do work when input changes or when API responds with an error
 
         field.addEventListener("nb:clear", function (e) {
           NBClass.setEmailStatus("clear");
+          engrid_ENGrid.enableSubmit();
           if (NBClass.nbDate) NBClass.nbDate.value = "";
           if (NBClass.nbStatus) NBClass.nbStatus.value = "";
         }); // Never Bounce: Do work when results have an input that does not look like an email (i.e. missing @ or no .com/.net/etc...)
@@ -5348,21 +5401,33 @@ class NeverBounce {
           NBClass.setEmailStatus("soft-result");
           if (NBClass.nbDate) NBClass.nbDate.value = "";
           if (NBClass.nbStatus) NBClass.nbStatus.value = "";
+          engrid_ENGrid.enableSubmit();
         }); // Never Bounce: When results have been received
 
         field.addEventListener("nb:result", function (e) {
           if (e.detail.result.is(window._nb.settings.getAcceptedStatusCodes())) {
             NBClass.setEmailStatus("valid");
-            if (NBClass.nbDate) NBClass.nbDate.value = new Date().toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: '2-digit',
-              day: '2-digit'
+            if (NBClass.nbDate) NBClass.nbDate.value = new Date().toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit"
             });
+            if (NBClass.nbStatus) NBClass.nbStatus.value = e.detail.result.response.result;
           } else {
             NBClass.setEmailStatus("invalid");
             if (NBClass.nbDate) NBClass.nbDate.value = "";
+            if (NBClass.nbStatus) NBClass.nbStatus.value = "";
           }
+
+          engrid_ENGrid.enableSubmit();
         });
+
+        if (field.value) {
+          console.log(field);
+          setTimeout(function () {
+            window._nb.fields.get(document.querySelector("[data-nb-id]"))[0].forceUpdate();
+          }, 100);
+        }
       }); // Never Bounce: Register field with the widget and broadcast nb:registration event
 
       window._nb.fields.registerListener(NBClass.emailField, true);
@@ -5371,7 +5436,7 @@ class NeverBounce {
 
   clearStatus() {
     if (!this.emailField) {
-      if (engrid_ENGrid.debug) console.log('Engrid Neverbounce: E-mail Field Not Found');
+      if (engrid_ENGrid.debug) console.log("Engrid Neverbounce: E-mail Field Not Found");
       return;
     }
 
@@ -5395,14 +5460,14 @@ class NeverBounce {
     if (engrid_ENGrid.debug) console.log("Neverbounce Status:", status);
 
     if (!this.emailField) {
-      if (engrid_ENGrid.debug) console.log('Engrid Neverbounce: E-mail Field Not Found');
+      if (engrid_ENGrid.debug) console.log("Engrid Neverbounce: E-mail Field Not Found");
       return;
     } // Search page for the NB Wrapper div and set as variable
 
 
     const nb_email_field_wrapper = document.getElementById("nb-wrapper"); // Search page for the NB Feedback div and set as variable
 
-    const nb_email_feedback_field = document.getElementById("nb-feedback"); // classes to add or remove based on neverbounce results
+    let nb_email_feedback_field = document.getElementById("nb-feedback"); // classes to add or remove based on neverbounce results
 
     const nb_email_field_wrapper_success = "nb-success";
     const nb_email_field_wrapper_error = "nb-error";
@@ -5411,8 +5476,9 @@ class NeverBounce {
     const nb_email_field_error = "rm-error";
 
     if (!nb_email_feedback_field) {
-      const nbWrapperDiv = nb_email_field_wrapper.querySelector('div');
+      const nbWrapperDiv = nb_email_field_wrapper.querySelector("div");
       if (nbWrapperDiv) nbWrapperDiv.innerHTML = '<div id="nb-feedback" class="en__field__error nb-hidden">Enter a valid email.</div>';
+      nb_email_feedback_field = document.getElementById("nb-feedback");
     }
 
     if (status == "valid") {
@@ -5486,7 +5552,7 @@ class NeverBounce {
     var _a;
 
     if (!this.emailField) {
-      if (engrid_ENGrid.debug) console.log('Engrid Neverbounce validate(): E-mail Field Not Found. Returning true.');
+      if (engrid_ENGrid.debug) console.log("Engrid Neverbounce validate(): E-mail Field Not Found. Returning true.");
       return true;
     }
 
@@ -5494,7 +5560,7 @@ class NeverBounce {
       this.nbStatus.value = engrid_ENGrid.getFieldValue("nb-result");
     }
 
-    if (!['catchall', 'valid'].includes(engrid_ENGrid.getFieldValue('nb-result'))) {
+    if (!["catchall", "unknown", "valid"].includes(engrid_ENGrid.getFieldValue("nb-result"))) {
       this.setEmailStatus("required");
       (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
       return false;

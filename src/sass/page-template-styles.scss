@@ -2,50 +2,48 @@
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 [data-engrid-theme="engrid-oceana"]{
-    // TYPOGRAPHY DEFAULT
-    // --default_font-family: var(--native-fonts__sans-serif);
-    // --default_color: initial;
-    // --default_font-size: var(--root_font-size);
-    // --default_font-weight: initial;
-    // --default_line-height: initial;
+   // TYPOGRAPHY DEFAULT
+    --default_font-family: 'Lato', sans-serif;
+    --default_color: initial;
+    --default_font-size: var(--root_font-size);
+    --default_font-weight: initial;
+    --default_line-height: initial;
 
     // TYPOGRAPHY H1
-    // --h1_font-family: var(--default_font-family);
-    // --h1_color: initial;
-    // --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
-    // --h1_font-weight: initial;
-    // --h1_line-height: initial;
-        
+    --h1_font-family: "ff-good-headline-web-pro-con", sans-serif;
+    --h1_color: #0686e5;
+    --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
+    --h1_font-weight: bold;
+    --h1_line-height: initial;
+    --h1_text-transform:uppercase;
+
     // TYPOGRAPHY P
-    // --p_font-family: var(--default_font-family);
-    // --p_color: initial;
-    // --p_font-size: var(--root_font-size);
-    // --p_font-weight: initial;
-    // --p_line-height: initial;
+    --p_font-family: 'Lato', sans-serif;
+    --p_color: initial;
+    --p_font-size: var(--root_font-size);
+    --p_font-weight: initial;
+    --p_line-height: initial;
 
     // TYPOGRAPHY A
-    // --a_font-family: var(--default_font-family);
-    // --a_color: initial;
-    // --a_text-decoration: underline;
+    --a_font-family: var(--default_font-family);
+    --a_color: initial;
+    --a_text-decoration: underline;
 
     // TYPOGRAPHY A:FOCUS
-    // TYPOGRAPHY A:HOVER
-    // --a_color_hover: var(--a_color);
-    // --a_text-decoration_hover: initial;
+    --a_color_hover: var(--a_color);
+    --a_text-decoration_hover: initial;
 
     // TYPOGRAPHY INPUT
-    // --input_font-family: var(--default_font-family);
-    // --input_color: #000000;
-    // --input_font-size: var(--root_font-size);
-    // --input_font-weight: initial;
-    // --input_line-height: initial;
-    // --input_background-color: #fafafa;
-    // --input_border-width: 1px;
-    // --input_border-color: #dfdfe1;
-    // --input_border-radius: 6px;
-    // --input_placeholder-color: var(--color_light-gray);
-    // --input_box-shadow: inset 0 2px 2px -1px rgba(74, 74, 104, 0.1);
-        
+    --input_font-family: var(--default_font-family);
+    --input_color: #000000;
+    --input_font-size: 16px;
+    --input_font-weight: 400;
+    --input_line-height: initial;
+    --input_background-color: #FFFFFF;
+    --input_border-width: 3px;
+    --input_border-color: #999999;
+    --input_border-radius: 0px;
+           
     // TYPOGRAPHY INPUT:FOCUS
     // TYPOGRAPHY INPUT:HOVER
     // --input_color_hover: var(--input_color);
@@ -61,9 +59,9 @@
     --button_font-weight: initial;
     --button_line-height: initial;
     --button_background-color: #ccc84a;
-    --button_border-width: 1px;
-    --button_border-color: var(--color_black);
-    --button_border-radius: 6px;
+    --button_border-width: 3px;
+    --button_border-color:#ccc84a;
+    --button_border-radius: 0px;
 
     // TYPOGRAPHY BUTTON:HOVER
     // --button_color_hover: var(--button_color);
@@ -80,7 +78,15 @@
     // --give-annual-donation-amount-appended-label: "/yr";  
     // --recurring-frequency__button_count: 4;
     // --donation-amount__button_count: 4;
-    // --give-by-select__button_count: 4;
+
+     // CTA COLORS
+     --theme-cta: #0686E5;
+     --theme-cta-hover:#0686E5;
+
+     //ERROR COLORS
+     --error__color: #C30D02;
+     --error__color_faded: rgba(243, 55, 55, 0.15);
+
 }
 
 /* Add your custom theme styles here */

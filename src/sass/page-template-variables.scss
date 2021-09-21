@@ -13,7 +13,8 @@
 // $two_col_body-column_max-width:    1080px;
 // $two_col_body-column_min-width:     900px;
 
-
+$centercenter2col_body-column_column-1_max-width: 300px;
+$centercenter2col_body-column_column-2_max-width: 780px;
 
 /* All CSS Custom Properties should be scoped to the theme using CSS Data Attributes. */
 [data-engrid-theme="engrid-oceana"]{
@@ -46,7 +47,6 @@
  
     // FONT STACKS
     --theme-font-stack-browser-fonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
- 
     // TYPOGRAPHY DEFAULT
     --theme-typography-default-font-family: 'Lato', sans-serif;
     --theme-typography-default-color: initial;
@@ -56,22 +56,23 @@
         
     // TYPOGRAPHY H1
     --theme-typography-h1-font-family: 'ff-good-headline-web-pro-con', sans-serif;
-    --theme-typography-h1-color: initial;
+    --theme-typography-h1-color: #0686e5;
     --theme-typography-h1-font-size: calc(var(--theme-root-font-size) * var(--scale-up-160pct));
-    --theme-typography-h1-font-weight: initial;
+    --theme-typography-h1-font-weight: 700;
     --theme-typography-h1-line-height: initial;
+    --theme-typography-h2-text-transform: uppercase;
         
     // TYPOGRAPHY H2
     --theme-typography-h2-font-family: var(--theme-typography-h1-font-family);
-    --theme-typography-h2-color: #0686e5;
+    --theme-typography-h2-color:var(--theme-typography-h1-font-color);
     --theme-typography-h2-font-size: calc(var(--theme-root-font-size) * var(--scale-up-80pct));
-    --theme-typography-h2-font-weight: bold;
+    --theme-typography-h2-font-weight: var(--theme-typography-h1-font-weight);
     --theme-typography-h2-line-height: initial;
     --theme-typography-h2-text-transform: uppercase;
            
     // TYPOGRAPHY H3
     --theme-typography-h3-font-family: var(--theme-typography-h1-font-family);
-    --theme-typography-h3-color: initial;
+    --theme-typography-h3-color: var(--theme-typography-h1-font-color);
     --theme-typography-h3-font-size: calc(var(--theme-root-font-size) * var(--scale-up-40pct));
     --theme-typography-h3-font-weight: initial;
     --theme-typography-h3-line-height: initial;
@@ -126,7 +127,7 @@
     --theme-typography-radio-background-color: var(--color-white);
     --theme-typography-radio-border-width: 1px;
     --theme-typography-radio-border-color: var(--color-black);
-    --theme-typography-radio-border-radius: 50%;
+    --theme-typography-radio-border-radius: 50%
  
     // TYPOGRAPHY RADIO INPUT:FOCUS
     // TYPOGRAPHY RADIO INPUT:HOVER
@@ -388,6 +389,8 @@
     --theme-image-attribution-overlay-background-color: rgba(0, 0, 0, 0.8);    
  
     // ADD THEME CUSTOM CSS PROPERTIES HERE
+    --submit__button_border-color:var(--submit__button_background-color);
+
  
  }
  
