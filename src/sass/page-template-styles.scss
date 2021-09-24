@@ -89,6 +89,16 @@
 
 }
 
+[data-engrid-subtheme="sailorsfortheseas"]{
+    // CTA COLORS
+    --theme-cta: #00205b;
+    --theme-cta-hover:#00205b;
+    --submit__button_background-color:var(--theme-cta);
+    --button_background-color:var(--theme-cta);
+    --button_border-color::var(--theme-cta);    
+}
+
+
 /* Add your custom theme styles here */
 [data-engrid-theme="organizational-name"]{
     @mixin until-mobile-l {

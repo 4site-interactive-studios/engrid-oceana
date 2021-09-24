@@ -2,7 +2,7 @@
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Tuesday, September 21, 2021 @ 13:53:33 ET
+ * Date: Friday, September 24, 2021 @ 17:37:45 ET
  * By: maansacdalan
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
@@ -2120,7 +2120,7 @@ const UpsellOptionsDefaults = {
   noLabel: "No, thanks. Continue with my <br> {old-amount} one-time gift",
   otherAmount: true,
   otherLabel: "Or enter a different monthly amount:",
-  upsellOriginalGiftAmountFieldName: '',
+  upsellOriginalGiftAmountFieldName: "",
   amountRange: [{
     max: 10,
     suggestion: 5
@@ -2158,6 +2158,7 @@ const UpsellOptionsDefaults = {
     max: 500,
     suggestion: "Math.ceil((amount / 12)/5)*5"
   }],
+  minAmount: 0,
   canClose: true,
   submitOnClose: false
 };
@@ -2339,14 +2340,14 @@ class DonationAmount {
 
   removeCommas(v) {
     // replace 5,00 with 5.00
-    if (v.length > 3 && v.charAt(v.length - 3) == ',') {
+    if (v.length > 3 && v.charAt(v.length - 3) == ",") {
       v = v.substr(0, v.length - 3) + "." + v.substr(v.length - 2, 2);
-    } else if (v.length > 2 && v.charAt(v.length - 2) == ',') {
+    } else if (v.length > 2 && v.charAt(v.length - 2) == ",") {
       v = v.substr(0, v.length - 2) + "." + v.substr(v.length - 1, 1);
     } // replace any remaining commas
 
 
-    return v.replace(/,/g, '');
+    return v.replace(/,/g, "");
   }
 
 }
@@ -2592,10 +2593,10 @@ class DonationFrequency {
       if (element && element.name == "transaction.recurrpay") {
         this.recurring = element.value; // When this element is a radio, that means you're between onetime and monthly only
 
-        if (element.type == 'radio') {
-          this.frequency = element.value.toLowerCase() == 'n' ? 'onetime' : 'monthly'; // This field is hidden when transaction.recurrpay is radio
+        if (element.type == "radio") {
+          this.frequency = element.value.toLowerCase() == "n" ? "onetime" : "monthly"; // This field is hidden when transaction.recurrpay is radio
 
-          engrid_ENGrid.setFieldValue('transaction.recurrfreq', this.frequency.toUpperCase());
+          engrid_ENGrid.setFieldValue("transaction.recurrfreq", this.frequency.toUpperCase());
         }
       }
 
@@ -2619,9 +2620,9 @@ class DonationFrequency {
 
 
   set frequency(value) {
-    this._frequency = value.toLowerCase() || 'onetime';
+    this._frequency = value.toLowerCase() || "onetime";
     if (this._dispatch) this._onFrequencyChange.dispatch(this._frequency);
-    engrid_ENGrid.setBodyData('transaction-recurring-frequency', this._frequency);
+    engrid_ENGrid.setBodyData("transaction-recurring-frequency", this._frequency);
   }
 
   get recurring() {
@@ -2629,8 +2630,8 @@ class DonationFrequency {
   }
 
   set recurring(value) {
-    this._recurring = value.toLowerCase() || 'n';
-    engrid_ENGrid.setBodyData('transaction-recurring', this._recurring);
+    this._recurring = value.toLowerCase() || "n";
+    engrid_ENGrid.setBodyData("transaction-recurring", this._recurring);
   }
 
   get onFrequencyChange() {
@@ -2639,8 +2640,8 @@ class DonationFrequency {
 
 
   load() {
-    this.frequency = engrid_ENGrid.getFieldValue('transaction.recurrfreq');
-    this.recurring = engrid_ENGrid.getFieldValue('transaction.recurrpay'); // ENGrid.enParseDependencies();
+    this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
+    this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay"); // ENGrid.enParseDependencies();
   } // Force a new recurrency
 
 
@@ -2674,7 +2675,7 @@ class DonationFrequency {
       freqField.checked = true;
       this.frequency = freq.toLowerCase();
 
-      if (this.frequency === 'onetime') {
+      if (this.frequency === "onetime") {
         this.setRecurrency("N", dispatch);
       } else {
         this.setRecurrency("Y", dispatch);
@@ -2742,19 +2743,20 @@ class ProcessingFees {
     this._onFeeChange.dispatch(this._fee);
   }
 
-  calculateFees() {
+  calculateFees(amount = 0) {
     var _a;
 
     if (this._field instanceof HTMLInputElement && this._field.checked) {
       if (this.isENfeeCover()) {
-        return window.EngagingNetworks.require._defined.enjs.getDonationFee();
+        return amount > 0 ? window.EngagingNetworks.require._defined.enjs.feeCover.fee(amount) : window.EngagingNetworks.require._defined.enjs.getDonationFee();
       }
 
       const fees = Object.assign({
         processingfeepercentadded: "0",
         processingfeefixedamountadded: "0"
       }, (_a = this._field) === null || _a === void 0 ? void 0 : _a.dataset);
-      const processing_fee = parseFloat(fees.processingfeepercentadded) / 100 * this._amount.amount + parseFloat(fees.processingfeefixedamountadded);
+      const amountToFee = amount > 0 ? amount : this._amount.amount;
+      const processing_fee = parseFloat(fees.processingfeepercentadded) / 100 * amountToFee + parseFloat(fees.processingfeefixedamountadded);
       return Math.round(processing_fee * 100) / 100;
     }
 
@@ -3323,7 +3325,7 @@ class CapitalizeFields {
   constructor() {
     this._form = EnForm.getInstance();
 
-    this._form.onSubmit.subscribe(() => this.capitalizeFields('en__field_supporter_firstName', 'en__field_supporter_lastName', 'en__field_supporter_address1', 'en__field_supporter_city'));
+    this._form.onSubmit.subscribe(() => this.capitalizeFields("en__field_supporter_firstName", "en__field_supporter_lastName", "en__field_supporter_address1", "en__field_supporter_city"));
   }
 
   capitalizeFields(...fields) {
@@ -3335,7 +3337,7 @@ class CapitalizeFields {
 
     if (field) {
       field.value = field.value.replace(/\w\S*/g, w => w.replace(/^\w/, c => c.toUpperCase()));
-      if (engrid_ENGrid.debug) console.log('Capitalized', field.value);
+      if (engrid_ENGrid.debug) console.log("Capitalized", field.value);
     }
 
     return true;
@@ -3440,12 +3442,12 @@ class Ecard {
 
 class ClickToExpand {
   constructor() {
-    this.clickToExpandWrapper = document.querySelectorAll('div.click-to-expand');
+    this.clickToExpandWrapper = document.querySelectorAll("div.click-to-expand");
 
     if (this.clickToExpandWrapper.length) {
       this.clickToExpandWrapper.forEach(element => {
         const content = element.innerHTML;
-        const wrapper_html = '<div class="click-to-expand-cta"></div><div class="click-to-expand-text-wrapper" tabindex="0">' + content + '</div>';
+        const wrapper_html = '<div class="click-to-expand-cta"></div><div class="click-to-expand-text-wrapper" tabindex="0">' + content + "</div>";
         element.innerHTML = wrapper_html;
         element.addEventListener("click", event => {
           if (event) {
@@ -3454,10 +3456,10 @@ class ClickToExpand {
           }
         });
         element.addEventListener("keydown", event => {
-          if (event.key === 'Enter') {
+          if (event.key === "Enter") {
             if (engrid_ENGrid.debug) console.log("A click-to-expand div had the 'Enter' key pressed on it");
             element.classList.add("expanded");
-          } else if (event.key === ' ') {
+          } else if (event.key === " ") {
             if (engrid_ENGrid.debug) console.log("A click-to-expand div had the 'Spacebar' key pressed on it");
             element.classList.add("expanded");
             event.preventDefault(); // Prevents the page from scrolling
@@ -4098,10 +4100,10 @@ const getCardType = cc_partial => {
 const handleCCUpdate = () => {
   const card_type = getCardType(field_credit_card.value);
   const card_values = {
-    amex: ['amex', 'american express', 'americanexpress', 'amx', 'ax'],
-    visa: ['visa', 'vi'],
-    mastercard: ['mastercard', 'master card', 'mc'],
-    discover: ['discover', 'di']
+    amex: ["amex", "american express", "americanexpress", "amx", "ax"],
+    visa: ["visa", "vi"],
+    mastercard: ["mastercard", "master card", "mc"],
+    discover: ["discover", "di"]
   };
   const payment_text = field_payment_type.options[field_payment_type.selectedIndex].text;
 
@@ -4373,7 +4375,7 @@ class IE {
     this.overlay = document.createElement("div");
 
     const isIE = () => {
-      return navigator.userAgent.indexOf('MSIE') !== -1 || navigator.appVersion.indexOf('Trident/') > -1;
+      return navigator.userAgent.indexOf("MSIE") !== -1 || navigator.appVersion.indexOf("Trident/") > -1;
     }; // If it's not IE, get out!
 
 
@@ -4468,7 +4470,7 @@ class MediaAttribution {
     this.mediaWithAttribution.forEach(element => {
       if (engrid_ENGrid.debug) console.log("The following image was found with data attribution fields on it. It's markup will be changed to add caption support.", element); // Creates the wapping <figure> element
 
-      let figure = document.createElement('figure');
+      let figure = document.createElement("figure");
       figure.classList.add("media-with-attribution"); // Moves the <img> inside its <figure> element
 
       let mediaWithAttributionParent = element.parentNode;
@@ -4484,9 +4486,9 @@ class MediaAttribution {
           let attributionSourceLink = mediaWithAttributionElement.dataset.attributionSourceLink;
 
           if (attributionSourceLink) {
-            mediaWithAttributionElement.insertAdjacentHTML('afterend', '<figattribution><a href="' + decodeURIComponent(attributionSourceLink) + '" target="_blank" tabindex="-1">' + attributionSource + '</a></figure>');
+            mediaWithAttributionElement.insertAdjacentHTML("afterend", '<figattribution><a href="' + decodeURIComponent(attributionSourceLink) + '" target="_blank" tabindex="-1">' + attributionSource + "</a></figure>");
           } else {
-            mediaWithAttributionElement.insertAdjacentHTML('afterend', '<figattribution>' + attributionSource + '</figure>');
+            mediaWithAttributionElement.insertAdjacentHTML("afterend", "<figattribution>" + attributionSource + "</figure>");
           }
         }
       }
@@ -4747,10 +4749,17 @@ class UpsellLightbox {
                   ${title}
                 </h1>
                 ${this.options.otherAmount ? `
-                <p>
-                  <span>${this.options.otherLabel}</span>
-                  <input href="#" id="secondOtherField" name="secondOtherField" size="12" type="number" inputmode="numeric" step="1" value="">
-                </p>
+                <div class="upsellOtherAmount">
+                  <div class="upsellOtherAmountLabel">
+                    <p>
+                      ${this.options.otherLabel}
+                    </p>
+                  </div>
+                  <div class="upsellOtherAmountInput">
+                    <input href="#" id="secondOtherField" name="secondOtherField" size="12" type="number" inputmode="numeric" step="1" value="" autocomplete="off">
+                    <small>Minimum ${this.getAmountTxt(this.options.minAmount)}</small>
+                  </div>
+                </div>
                 ` : ``}
 
                 <p>
@@ -4818,19 +4827,23 @@ class UpsellLightbox {
 
     const value = parseFloat((_b = (_a = this.overlay.querySelector("#secondOtherField")) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "");
     const live_upsell_amount = document.querySelectorAll("#upsellYesButton .upsell_suggestion");
+    const upsellAmount = this.getUpsellAmount();
 
     if (!isNaN(value) && value > 0) {
-      live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(value));
+      this.checkOtherAmount(value);
     } else {
-      live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(this.getUpsellAmount()));
+      this.checkOtherAmount(upsellAmount);
     }
+
+    live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(upsellAmount + this._fees.calculateFees(upsellAmount)));
   }
 
   liveAmounts() {
     const live_upsell_amount = document.querySelectorAll(".upsell_suggestion");
     const live_amount = document.querySelectorAll(".upsell_amount");
+    const upsellAmount = this.getUpsellAmount();
 
-    const suggestedAmount = this.getUpsellAmount() + this._fees.fee;
+    const suggestedAmount = upsellAmount + this._fees.calculateFees(upsellAmount);
 
     live_upsell_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(suggestedAmount));
     live_amount.forEach(elem => elem.innerHTML = this.getAmountTxt(this._amount.amount + this._fees.fee));
@@ -4844,7 +4857,7 @@ class UpsellLightbox {
     const otherAmount = parseFloat((_b = (_a = this.overlay.querySelector("#secondOtherField")) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "");
 
     if (otherAmount > 0) {
-      return otherAmount;
+      return otherAmount > this.options.minAmount ? otherAmount : this.options.minAmount;
     }
 
     let upsellAmount = 0;
@@ -4864,7 +4877,7 @@ class UpsellLightbox {
       }
     }
 
-    return upsellAmount;
+    return upsellAmount > this.options.minAmount ? upsellAmount : this.options.minAmount;
   }
 
   shouldOpen() {
@@ -4982,6 +4995,18 @@ class UpsellLightbox {
     const dec_places = amount % 1 == 0 ? 0 : (_d = engrid_ENGrid.getOption("DecimalPlaces")) !== null && _d !== void 0 ? _d : 2;
     const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
     return amount > 0 ? symbol + amountTxt : "";
+  }
+
+  checkOtherAmount(value) {
+    const otherInput = document.querySelector(".upsellOtherAmountInput");
+
+    if (otherInput) {
+      if (value >= this.options.minAmount) {
+        otherInput.classList.remove("is-invalid");
+      } else {
+        otherInput.classList.add("is-invalid");
+      }
+    }
   }
 
 }
@@ -5122,16 +5147,16 @@ class SkipToMainContentLink {
     const firstH1 = document.querySelector("h1");
 
     if (firstTitleInEngridBody && firstTitleInEngridBody.parentElement) {
-      firstTitleInEngridBody.parentElement.insertAdjacentHTML('beforebegin', '<span id="skip-link"></span>');
+      firstTitleInEngridBody.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
       this.insertSkipLinkSpan();
     } else if (firstH1InEngridBody && firstH1InEngridBody.parentElement) {
-      firstH1InEngridBody.parentElement.insertAdjacentHTML('beforebegin', '<span id="skip-link"></span>');
+      firstH1InEngridBody.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
       this.insertSkipLinkSpan();
     } else if (firstTitle && firstTitle.parentElement) {
-      firstTitle.parentElement.insertAdjacentHTML('beforebegin', '<span id="skip-link"></span>');
+      firstTitle.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
       this.insertSkipLinkSpan();
     } else if (firstH1 && firstH1.parentElement) {
-      firstH1.parentElement.insertAdjacentHTML('beforebegin', '<span id="skip-link"></span>');
+      firstH1.parentElement.insertAdjacentHTML("beforebegin", '<span id="skip-link"></span>');
       this.insertSkipLinkSpan();
     } else {
       if (engrid_ENGrid.debug) console.log("This page contains no <title> or <h1> and a 'Skip to main content' link was not added");
@@ -5139,7 +5164,7 @@ class SkipToMainContentLink {
   }
 
   insertSkipLinkSpan() {
-    document.body.insertAdjacentHTML('afterbegin', '<a class="skip-link" href="#skip-link">Skip to main content</a>');
+    document.body.insertAdjacentHTML("afterbegin", '<a class="skip-link" href="#skip-link">Skip to main content</a>');
   }
 
 }
@@ -5240,28 +5265,46 @@ class SrcDefer {
 class setRecurrFreq {
   constructor() {
     this._frequency = DonationFrequency.getInstance();
-    this.linkClass = 'setRecurrFreq-';
-    this.checkboxName = 'engrid.recurrfreq'; // Watch the links that starts with linkClass
+    this.linkClass = "setRecurrFreq-";
+    this.checkboxName = "engrid.recurrfreq"; // Watch the links that starts with linkClass
 
     document.querySelectorAll(`a[class^="${this.linkClass}"]`).forEach(element => {
       element.addEventListener("click", e => {
         // Get the right class
-        const setRecurrFreqClass = element.className.split(' ').filter(linkClass => linkClass.startsWith(this.linkClass));
+        const setRecurrFreqClass = element.className.split(" ").filter(linkClass => linkClass.startsWith(this.linkClass));
         if (engrid_ENGrid.debug) console.log(setRecurrFreqClass);
 
         if (setRecurrFreqClass.length) {
           e.preventDefault();
-          engrid_ENGrid.setFieldValue('transaction.recurrfreq', setRecurrFreqClass[0].substring(this.linkClass.length).toUpperCase());
+          engrid_ENGrid.setFieldValue("transaction.recurrfreq", setRecurrFreqClass[0].substring(this.linkClass.length).toUpperCase());
 
           this._frequency.load();
         }
       });
-    }); // Watch checkboxes with the name checkboxName
+    });
+    const currentFrequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq").toUpperCase(); // Watch checkboxes with the name checkboxName
 
     document.getElementsByName(this.checkboxName).forEach(element => {
+      // Set checked status per currently-set frequency
+      const frequency = element.value.toUpperCase();
+
+      if (frequency === currentFrequency) {
+        element.checked = true;
+      } else {
+        element.checked = false;
+      }
+
       element.addEventListener("change", () => {
+        const frequency = element.value.toUpperCase();
+
         if (element.checked) {
-          engrid_ENGrid.setFieldValue('transaction.recurrfreq', element.value.toUpperCase());
+          engrid_ENGrid.setFieldValue("transaction.recurrfreq", frequency);
+          engrid_ENGrid.setFieldValue("transaction.recurrpay", "Y");
+
+          this._frequency.load();
+        } else if (frequency !== "ONETIME") {
+          engrid_ENGrid.setFieldValue("transaction.recurrfreq", "ONETIME");
+          engrid_ENGrid.setFieldValue("transaction.recurrpay", "N");
 
           this._frequency.load();
         }
@@ -5269,11 +5312,15 @@ class setRecurrFreq {
     }); // Uncheck the checkbox when frequency != checkbox value
 
     this._frequency.onFrequencyChange.subscribe(() => {
-      const freq = this._frequency.frequency.toUpperCase();
+      const currentFrequency = this._frequency.frequency.toUpperCase();
 
       document.getElementsByName(this.checkboxName).forEach(element => {
-        if (element.checked && element.value != freq) {
+        const elementFrequency = element.value.toUpperCase();
+
+        if (element.checked && elementFrequency !== currentFrequency) {
           element.checked = false;
+        } else if (!element.checked && elementFrequency === currentFrequency) {
+          element.checked = true;
         }
       });
     });
@@ -5295,11 +5342,11 @@ class PageBackground {
       if (this.pageBackground && pageBackgroundImgDataSrc) {
         if (engrid_ENGrid.debug) console.log("A background image set in the page was found with a data-src value, setting it as --engrid__page-backgroundImage_url", pageBackgroundImgDataSrc);
         pageBackgroundImgDataSrc = "url('" + pageBackgroundImgDataSrc + "')";
-        this.pageBackground.style.setProperty('--engrid__page-backgroundImage_url', pageBackgroundImgDataSrc);
+        this.pageBackground.style.setProperty("--engrid__page-backgroundImage_url", pageBackgroundImgDataSrc);
       } else if (this.pageBackground && pageBackgroundImgSrc) {
         if (engrid_ENGrid.debug) console.log("A background image set in the page was found with a src value, setting it as --engrid__page-backgroundImage_url", pageBackgroundImgSrc);
         pageBackgroundImgSrc = "url('" + pageBackgroundImgSrc + "')";
-        this.pageBackground.style.setProperty('--engrid__page-backgroundImage_url', pageBackgroundImgSrc);
+        this.pageBackground.style.setProperty("--engrid__page-backgroundImage_url", pageBackgroundImgSrc);
       } else if (pageBackgroundImg) {
         if (engrid_ENGrid.debug) console.log("A background image set in the page was found but without a data-src or src value, no action taken", pageBackgroundImg);
       } else {
@@ -5313,20 +5360,20 @@ class PageBackground {
   }
 
   setDataAttributes() {
-    if (this.hasVideoBackground()) return engrid_ENGrid.setBodyData('page-background', 'video');
-    if (this.hasImageBackground()) return engrid_ENGrid.setBodyData('page-background', 'image');
-    return engrid_ENGrid.setBodyData('page-background', 'empty');
+    if (this.hasVideoBackground()) return engrid_ENGrid.setBodyData("page-background", "video");
+    if (this.hasImageBackground()) return engrid_ENGrid.setBodyData("page-background", "image");
+    return engrid_ENGrid.setBodyData("page-background", "empty");
   }
 
   hasVideoBackground() {
     if (this.pageBackground) {
-      return !!this.pageBackground.querySelector('video');
+      return !!this.pageBackground.querySelector("video");
     }
   }
 
   hasImageBackground() {
     if (this.pageBackground) {
-      return !this.hasVideoBackground() && !!this.pageBackground.querySelector('img');
+      return !this.hasVideoBackground() && !!this.pageBackground.querySelector("img");
     }
   }
 
@@ -5585,9 +5632,9 @@ class ProgressBar {
     }
 
     let maxValue = (_a = progressIndicator.getAttribute("max")) !== null && _a !== void 0 ? _a : 100;
-    if (typeof maxValue === 'string') maxValue = parseInt(maxValue);
+    if (typeof maxValue === "string") maxValue = parseInt(maxValue);
     let amountValue = (_b = progressIndicator.getAttribute("amount")) !== null && _b !== void 0 ? _b : 0;
-    if (typeof amountValue === 'string') amountValue = parseInt(amountValue);
+    if (typeof amountValue === "string") amountValue = parseInt(amountValue);
     const prevPercentage = pageNumber === 1 ? 0 : Math.ceil((pageNumber - 1) / pageCount * maxValue);
     let percentage = pageNumber === 1 ? 0 : Math.ceil(pageNumber / pageCount * maxValue);
     const scalePrev = prevPercentage / 100;
