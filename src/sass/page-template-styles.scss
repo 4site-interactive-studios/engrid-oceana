@@ -1,6 +1,7 @@
 // The most broadly used CSS Custom Properties for quick theming.
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
+
 [data-engrid-theme="engrid-oceana"]{
    // TYPOGRAPHY DEFAULT
     --default_font-family: 'Lato', sans-serif;
@@ -87,6 +88,11 @@
      --error__color: #C30D02;
      --error__color_faded: rgba(243, 55, 55, 0.15);
 
+    //INPUT
+    --theme-typography-checkbox-checked-content:"url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
+    --radio_color_selected: var(--theme-cta); 
+
+    
 }
 
 [data-engrid-subtheme="sailorsfortheseas"]{

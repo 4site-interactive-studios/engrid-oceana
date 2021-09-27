@@ -154,7 +154,7 @@ $centercenter2col_body-column_column-2_max-width: 580px;
     --theme-typography-checkbox-focus-hover-border-color: var(--theme-typography-checkbox-border-color);
  
     // TYPOGRAPHY CHECKBOX INPUT:CHECKED
-    --theme-typography-checkbox-checked-content:"✓";
+    //--theme-typography-checkbox-checked-content:"url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E")";
     --theme-typography-checkbox-checked-color: var(--theme-typography-checkbox-background-color);
     --theme-typography-checkbox-checked-background-color: var(--theme-cta);
     --theme-typography-checkbox-checked-border-color: var(--theme-typography-checkbox-border-color);
@@ -391,6 +391,7 @@ $centercenter2col_body-column_column-2_max-width: 580px;
     // ADD THEME CUSTOM CSS PROPERTIES HERE
     --submit__button_border-color:var(--submit__button_background-color);
 
- 
+
+
  }
  
