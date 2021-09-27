@@ -5,7 +5,7 @@
  * *************************************************
  * ENGRID PAGE TEMPLATE ASSETS
  *
- * Date: Monday, September 27, 2021 @ 09:25:07 ET
+ * Date: Monday, September 27, 2021 @ 09:44:48 ET
  * By: maansacdalan
  * ENGrid styles: vTBD1
  * ENGrid scripts: vTBD2
@@ -7317,6 +7317,85 @@ body:not([data-engrid-debug]) #debug-bar{
   --error__color_faded:#f3373726;
   --theme-typography-checkbox-checked-content:"url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
   --radio_color_selected:var(--theme-cta);
+}
+
+[data-engrid-theme=engrid-oceana] h2{
+  font-size:50px;
+  font-weight:700;
+}
+
+[data-engrid-theme=engrid-oceana] h5{
+  color:initial;
+  font-family:var(--default_font-family);
+  font-size:22px;
+  font-weight:600;
+}
+
+[data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item{
+  flex-basis:auto;
+  flex-grow:0;
+}
+
+[data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item{
+  padding-left:0;
+  padding-right:0;
+}
+
+[data-engrid-theme=engrid-oceana] .small{
+  font-size:13px;
+}
+
+[data-engrid-theme=engrid-oceana] .body-main{
+  padding-top:50px;
+}
+
+[data-engrid-theme=engrid-oceana] .content-footerSpacer{
+  height:100px;
+}
+
+[data-engrid-theme=engrid-oceana] .content-footer{
+  padding:60px 0;
+}
+
+[data-engrid-theme=engrid-oceana] .body-banner{
+  padding:0 30px;
+}
+
+[data-engrid-theme=engrid-oceana] .body-top{
+  height:1em;
+}
+
+[data-engrid-theme=engrid-oceana] .body-banner,[data-engrid-theme=engrid-oceana] .body-bannerOverlay,[data-engrid-theme=engrid-oceana] .body-title,[data-engrid-theme=engrid-oceana] .body-top{
+  margin-right:2rem;
+}
+
+[data-engrid-theme=engrid-oceana] .footer-wrapper{
+  align-items:center;
+  color:#fff;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:1rem 0;
+}
+
+[data-engrid-theme=engrid-oceana] .footer-col1,[data-engrid-theme=engrid-oceana] .footer-col2{
+  padding:0 1rem;
+}
+
+[data-engrid-theme=engrid-oceana] .en__submit .button,[data-engrid-theme=engrid-oceana] .en__submit button,[data-engrid-theme=engrid-oceana] .pseduo__en__submit_button{
+  font-size:20px;
+  font-weight:700;
+}
+
+[data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child{
+  padding-left:1rem;
+}
+
+[data-engrid-theme=engrid-oceana] input[type=checkbox]:checked+label:before{
+  background-color:var(--checkbox_background-color_checked);
+  border-color:var(--checkbox_border-color_checked);
+  color:var(--checkbox_color_checked);
+  content:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='m9 21.035-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z' style='fill:%230686e5'/%3E%3C/svg%3E");
 }
 
 [data-engrid-subtheme=sailorsfortheseas]{

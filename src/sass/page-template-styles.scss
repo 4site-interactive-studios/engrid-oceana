@@ -92,6 +92,88 @@
     --theme-typography-checkbox-checked-content:"url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
     --radio_color_selected: var(--theme-cta); 
 
+    // BODY STYLES //
+    
+    h2{
+    font-size:50px;
+    font-weight:700;
+    }
+    
+    h5{
+    font-family: var(--default_font-family);
+    font-size:22px;
+    color: initial;
+    font-weight:600;
+    }
+    
+    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
+    flex-basis: auto;
+    flex-grow: 0;
+    }
+    
+    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
+    padding-left: 0px;
+    padding-right: 0px;
+    }
+    
+    .small{
+    font-size:13px;
+    }
+
+//SPACING//
+    .body-main {
+    padding-top: 50px;
+    }
+    
+    .content-footerSpacer {
+    height: 100px;
+    }
+    
+    .content-footer {
+    padding: 60px 0;
+    }
+    
+    .body-banner {
+    padding: 0 30px;
+    }
+    
+    .body-top {
+    height: 1em;
+    }
+    
+    .body-title, .body-title, .body-banner, .body-bannerOverlay, .body-top {
+    margin-right: 2rem;
+    }
+    
+    .footer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    padding: 1rem 0px;
+    flex-wrap: wrap;
+    }
+    
+    .footer-col1, .footer-col2 {
+    padding: 0rem 1rem;
+    }
+    
+    .en__submit .button, .en__submit button, .pseduo__en__submit_button {
+    font-size: 20px;
+    font-weight:bold;
+    }
+    
+    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
+    padding-left: 1rem;
+    }
+    
+    input[type=checkbox]:checked+label:before {
+    background-color: var(--checkbox_background-color_checked);
+    border-color: var(--checkbox_border-color_checked);
+    color: var(--checkbox_color_checked);
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
+    }
+
     
 }
 
