@@ -1,13 +1,31 @@
 /*!
- * *************************************************
- * ENGRID PAGE TEMPLATE ASSETS
+ * 
+ *                ((((
+ *          ((((((((
+ *       (((((((
+ *     (((((((           ****
+ *   (((((((          *******
+ *  ((((((((       **********     *********       ****    ***
+ *  ((((((((    ************   **************     ***    ****
+ *  ((((((   *******  *****   *****        *     **    ******        *****
+ *  (((   *******    ******   ******            ****  ********   ************
+ *      *******      *****     **********      ****    ****     ****      ****
+ *    *********************         *******   *****   ****     ***************
+ *     ********************            ****   ****    ****    ****
+ *                 *****    *****   *******  *****   *****     *****     **
+ *                *****     *************    ****    *******     **********
  *
- * Date: Monday, September 27, 2021 @ 20:15:48 ET
- * By: maansacdalan
- * ENGrid styles: vTBD1
- * ENGrid scripts: vTBD2
+ *  ENGRID PAGE TEMPLATE ASSETS
  *
- * *************************************************
+ *  Date: Thursday, September 30, 2021 @ 15:35:35 ET
+ *  By: maansacdalan
+ *  ENGrid styles: v0.3.38
+ *  ENGrid scripts: v0.3.38
+ *
+ *  Created by 4Site Studios
+ *  Come work with us or join our team, we would love to hear from you
+ *  https://www.4sitestudios.com/en
+ *
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -3162,7 +3180,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
 };
 
 
-
 /*global window */
 
 const ApplePaySession = window.ApplePaySession;
@@ -3182,6 +3199,7 @@ class ApplePay {
   constructor() {
     this.applePay = document.querySelector('.en__field__input.en__field__input--radio[value="applepay"]');
     this._amount = DonationAmount.getInstance();
+    this._fees = ProcessingFees.getInstance();
     this._form = EnForm.getInstance();
     this.checkApplePay();
   }
@@ -3269,7 +3287,7 @@ class ApplePay {
 
     if (enFieldPaymentType.value == "applepay" && applePayToken.value == "") {
       try {
-        let donationAmount = this._amount.amount;
+        let donationAmount = this._amount.amount + this._fees.fee;
         var request = {
           supportedNetworks: merchantSupportedNetworks,
           merchantCapabilities: merchantCapabilities,
