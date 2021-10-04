@@ -20,7 +20,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 4, 2021 @ 12:39:30 ET
+ *  Date: Monday, October 4, 2021 @ 16:55:44 ET
  *  By: maansacdalan
  *  ENGrid styles: v0.3.38
  *  ENGrid scripts: v0.3.38
@@ -7346,6 +7346,28 @@ body:not([data-engrid-debug]) #debug-bar{
   --button_border-color:var(--theme-cta);
 }
 
+[data-engrid-subtheme=sailorsfortheseas] .content-footer{
+  background:#1f2024;
+  color:#fff;
+  font-size:14px;
+}
+
+[data-engrid-subtheme=sailorsfortheseas] .content-footer nav ul{
+  display:inline-block;
+  margin:0 3em 0 0;
+  padding:0;
+  vertical-align:top;
+}
+
+[data-engrid-subtheme=sailorsfortheseas] .content-footer a{
+  color:#0686e5;
+  text-decoration:none;
+}
+
+[data-engrid-theme=engrid-oceana][data-engrid-layout=centerleft1col] .content-footer,[data-engrid-theme=engrid-oceana][data-engrid-layout=centerright1col] .content-footer{
+  margin-top:3.125rem;
+}
+
 @media screen and (min-width:900px){
   [data-engrid-theme=engrid-oceana][data-engrid-layout=centercenter2col]{
     --engrid__body_margin:0 1rem;
@@ -7358,6 +7380,10 @@ body:not([data-engrid-debug]) #debug-bar{
 
 [data-engrid-theme=engrid-oceana][data-engrid-layout=centercenter2col] .content-footerSpacer{
   height:100px;
+}
+
+[data-engrid-theme=engrid-oceana][data-engrid-layout=centercenter2col] .content-footer{
+  margin-top:3.125rem;
 }
 
 [data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label{
@@ -7411,7 +7437,6 @@ body:not([data-engrid-debug]) #debug-bar{
 }
 
 [data-engrid-theme=engrid-oceana] .content-footer{
-  margin-top:3.125rem;
   padding:3.75rem 0;
 }
 
@@ -7426,7 +7451,7 @@ body:not([data-engrid-debug]) #debug-bar{
 
 @media (min-width:769px){
   [data-engrid-theme=engrid-oceana] .content-header{
-    background:#fff9;
+    background:#fff9 !important;
     margin-bottom:3.75rem;
     padding:1.5rem;
   }
@@ -7500,6 +7525,10 @@ body:not([data-engrid-debug]) #debug-bar{
 [data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item{
   flex-basis:auto;
   flex-grow:0;
+}
+
+[data-engrid-theme=engrid-oceana] .footer-col1,[data-engrid-theme=engrid-oceana] .footer-col2{
+  padding:0 1rem;
 }
 
 [data-engrid-theme=engrid-oceana] .content-footer{

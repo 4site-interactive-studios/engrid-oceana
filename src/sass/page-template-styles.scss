@@ -66,6 +66,8 @@
 
     // HEADER COLOR
     --engrid__content-header_background-color: rgb(255 255 255 / 60%);
+
+
     // TYPOGRAPHY BUTTON:HOVER
     // --button_color_hover: var(--button_color);
     // --button_background-color_hover: var(--color_black);
@@ -102,7 +104,31 @@
         --theme-cta-hover:#00205b;
         --submit__button_background-color:var(--theme-cta);
         --button_background-color:var(--theme-cta);
-        --button_border-color::var(--theme-cta);    
+        --button_border-color::var(--theme-cta);   
+
+    /** FOOTER STYLES **/
+
+    /** Footer: Background **/
+    .content-footer {
+        background: #1f2024;
+        color: white;
+        font-size: 14px;
+    }
+    
+    /** Footer: Nav and Styling **/
+    .content-footer nav ul {
+        display: inline-block;
+        vertical-align: top;
+        margin: 0 3em 0 0;
+        padding: 0;
+    }
+    
+    /** Footer: Links **/
+    .content-footer a {
+        color: #0686e5;
+        text-decoration: none;
+    }
+
 }
 
 
@@ -136,9 +162,24 @@
         @media screen and (max-width: $centerleft1col_content-column_min-width) {
             @include simplified-header;
         }
+        .content-footer {
+            margin-top: 3.125rem;
+        }
+        
     }
 
     &[data-engrid-layout="centerright1col"]{
+        @media screen and (max-width: $centerright1col_content-column_min-width) {
+            @include simplified-header;
+        }
+
+        .content-footer {
+            margin-top: 3.125rem;
+        }
+    }
+
+
+    &[data-engrid-layout="leftleft1col"]{
         @media screen and (max-width: $centerright1col_content-column_min-width) {
             @include simplified-header;
         }
@@ -158,6 +199,10 @@
         /** Content Footer space **/
         .content-footerSpacer {
             height: 100px;
+        }
+
+        .content-footer {
+            margin-top: 3.125rem;
         }
         
     }
@@ -233,7 +278,6 @@
     /** Footer Padding **/
     .content-footer {
         padding: 3.75rem 0;
-        margin-top: 3.125rem;
     }
     
     /** Footer Wrapper **/
@@ -250,7 +294,7 @@
     /** Header: Background **/
     @media (min-width: 769px) {
         .content-header {
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.6) !important;
             padding: 1.5rem;
             margin-bottom: 3.75rem;
         }
@@ -331,10 +375,11 @@
 
     /** FOOTER STYLES **/
 
-    /**.footer-col1, .footer-col2 {
+    /** Footer seals **/
+    .footer-col1, .footer-col2 {
     padding: 0rem 1rem;
     }
-    **/
+    
     
     /** Footer: Background **/
     .content-footer {
