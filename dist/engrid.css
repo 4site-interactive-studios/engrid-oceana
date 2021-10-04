@@ -20,7 +20,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 4, 2021 @ 11:33:24 ET
+ *  Date: Monday, October 4, 2021 @ 11:46:36 ET
  *  By: maansacdalan
  *  ENGrid styles: v0.3.38
  *  ENGrid scripts: v0.3.38
@@ -7425,7 +7425,8 @@ body:not([data-engrid-debug]) #debug-bar{
 
 @media (min-width:769px){
   [data-engrid-theme=engrid-oceana] .content-header{
-    margin-bottom:75px;
+    background:#fff9;
+    margin-bottom:3.75rem;
     padding:1.5rem;
   }
 }
