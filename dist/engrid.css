@@ -20,7 +20,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 4, 2021 @ 11:46:36 ET
+ *  Date: Monday, October 4, 2021 @ 12:39:30 ET
  *  By: maansacdalan
  *  ENGrid styles: v0.3.38
  *  ENGrid scripts: v0.3.38
@@ -7329,6 +7329,7 @@ body:not([data-engrid-debug]) #debug-bar{
   --button_border-width:3px;
   --button_border-color:#ccc84a;
   --button_border-radius:0px;
+  --engrid__content-header_background-color:#fff9;
   --theme-cta:#0686e5;
   --theme-cta-hover:#0686e5;
   --error__color:#c30d02;
