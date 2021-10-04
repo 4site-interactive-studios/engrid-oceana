@@ -93,12 +93,6 @@
     --radio_color_selected: var(--theme-cta); 
 }
 
-    @mixin simplified-header {
-
-    }
-    
-
-
     
 [data-engrid-subtheme="sailorsfortheseas"]{
     // CTA COLORS
@@ -107,7 +101,7 @@
         --submit__button_background-color:var(--theme-cta);
         --button_background-color:var(--theme-cta);
         --button_border-color::var(--theme-cta);    
-    }
+}
 
 
 /* Add your custom theme styles here */
@@ -153,15 +147,24 @@
         @media screen and (min-width: $centercenter2col_content-column_min-width) {
             --engrid__body_margin: 0 1rem;
         }  
+
+        //Transparent 2 col Header
+        .body-title, .body-banner, .body-title {
+            background: #ffffffde;
+        }
+    
+        /** Content Footer space **/
+        .content-footerSpacer {
+            height: 100px;
+        }
+        
     }
 
 }
 
 
 [data-engrid-theme="engrid-oceana"]{
-@mixin simplified-header {
-
-//DONATION
+    /** Donation Page: Radio to Button Styling **/
     .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label {
         background-color: #0686e5;
         background-position-x: 40px;
@@ -179,192 +182,118 @@
         margin: 0 0 10px 12px;
     }
     
+    /** Donation Page: Radio to Button Styling- Checked **/
+    
     .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio .en__field__item input[type=radio]:checked+label {
         background-color: var(--color-white);
         border: 3px solid var(--theme-cta);
         color: var(--theme-cta);
     }
     
-// ERROR FIELD COLOR UPDATE //
+    
+    /** - PAGES - **/
+    /** Error-Validation Styles **/
     .en__field--validationFailed:not(.has-value):not(.has-focus) [type], .en__field--validationFailed:not(.has-value):not(.has-focus) select, .en__field--validationFailed:not(.has-value):not(.has-focus) textarea {
         background-color: rgba(243, 55, 55, 0.15);
         border-color: var(--input_border-color);
     }
     
-//FOOTER//
-.body-bottom {
-    padding-bottom: 3em;
-}
-
-.content-footer>div {
-    grid-column: pc;
-    padding: 0 3rem;
-}
-
-.content-footer {
-    background: #1f2024;
-    color: white;
-    font-size: 14px;
-}
-
-.content-footer nav ul {
-    display: inline-block;
-    vertical-align: top;
-    margin: 0 3em 0 0;
-    padding: 0;
-}
-
-.content-footer a {
-    color: #0686e5;
-    text-decoration:none;
-}
-
-.content-footer hr {
-    display: none;
-    height: 1px;
-    background: 0;
-    border: 0;
-    margin: 0;
-}
-
-li.twitter {
-    margin-top: 10px;
-}
+    /** - ENGRID COMPONENTS - **/
     
-@media (min-width: 769px){
-    nav {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-        justify-content: center;
-        text-align: left;
-        margin: 0 auto;
-    }
-}
-
-// mobile footer styles //
-@media (max-width: 767px){
-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-content: center;
-    text-align: left;
-    margin: 0 auto;
-    row-gap: 1em;
-    }
-
-    li.facebook {
-    display: inline;
-    }
-
-        li.twitter {
-        margin-top: 10px;
-    display: inline-block;
-    }
-}
-
-//  HEADER STYLES //
-    @media (min-width: 769px){
-    .content-header {
-    background: rgb(255 255 255 / 60%);
-    padding: 1.5rem;
-    margin-bottom: 75px;
-    }
-    }
-        
+    /** Content Header Padding **/
     .content-header.pseudo-subgrid>div {
-    grid-column: pc;
-    padding: 0 3rem;
-    }
-        
-// BODY STYLES //
-        
-    h2{
-    font-size:50px;
-    font-weight:700;
-    }
-    
-    h5{
-    font-family: var(--default_font-family);
-    font-size:22px;
-    color: initial;
-    font-weight:600;
-    }
-    
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
-    flex-basis: auto;
-    flex-grow: 0;
-    }
-    
-    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
-    padding-left: 0px;
-    padding-right: 0px;
-    }
-    
-    .small{
-    font-size:13px;
+        grid-column: pc;
+        padding: 0 3rem;
     }
 
-// SPACING //
-    .body-main {
-    padding-top: 50px;
-    }
-
-    .content-footerSpacer {
-    height: 100px;
-    }
     
-    
-    .content-footer {
-    padding: 60px 0;
-    margin-top:50px;
-    }
-    
+    /** Body Banner Spacing **/
     .body-banner {
-    padding: 0 30px;
+        padding-bottom: 1em;
     }
     
-    // .body-title, .body-title, .body-banner, .body-bannerOverlay, .body-top {
-    // margin-right: 2rem;
-    // }
+    /** Main Top Padding **/
+    .body-main {
+        padding-top: 3.125rem;
+    }
     
+    /** Body Bottom Padding **/
+    .body-bottom {
+        padding-bottom: 3rem;
+    }
+    
+    /** Footer Padding **/
+    .content-footer>div {
+        grid-column: pc;
+        padding: 0 3rem;
+    }
+    
+    /** Footer Padding **/
+    .content-footer {
+        padding: 3.75rem 0;
+        margin-top: 3.125rem;
+    }
+    
+    /** Footer Wrapper **/
     .footer-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    padding: 1rem 0px;
-    flex-wrap: wrap;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        padding: 1rem 0px;
+        flex-wrap: wrap;
     }
     
-    .footer-col1, .footer-col2 {
-    padding: 0rem 1rem;
+    /**  HEADER STYLES **/
+    /** Header: Background **/
+    @media (min-width: 769px) {
+        .content-header {
+            // background: rgb(255 255 255 / 60%);
+            padding: 1.5rem;
+            margin-bottom: 75px;
+        }
     }
     
+    /* BODY STYLES */
+
+    h2 {
+        font-size: 50px;
+        font-weight: 700;
+    }
+    h5 {
+        font-family: var(--default_font-family);
+        font-size: 22px;
+        color: initial;
+        font-weight: 600;
+    }
+    
+    /* Submit Button **/
     .en__submit .button, .en__submit button, .pseduo__en__submit_button {
-    font-size: 20px;
-    font-weight:bold;
+        font-size: 20px;
+        font-weight: bold;
+        text-transform: uppercase;
     }
-    
-    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
-    padding-left: 1rem;
-    }
-    
+
+    /*Checkbox **/
     input[type=checkbox]:checked+label:before {
-    background-color: var(--checkbox_background-color_checked);
-    border-color: var(--checkbox_border-color_checked);
-    color: var(--checkbox_color_checked);
-    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
+        background-color: var(--checkbox_background-color_checked);
+        border-color: var(--checkbox_border-color_checked);
+        color: var(--checkbox_color_checked);
+        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
     }
-    
-// DONATION PAGES //
+
+    /** DONATION PAGES **/   
+    /** Donation: Other Amount Styles **/
+    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
     .en__field--donationAmt .en__field__item--other {
-    position: relative
+        position: relative
     }
-    
     .en__field--donationAmt .en__field__item--other input {
         padding-left: 3.4ch;
     }
-    
     .en__field--donationAmt .en__field__item--other:before {
         content: "$";
         display: block;
@@ -381,12 +310,96 @@ nav {
         border-radius: 50%;
         padding: 13px 9px;
     }
-    
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other{
+    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other {
         background-color: #e4e4e4;
         border-color: #8e8e8e;
         color: #000000;
     }
+
+    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
+        padding-left: 1rem;
+    }
+
+    /** Donation Amount Radio Buttons **/
+    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
+        flex-basis: auto;
+        flex-grow: 0;
+    }
+        
+
+    /** FOOTER STYLES **/
+
+    /**.footer-col1, .footer-col2 {
+    padding: 0rem 1rem;
+    }
+    **/
     
-}
+    /** Footer: Background **/
+    .content-footer {
+        background: #1f2024;
+        color: white;
+        font-size: 14px;
+    }
+    
+    /** Footer: Nav and Styling **/
+    .content-footer nav ul {
+        display: inline-block;
+        vertical-align: top;
+        margin: 0 3em 0 0;
+        padding: 0;
+    }
+    
+    /** Footer: Links **/
+    .content-footer a {
+        color: #0686e5;
+        text-decoration: none;
+    }
+
+    /** Footer: Small Style **/
+    .small {
+        font-size: 13px;
+    }
+    
+    /** Footer: HR **/
+    .content-footer hr {
+        display: none;
+        height: 1px;
+        background: 0;
+        border: 0;
+        margin: 0;
+    }
+    
+    /** Footer: Social icons style **/
+    li.twitter {
+        margin-top: 10px;
+    }
+    
+    /** Footer Nav **/    
+    @media (min-width: 769px) {
+        nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            justify-content: center;
+            text-align: left;
+            margin: 0 auto;
+        }
+    }
+    /** Footer Nav: Mobile **/
+    @media (max-width: 767px) {
+        nav {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            justify-content: center;
+            text-align: left;
+            margin: 0 auto;
+            row-gap: 1em;
+        }
+        li.facebook {
+            display: inline;
+        }
+        li.twitter {
+            margin-top: 10px;
+            display: inline-block;
+        }
+    }
 }
