@@ -20,7 +20,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 4, 2021 @ 16:55:44 ET
+ *  Date: Monday, October 4, 2021 @ 19:43:10 ET
  *  By: maansacdalan
  *  ENGrid styles: v0.3.38
  *  ENGrid scripts: v0.3.38
@@ -7364,7 +7364,7 @@ body:not([data-engrid-debug]) #debug-bar{
   text-decoration:none;
 }
 
-[data-engrid-theme=engrid-oceana][data-engrid-layout=centerleft1col] .content-footer,[data-engrid-theme=engrid-oceana][data-engrid-layout=centerright1col] .content-footer{
+[data-engrid-theme=engrid-oceana][data-engrid-layout=centercenter1col] .content-footer,[data-engrid-theme=engrid-oceana][data-engrid-layout=centerleft1col] .content-footer,[data-engrid-theme=engrid-oceana][data-engrid-layout=centerright1col] .content-footer{
   margin-top:3.125rem;
 }
 

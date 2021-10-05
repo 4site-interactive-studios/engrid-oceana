@@ -165,7 +165,17 @@
         .content-footer {
             margin-top: 3.125rem;
         }
-        
+
+    }
+
+    &[data-engrid-layout="centercenter1col"]{
+        @media screen and (max-width: $centerleft1col_content-column_min-width) {
+            @include simplified-header;
+        }
+        .content-footer {
+            margin-top: 3.125rem;
+        }
+
     }
 
     &[data-engrid-layout="centerright1col"]{
