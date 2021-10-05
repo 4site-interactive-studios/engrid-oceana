@@ -338,6 +338,43 @@
         content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
     }
 
+    input.en__field__input--checkbox:checked
+    + label.en__field__label.en__field__label--item,
+    input.en__field__input--checkbox
+    + label.en__field__label.en__field__label--item {
+      font-weight: 500;
+      font-family: var(--theme-typography-default-font-family);
+      text-transform: none;
+      border: 0px;
+      line-height: 18px;
+      text-align: left;
+      justify-content: flex-start;
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      margin-left: 0px;
+    }
+    
+    
+    .en__field__input--checkbox:checked + .en__field__label::after {
+    content: "✓";
+    position: absolute;
+    left: -28px;
+    top: 5px;
+    color: var(--theme-typography-checkbox-color);
+    background-color: transparent;
+    font-size: 0.99936rem;
+    }
+    
+    .en__field__input--checkbox+.en__field__label:before {
+    height: 2rem;
+    width: 2rem;
+    top: 0;
+    left: 0;
+    }
+
+
+
     /** DONATION PAGES **/   
     /** Donation: Other Amount Styles **/
     .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {

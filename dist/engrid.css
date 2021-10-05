@@ -20,7 +20,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, October 4, 2021 @ 19:43:10 ET
+ *  Date: Monday, October 4, 2021 @ 22:21:45 ET
  *  By: maansacdalan
  *  ENGrid styles: v0.3.38
  *  ENGrid scripts: v0.3.38
@@ -7480,6 +7480,37 @@ body:not([data-engrid-debug]) #debug-bar{
   border-color:var(--checkbox_border-color_checked);
   color:var(--checkbox_color_checked);
   content:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='m9 21.035-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436L24 5.782z' style='fill:%230686e5'/%3E%3C/svg%3E");
+}
+
+[data-engrid-theme=engrid-oceana] input.en__field__input--checkbox+label.en__field__label.en__field__label--item,[data-engrid-theme=engrid-oceana] input.en__field__input--checkbox:checked+label.en__field__label.en__field__label--item{
+  align-items:center;
+  border:0;
+  display:inline-flex;
+  font-family:var(--theme-typography-default-font-family);
+  font-weight:500;
+  justify-content:flex-start;
+  line-height:18px;
+  margin-left:0;
+  min-height:2rem;
+  text-align:left;
+  text-transform:none;
+}
+
+[data-engrid-theme=engrid-oceana] .en__field__input--checkbox:checked+.en__field__label:after{
+  background-color:initial;
+  color:var(--theme-typography-checkbox-color);
+  content:"✓";
+  font-size:.99936rem;
+  left:-28px;
+  position:absolute;
+  top:5px;
+}
+
+[data-engrid-theme=engrid-oceana] .en__field__input--checkbox+.en__field__label:before{
+  height:2rem;
+  left:0;
+  top:0;
+  width:2rem;
 }
 
 [data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item{
