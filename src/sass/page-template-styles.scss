@@ -2,361 +2,380 @@
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 
-[data-engrid-theme="engrid-oceana"]{
-   // TYPOGRAPHY DEFAULT
-    --default_font-family: 'Lato', sans-serif;
-    --default_color: initial;
-    --default_font-size: var(--root_font-size);
-    --default_font-weight: initial;
-    --default_line-height: initial;
+[data-engrid-theme="engrid-oceana"] {
+  // TYPOGRAPHY DEFAULT
+  --default_font-family: "Lato", sans-serif;
+  --default_color: initial;
+  --default_font-size: var(--root_font-size);
+  --default_font-weight: initial;
+  --default_line-height: initial;
 
-    // TYPOGRAPHY H1
-    --h1_font-family: "ff-good-headline-web-pro-con", sans-serif;
-    --h1_color: #0686e5;
-    --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
-    --h1_font-weight: bold;
-    --h1_line-height: initial;
-    --h1_text-transform:uppercase;
+  // TYPOGRAPHY H1
+  --h1_font-family: "ff-good-headline-web-pro-con", sans-serif;
+  --h1_color: #0686e5;
+  --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
+  --h1_font-weight: bold;
+  --h1_line-height: initial;
+  --h1_text-transform: uppercase;
 
-    // TYPOGRAPHY P
-    --p_font-family: 'Lato', sans-serif;
-    --p_color: initial;
-    --p_font-size: var(--root_font-size);
-    --p_font-weight: initial;
-    --p_line-height: initial;
+  // TYPOGRAPHY P
+  --p_font-family: "Lato", sans-serif;
+  --p_color: initial;
+  --p_font-size: var(--root_font-size);
+  --p_font-weight: initial;
+  --p_line-height: initial;
 
-    // TYPOGRAPHY A
-    --a_font-family: var(--default_font-family);
-    --a_color: initial;
-    --a_text-decoration: underline;
+  // TYPOGRAPHY A
+  --a_font-family: var(--default_font-family);
+  --a_color: initial;
+  --a_text-decoration: underline;
 
-    // TYPOGRAPHY A:FOCUS
-    --a_color_hover: var(--a_color);
-    --a_text-decoration_hover: initial;
+  // TYPOGRAPHY A:FOCUS
+  --a_color_hover: var(--a_color);
+  --a_text-decoration_hover: initial;
 
-    // TYPOGRAPHY INPUT
-    --input_font-family: var(--default_font-family);
-    --input_color: #000000;
-    --input_font-size: 16px;
-    --input_font-weight: 400;
-    --input_line-height: initial;
-    --input_background-color: #FFFFFF;
-    --input_border-width: 3px;
-    --input_border-color: #999999;
-    --input_border-radius: 0px;
-           
-    // TYPOGRAPHY INPUT:FOCUS
-    // TYPOGRAPHY INPUT:HOVER
-    // --input_color_hover: var(--input_color);
-    // --input_background-color_hover: var(--input_background-color);
-    // --input_border-color_hover: #767677;
-    // --input_border-bottom-color_hover: var(--input_border-color_hover);
-    // --input_box-shadow_hover: --input_box-shadow;
+  // TYPOGRAPHY INPUT
+  --input_font-family: var(--default_font-family);
+  --input_color: #000000;
+  --input_font-size: 16px;
+  --input_font-weight: 400;
+  --input_line-height: initial;
+  --input_background-color: #ffffff;
+  --input_border-width: 3px;
+  --input_border-color: #999999;
+  --input_border-radius: 0px;
 
-    // TYPOGRAPHY BUTTON
-    --button_font-family: var(--default_font-family);
-    --button_color: var(--color_white);
-    --button_font-size: var(--root_font-size);
-    --button_font-weight: initial;
-    --button_line-height: initial;
-    --button_background-color: #ccc84a;
-    --button_border-width: 3px;
-    --button_border-color:#ccc84a;
-    --button_border-radius: 0px;
+  // TYPOGRAPHY INPUT:FOCUS
+  // TYPOGRAPHY INPUT:HOVER
+  // --input_color_hover: var(--input_color);
+  // --input_background-color_hover: var(--input_background-color);
+  // --input_border-color_hover: #767677;
+  // --input_border-bottom-color_hover: var(--input_border-color_hover);
+  // --input_box-shadow_hover: --input_box-shadow;
 
-    // HEADER COLOR
-    --engrid__content-header_background-color: rgb(255 255 255 / 60%);
+  // TYPOGRAPHY BUTTON
+  --button_font-family: var(--default_font-family);
+  --button_color: var(--color_white);
+  --button_font-size: var(--root_font-size);
+  --button_font-weight: initial;
+  --button_line-height: initial;
+  --button_background-color: #ccc84a;
+  --button_border-width: 3px;
+  --button_border-color: #ccc84a;
+  --button_border-radius: 0px;
 
+  // HEADER COLOR
+  --engrid__content-header_background-color: rgb(255 255 255 / 60%);
 
-    // TYPOGRAPHY BUTTON:HOVER
-    // --button_color_hover: var(--button_color);
-    // --button_background-color_hover: var(--color_black);
-    // --button_border-color_hover: var(--button_background-color_hover);
+  // TYPOGRAPHY BUTTON:HOVER
+  // --button_color_hover: var(--button_color);
+  // --button_background-color_hover: var(--color_black);
+  // --button_border-color_hover: var(--button_background-color_hover);
 
-    // TYPOGRAPHY BUTTON:SELECTED
-    // --button_color_checked: var(--button_color_hover);
-    // --button_background-color_checked: var(--button_background-color_hover);
-    // --button_border-color_checked: var(--button_border-color_hover);
+  // TYPOGRAPHY BUTTON:SELECTED
+  // --button_color_checked: var(--button_color_hover);
+  // --button_background-color_checked: var(--button_background-color_hover);
+  // --button_border-color_checked: var(--button_border-color_hover);
 
-    // DONATION PAGE
-    // --give-monthly-donation-amount-appended-label: "/mo";
-    // --give-annual-donation-amount-appended-label: "/yr";  
-    // --recurring-frequency__button_count: 4;
-    // --donation-amount__button_count: 4;
+  // DONATION PAGE
+  // --give-monthly-donation-amount-appended-label: "/mo";
+  // --give-annual-donation-amount-appended-label: "/yr";
+  // --recurring-frequency__button_count: 4;
+  // --donation-amount__button_count: 4;
 
-     // CTA COLORS
-     --theme-cta: #0686E5;
-     --theme-cta-hover:#0686E5;
+  // CTA COLORS
+  --theme-cta: #0686e5;
+  --theme-cta-hover: #0686e5;
 
-     //ERROR COLORS
-     --error__color: #C30D02;
-     --error__color_faded: rgba(243, 55, 55, 0.15);
+  //ERROR COLORS
+  --error__color: #c30d02;
+  --error__color_faded: rgba(243, 55, 55, 0.15);
 
-    //INPUT
-    --theme-typography-checkbox-checked-content:"url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
-    --radio_color_selected: var(--theme-cta); 
+  //INPUT
+  --theme-typography-checkbox-checked-content: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
+  --radio_color_selected: var(--theme-cta);
 }
 
-    
-[data-engrid-subtheme="sailorsfortheseas"]{
-    // CTA COLORS
-        --theme-cta: #00205b;
-        --theme-cta-hover:#00205b;
-        --submit__button_background-color:var(--theme-cta);
-        --button_background-color:var(--theme-cta);
-        --button_border-color::var(--theme-cta);   
+[data-engrid-subtheme="sailorsfortheseas"] {
+  // CTA COLORS
+  --theme-cta: #00205b;
+  --theme-cta-hover: #00205b;
+  --submit__button_background-color: var(--theme-cta);
+  --button_background-color: var(--theme-cta);
+  --button_border-color: var(--theme-cta);
 
-    /** FOOTER STYLES **/
+  /** FOOTER STYLES **/
 
-    /** Footer: Background **/
-    .content-footer {
-        background: #1f2024;
-        color: white;
-        font-size: 14px;
-    }
-    
-    /** Footer: Nav and Styling **/
-    .content-footer nav ul {
-        display: inline-block;
-        vertical-align: top;
-        margin: 0 3em 0 0;
-        padding: 0;
-    }
-    
-    /** Footer: Links **/
-    .content-footer a {
-        color: #0686e5;
-        text-decoration: none;
-    }
+  /** Footer: Background **/
+  .content-footer {
+    background: #1f2024;
+    color: white;
+    font-size: 14px;
+  }
 
+  /** Footer: Nav and Styling **/
+  .content-footer nav ul {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 3em 0 0;
+    padding: 0;
+  }
+
+  /** Footer: Links **/
+  .content-footer a {
+    color: #0686e5;
+    text-decoration: none;
+  }
 }
-
 
 /* Add your custom theme styles here */
-[data-engrid-theme="engrid-oceana"]{
-    @mixin until-mobile-l {
-        // STYLES
+[data-engrid-theme="engrid-oceana"] {
+  @mixin until-mobile-l {
+    // STYLES
+  }
+
+  @mixin from-mobile-l {
+    // STYLES
+  }
+
+  @mixin simplified-header {
+    // STYLES
+  }
+
+  // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
+  &[data-engrid-layout] {
+    @include mq($until: mobile-l) {
+      @include until-mobile-l;
     }
 
-    @mixin from-mobile-l {
-        // STYLES
+    @include mq($from: mobile-l) {
+      @include from-mobile-l;
+    }
+  }
+
+  // Example of Shared Layout Stylings
+  &[data-engrid-layout="centerleft1col"] {
+    @media screen and (max-width: $centerleft1col_content-column_min-width) {
+      @include simplified-header;
+    }
+    .content-footer {
+      margin-top: 3.125rem;
+    }
+  }
+
+  &[data-engrid-layout="centercenter1col"] {
+    @media screen and (max-width: $centerleft1col_content-column_min-width) {
+      @include simplified-header;
+    }
+    .content-footer {
+      margin-top: 3.125rem;
+    }
+  }
+
+  &[data-engrid-layout="centerright1col"] {
+    @media screen and (max-width: $centerright1col_content-column_min-width) {
+      @include simplified-header;
     }
 
-    @mixin simplified-header {
-        // STYLES
+    .content-footer {
+      margin-top: 3.125rem;
+    }
+  }
+
+  &[data-engrid-layout="leftleft1col"] {
+    @media screen and (max-width: $centerright1col_content-column_min-width) {
+      @include simplified-header;
+    }
+  }
+
+  // Two column layouts on desktop get horizontal spacing between each column
+  &[data-engrid-layout="centercenter2col"] {
+    @media screen and (min-width: $centercenter2col_content-column_min-width) {
+      --engrid__body_margin: 0 1rem;
     }
 
-    // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
-    &[data-engrid-layout] {
-        @include mq($until: mobile-l){
-            @include until-mobile-l;
-        }
-
-        @include mq($from: mobile-l){
-            @include from-mobile-l;
-        }
-    }
-    
-    // Example of Shared Layout Stylings
-    &[data-engrid-layout="centerleft1col"]{
-        @media screen and (max-width: $centerleft1col_content-column_min-width) {
-            @include simplified-header;
-        }
-        .content-footer {
-            margin-top: 3.125rem;
-        }
-
+    //Transparent 2 col Header
+    .body-title,
+    .body-banner,
+    .body-title {
+      background: #ffffffde;
     }
 
-    &[data-engrid-layout="centercenter1col"]{
-        @media screen and (max-width: $centerleft1col_content-column_min-width) {
-            @include simplified-header;
-        }
-        .content-footer {
-            margin-top: 3.125rem;
-        }
-
+    /** Content Footer space **/
+    .content-footerSpacer {
+      height: 100px;
     }
 
-    &[data-engrid-layout="centerright1col"]{
-        @media screen and (max-width: $centerright1col_content-column_min-width) {
-            @include simplified-header;
-        }
-
-        .content-footer {
-            margin-top: 3.125rem;
-        }
+    .content-footer {
+      margin-top: 3.125rem;
     }
+  }
 
-
-    &[data-engrid-layout="leftleft1col"]{
-        @media screen and (max-width: $centerright1col_content-column_min-width) {
-            @include simplified-header;
-        }
+  // Tide Pool Wrapper
+  .tide-pool-wrapper {
+    background-color: #eff0f0;
+    padding: 2rem;
+    margin: 1rem auto;
+    & > p:first-child {
+      margin-top: 0;
     }
-
-    // Two column layouts on desktop get horizontal spacing between each column
-    &[data-engrid-layout="centercenter2col"] {
-        @media screen and (min-width: $centercenter2col_content-column_min-width) {
-            --engrid__body_margin: 0 1rem;
-        }  
-
-        //Transparent 2 col Header
-        .body-title, .body-banner, .body-title {
-            background: #ffffffde;
-        }
-    
-        /** Content Footer space **/
-        .content-footerSpacer {
-            height: 100px;
-        }
-
-        .content-footer {
-            margin-top: 3.125rem;
-        }
-        
+    .button {
+      display: block;
+      margin-top: 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 0;
+      width: 80%;
+      font-size: 1.15rem;
     }
-
+  }
 }
 
+[data-engrid-theme="engrid-oceana"] {
+  /** Donation Page: Radio to Button Styling **/
+  .radio-to-buttons_donationAmt
+    .en__field--donationAmt.en__field--radio
+    input[type="radio"]
+    + label {
+    background-color: #0686e5;
+    background-position-x: 40px;
+    border: var(--donation-amount__button_border-width) solid #0686e5;
+    border-radius: 50%;
+    color: var(--donation-amount__button_color);
+    font-family: "Lato", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    width: 69px;
+    height: 69px;
+    padding: 24px 0;
+    font-size: 17px;
+    line-height: 1;
+    margin: 0 0 10px 12px;
+  }
 
-[data-engrid-theme="engrid-oceana"]{
-    /** Donation Page: Radio to Button Styling **/
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label {
-        background-color: #0686e5;
-        background-position-x: 40px;
-        border: var(--donation-amount__button_border-width) solid #0686e5;
-        border-radius: 50%;
-        color: var(--donation-amount__button_color);
-        font-family: 'Lato', sans-serif;
-        font-weight: bold;
-        text-align: center;
-        width: 69px;
-        height: 69px;
-        padding: 24px 0;
-        font-size: 17px;
-        line-height: 1;
-        margin: 0 0 10px 12px;
-    }
-    
-    /** Donation Page: Radio to Button Styling- Checked **/
-    
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio .en__field__item input[type=radio]:checked+label {
-        background-color: var(--color-white);
-        border: 3px solid var(--theme-cta);
-        color: var(--theme-cta);
-    }
-    
-    
-    /** - PAGES - **/
-    /** Error-Validation Styles **/
-    .en__field--validationFailed:not(.has-value):not(.has-focus) [type], .en__field--validationFailed:not(.has-value):not(.has-focus) select, .en__field--validationFailed:not(.has-value):not(.has-focus) textarea {
-        background-color: rgba(243, 55, 55, 0.15);
-        border-color: var(--input_border-color);
-    }
-    
-    /** - ENGRID COMPONENTS - **/
-    
-    /** Content Header Padding **/
-    .content-header.pseudo-subgrid>div {
-        grid-column: pc;
-        padding: 0 3rem;
-    }
+  /** Donation Page: Radio to Button Styling- Checked **/
 
-    
-    /** Body Banner Spacing **/
-    .body-banner {
-        padding-bottom: 1em;
-    }
-    
-    /** Main Top Padding **/
-    .body-main {
-        padding-top: 3.125rem;
-    }
-    
-    /** Body Bottom Padding **/
-    .body-bottom {
-        padding-bottom: 3rem;
-    }
-    
-    /** Footer Padding **/
-    .content-footer>div {
-        grid-column: pc;
-        padding: 0 3rem;
-    }
-    
-    /** Footer Padding **/
-    .content-footer {
-        padding: 3.75rem 0;
-    }
-    
-    /** Footer Wrapper **/
-    .footer-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-        padding: 1rem 0px;
-        flex-wrap: wrap;
-    }
-    
-    /**  HEADER STYLES **/
-    /** Header: Background **/
-    @media (min-width: 769px) {
-        .content-header {
-            background: rgba(255, 255, 255, 0.6) !important;
-            padding: 1.5rem;
-            margin-bottom: 3.75rem;
-        }
-    }
-    
-    /* BODY STYLES */
+  .radio-to-buttons_donationAmt
+    .en__field--donationAmt.en__field--radio
+    .en__field__item
+    input[type="radio"]:checked
+    + label {
+    background-color: var(--color-white);
+    border: 3px solid var(--theme-cta);
+    color: var(--theme-cta);
+  }
 
-    h2 {
-        font-size: 50px;
-        font-weight: 700;
-    }
-    h5 {
-        font-family: var(--default_font-family);
-        font-size: 22px;
-        color: initial;
-        font-weight: 600;
-    }
-    
-    /* Submit Button **/
-    .en__submit .button, .en__submit button, .pseduo__en__submit_button {
-        font-size: 20px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+  /** - PAGES - **/
+  /** Error-Validation Styles **/
+  .en__field--validationFailed:not(.has-value):not(.has-focus) [type],
+  .en__field--validationFailed:not(.has-value):not(.has-focus) select,
+  .en__field--validationFailed:not(.has-value):not(.has-focus) textarea {
+    background-color: rgba(243, 55, 55, 0.15);
+    border-color: var(--input_border-color);
+  }
 
-    /*Checkbox **/
-    input[type=checkbox]:checked+label:before {
-        background-color: var(--checkbox_background-color_checked);
-        border-color: var(--checkbox_border-color_checked);
-        color: var(--checkbox_color_checked);
-        content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
-    }
+  /** - ENGRID COMPONENTS - **/
 
-    input.en__field__input--checkbox:checked
+  /** Content Header Padding **/
+  .content-header.pseudo-subgrid > div {
+    grid-column: pc;
+    padding: 0 3rem;
+  }
+
+  /** Body Banner Spacing **/
+  .body-banner {
+    padding-bottom: 1em;
+  }
+
+  /** Main Top Padding **/
+  .body-main {
+    padding-top: 3.125rem;
+  }
+
+  /** Body Bottom Padding **/
+  .body-bottom {
+    padding-bottom: 3rem;
+  }
+
+  /** Footer Padding **/
+  .content-footer > div {
+    grid-column: pc;
+    padding: 0 3rem;
+  }
+
+  /** Footer Padding **/
+  .content-footer {
+    padding: 3.75rem 0;
+  }
+
+  /** Footer Wrapper **/
+  .footer-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    padding: 1rem 0px;
+    flex-wrap: wrap;
+  }
+
+  /**  HEADER STYLES **/
+  /** Header: Background **/
+  @media (min-width: 769px) {
+    .content-header {
+      background: rgba(255, 255, 255, 0.6) !important;
+      padding: 1.5rem;
+      margin-bottom: 3.75rem;
+    }
+  }
+
+  /* BODY STYLES */
+
+  h2 {
+    font-size: 50px;
+    font-weight: 700;
+  }
+  h5 {
+    font-family: var(--default_font-family);
+    font-size: 22px;
+    color: initial;
+    font-weight: 600;
+  }
+
+  /* Submit Button **/
+  .en__submit .button,
+  .en__submit button,
+  .pseduo__en__submit_button {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  /*Checkbox **/
+  input[type="checkbox"]:checked + label:before {
+    background-color: var(--checkbox_background-color_checked);
+    border-color: var(--checkbox_border-color_checked);
+    color: var(--checkbox_color_checked);
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
+  }
+
+  input.en__field__input--checkbox:checked
     + label.en__field__label.en__field__label--item,
-    input.en__field__input--checkbox
+  input.en__field__input--checkbox
     + label.en__field__label.en__field__label--item {
-      font-weight: 500;
-      font-family: var(--theme-typography-default-font-family);
-      text-transform: none;
-      border: 0px;
-      line-height: 18px;
-      text-align: left;
-      justify-content: flex-start;
-      display: inline-flex;
-      align-items: center;
-      min-height: 2rem;
-      margin-left: 0px;
-    }
-    
-    
-    .en__field__input--checkbox:checked + .en__field__label::after {
+    font-weight: 500;
+    font-family: var(--theme-typography-default-font-family);
+    text-transform: none;
+    border: 0px;
+    line-height: 18px;
+    text-align: left;
+    justify-content: flex-start;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    margin-left: 0px;
+  }
+
+  .en__field__input--checkbox:checked + .en__field__label::after {
     content: "✓";
     position: absolute;
     left: -28px;
@@ -364,136 +383,145 @@
     color: var(--theme-typography-checkbox-color);
     background-color: transparent;
     font-size: 0.99936rem;
-    }
-    
-    .en__field__input--checkbox+.en__field__label:before {
+  }
+
+  .en__field__input--checkbox + .en__field__label:before {
     height: 2rem;
     width: 2rem;
     top: 0;
     left: 0;
-    }
+  }
 
+  /** DONATION PAGES **/
+  /** Donation: Other Amount Styles **/
+  .radio-to-buttons_donationAmt
+    .en__field.en__field--withOther
+    .en__field__element
+    .en__field__item {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .en__field--donationAmt .en__field__item--other {
+    position: relative;
+  }
+  .en__field--donationAmt .en__field__item--other input {
+    padding-left: 3.4ch;
+  }
+  .en__field--donationAmt .en__field__item--other:before {
+    content: "$";
+    display: block;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 700;
+    height: 0;
+    left: 2.2ch;
+    line-height: 0;
+    position: absolute;
+    top: calc(50% - 14px);
+    background: #57595b;
+    color: white;
+    border-radius: 50%;
+    padding: 13px 9px;
+  }
+  .radio-to-buttons_donationAmt
+    .en__field--donationAmt.en__field--radio.en__field--withOther--active
+    .en__field__item
+    .en__field__input--other {
+    background-color: #e4e4e4;
+    border-color: #8e8e8e;
+    color: #000000;
+  }
 
+  .radio-to-buttons_donationAmt
+    .en__field.en__field--withOther
+    .en__field__element
+    .en__field__item:last-child {
+    padding-left: 1rem;
+  }
 
-    /** DONATION PAGES **/   
-    /** Donation: Other Amount Styles **/
-    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-    .en__field--donationAmt .en__field__item--other {
-        position: relative
-    }
-    .en__field--donationAmt .en__field__item--other input {
-        padding-left: 3.4ch;
-    }
-    .en__field--donationAmt .en__field__item--other:before {
-        content: "$";
-        display: block;
-        font-family: inherit;
-        font-size: 1rem;
-        font-weight: 700;
-        height: 0;
-        left: 2.2ch;
-        line-height: 0;
-        position: absolute;
-        top: calc(50% - 14px);
-        background: #57595b;
-        color: white;
-        border-radius: 50%;
-        padding: 13px 9px;
-    }
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other {
-        background-color: #e4e4e4;
-        border-color: #8e8e8e;
-        color: #000000;
-    }
+  /** Donation Amount Radio Buttons **/
+  .radio-to-buttons_donationAmt
+    .en__field--donationAmt.en__field--radio
+    > .en__field__element
+    .en__field__item {
+    flex-basis: auto;
+    flex-grow: 0;
+  }
 
-    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
-        padding-left: 1rem;
-    }
+  /** FOOTER STYLES **/
 
-    /** Donation Amount Radio Buttons **/
-    .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
-        flex-basis: auto;
-        flex-grow: 0;
-    }
-        
-
-    /** FOOTER STYLES **/
-
-    /** Footer seals **/
-    .footer-col1, .footer-col2 {
+  /** Footer seals **/
+  .footer-col1,
+  .footer-col2 {
     padding: 0rem 1rem;
-    }
-    
-    
-    /** Footer: Background **/
-    .content-footer {
-        background: #1f2024;
-        color: white;
-        font-size: 14px;
-    }
-    
-    /** Footer: Nav and Styling **/
-    .content-footer nav ul {
-        display: inline-block;
-        vertical-align: top;
-        margin: 0 3em 0 0;
-        padding: 0;
-    }
-    
-    /** Footer: Links **/
-    .content-footer a {
-        color: #0686e5;
-        text-decoration: none;
-    }
+  }
 
-    /** Footer: Small Style **/
-    .small {
-        font-size: 13px;
+  /** Footer: Background **/
+  .content-footer {
+    background: #1f2024;
+    color: white;
+    font-size: 14px;
+  }
+
+  /** Footer: Nav and Styling **/
+  .content-footer nav ul {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 3em 0 0;
+    padding: 0;
+  }
+
+  /** Footer: Links **/
+  .content-footer a {
+    color: #0686e5;
+    text-decoration: none;
+  }
+
+  /** Footer: Small Style **/
+  .small {
+    font-size: 13px;
+  }
+
+  /** Footer: HR **/
+  .content-footer hr {
+    display: none;
+    height: 1px;
+    background: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  /** Footer: Social icons style **/
+  li.twitter {
+    margin-top: 10px;
+  }
+
+  /** Footer Nav **/
+  @media (min-width: 769px) {
+    nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+      justify-content: center;
+      text-align: left;
+      margin: 0 auto;
     }
-    
-    /** Footer: HR **/
-    .content-footer hr {
-        display: none;
-        height: 1px;
-        background: 0;
-        border: 0;
-        margin: 0;
+  }
+  /** Footer Nav: Mobile **/
+  @media (max-width: 767px) {
+    nav {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-content: center;
+      text-align: left;
+      margin: 0 auto;
+      row-gap: 1em;
     }
-    
-    /** Footer: Social icons style **/
+    li.facebook {
+      display: inline;
+    }
     li.twitter {
-        margin-top: 10px;
+      margin-top: 10px;
+      display: inline-block;
     }
-    
-    /** Footer Nav **/    
-    @media (min-width: 769px) {
-        nav {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            justify-content: center;
-            text-align: left;
-            margin: 0 auto;
-        }
-    }
-    /** Footer Nav: Mobile **/
-    @media (max-width: 767px) {
-        nav {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            justify-content: center;
-            text-align: left;
-            margin: 0 auto;
-            row-gap: 1em;
-        }
-        li.facebook {
-            display: inline;
-        }
-        li.twitter {
-            margin-top: 10px;
-            display: inline-block;
-        }
-    }
+  }
 }
