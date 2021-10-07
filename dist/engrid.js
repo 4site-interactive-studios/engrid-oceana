@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 7, 2021 @ 09:09:13 ET
+ *  Date: Thursday, October 7, 2021 @ 09:17:55 ET
  *  By: fe
  *  ENGrid styles: v0.4.0
  *  ENGrid scripts: v0.4.0
@@ -6450,7 +6450,6 @@ const customScript = function () {
       formData.append("supporter.emailAddress", tidepoolButton.dataset.email);
       formData.append("supporter.questions.265330", tidepoolButton.dataset.transaction);
       formData.append("supporter.questions.265331", tidepoolButton.dataset.amount);
-      console.log(formData);
       fetch("https://act.oceana.org/page/28691/subscribe/2", {
         body: formData,
         method: "POST",
@@ -6458,10 +6457,8 @@ const customScript = function () {
           "Content-Type": "application/x-www-form-urlencoded"
         }
       }).then(response => {
-        console.log(response);
-
         if (response.ok) {
-          tidepoolButton.innerHTML = `Thank you!`;
+          tidepoolButton.innerHTML = "Thank you!";
           tidepoolButton.classList.add("disabled");
           tidepoolButton.disabled = true;
         }

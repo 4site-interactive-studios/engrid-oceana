@@ -19,7 +19,6 @@ export const customScript = function () {
         "supporter.questions.265331",
         tidepoolButton.dataset.amount
       );
-      console.log(formData);
 
       fetch("https://act.oceana.org/page/28691/subscribe/2", {
         body: formData,
@@ -28,9 +27,8 @@ export const customScript = function () {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       }).then((response) => {
-        console.log(response);
         if (response.ok) {
-          tidepoolButton.innerHTML = `Thank you!`;
+          tidepoolButton.innerHTML = "Thank you!";
           tidepoolButton.classList.add("disabled");
           tidepoolButton.disabled = true;
         }
