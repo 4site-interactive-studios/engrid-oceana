@@ -3,6 +3,8 @@
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 
 [data-engrid-theme="engrid-oceana"] {
+  --engrid__page_background-color: #0686e5;
+
   // TYPOGRAPHY DEFAULT
   --default_font-family: "Lato", sans-serif;
   --default_color: initial;
@@ -65,7 +67,7 @@
   --button_border-radius: 0px;
 
   // HEADER COLOR
-  --engrid__content-header_background-color: rgb(255 255 255 / 60%);
+  --engrid__content-header_background-color: rgba(255, 255, 255, 0.6);
 
   // TYPOGRAPHY BUTTON:HOVER
   // --button_color_hover: var(--button_color);
@@ -522,6 +524,82 @@
     li.twitter {
       margin-top: 10px;
       display: inline-block;
+    }
+  }
+
+  // Temporary styles moved in from Page Template
+  /** DONATION PAGES **/   
+    /** Donation: Other Amount Styles **/
+    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
+      padding-left: 0px;
+      padding-right: 0px;
+  }
+  .en__field--donationAmt .en__field__item--other {
+      position: relative
+  }
+  .en__field--donationAmt .en__field__item--other input {
+      padding-left: 3.4ch;
+  }
+  .en__field--donationAmt .en__field__item--other:before {
+      content: "$";
+      display: block;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      height: 0;
+      left: 2.2ch;
+      line-height: 0;
+      position: absolute;
+      top: calc(50% - 14px);
+      background: #57595b;
+      color: white;
+      border-radius: 50%;
+      padding: 13px 9px;
+  }
+  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other {
+      background-color: #e4e4e4;
+      border-color: #8e8e8e;
+      color: #000000;
+  }
+
+  .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
+      padding-left: 1rem;
+  }
+
+  /** Donation Amount Radio Buttons **/
+  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
+      flex-basis: auto;
+      flex-grow: 0;
+  }
+  
+  /** Donation Page: Radio to Button Styling **/
+  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label {
+      background-color: #0686e5;
+      background-position-x: 40px;
+      border: var(--donation-amount__button_border-width) solid #0686e5;
+      border-radius: 50%;
+      color: var(--donation-amount__button_color);
+      font-family: 'Lato', sans-serif;
+      font-weight: bold;
+      text-align: center;
+      width: 69px;
+      height: 69px;
+      padding: 24px 0;
+      font-size: 17px;
+      line-height: 1;
+      margin: 0 0 10px 12px;
+  }
+  
+  /** Donation Page: Radio to Button Styling- Checked **/
+  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio .en__field__item input[type=radio]:checked+label {
+      background-color: var(--color-white);
+      border: 3px solid var(--theme-cta);
+      color: var(--theme-cta);
+  }
+  
+  @media (min-width: 769px) {
+    .content-header {
+      background: rgba(255, 255, 255, 0.6);
     }
   }
 }
