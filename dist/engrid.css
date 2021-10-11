@@ -21,7 +21,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, October 10, 2021 @ 21:32:27 ET
+ *  Date: Sunday, October 10, 2021 @ 21:57:58 ET
  *  By: bryancasler
  *  ENGrid styles: v0.4.3
  *  ENGrid scripts: v0.4.1
@@ -7422,7 +7422,7 @@ body:not([data-engrid-debug]) #debug-bar{
 }
 
 [data-engrid-theme=engrid-oceana]{
-  --engrid__page_background-color:#0686e5;
+  --engrid__page_background-color:#d8f2fb;
   --default_font-family:"Lato", sans-serif;
   --default_color:initial;
   --default_font-size:var(--root_font-size);
