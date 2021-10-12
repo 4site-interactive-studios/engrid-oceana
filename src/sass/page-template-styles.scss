@@ -233,9 +233,10 @@
   }
 }
 
+
 [data-engrid-theme="engrid-oceana"] {
   /** Donation Page: Radio to Button Styling **/
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
     input[type="radio"]
     + label {
@@ -257,7 +258,7 @@
 
   /** Donation Page: Radio to Button Styling- Checked **/
 
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
     .en__field__item
     input[type="radio"]:checked
