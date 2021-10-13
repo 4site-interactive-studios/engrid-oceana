@@ -96,6 +96,30 @@
   //INPUT
   --theme-typography-checkbox-checked-content: "url('data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E')";
   --radio_color_selected: var(--theme-cta);
+
+  //RADIO
+  --radio_background-color_selected:var(--theme-cta);
+  --radio_box-shadow_selected:rgb(255 255 255) 0px 0px 0px 2px inset;
+
+  // HIDES UNUSED SECTION FROM PAGE BUILDER
+    &#en__pagebuilder {
+      .page-alert, .body-headerOutside, .body-header, .body-bannerOverlay, .body-footer,.body-footerOutside, .content-preFooter, .page-backgroundImageOverlay{
+        // display: none;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        border: 0;
+        padding: 0;
+        white-space: nowrap;
+        -webkit-clip-path: inset(100%);
+        clip-path: inset(100%);
+        clip: rect(0 0 0 0);
+        overflow: hidden;
+      }
+  }
+
+
 }
 
 [data-engrid-subtheme="sailorsfortheseas"] {
@@ -105,6 +129,10 @@
   --submit__button_background-color: var(--theme-cta);
   --button_background-color: var(--theme-cta);
   --button_border-color: var(--theme-cta);
+
+  // SPACING AROUND BANNER IMAGE
+  --engrid__body-banner_padding: var(--engrid__body-main_padding);
+
 
   /** FOOTER STYLES **/
 
@@ -211,6 +239,7 @@
     .content-footer {
       margin-top: 3.125rem;
     }
+
   }
 
   // Tide Pool Wrapper
@@ -233,6 +262,18 @@
   }
 }
 
+/** HEADER STYLES **/
+  // Mobile Style - Adds padding to the logo
+  @media (max-width: 768px) {
+    .content-header #header-logo img {
+      padding: 2em 0;
+    }
+    }
+  
+  // Mobile Style - Remove background color for header
+    @media (max-width: 768px) {
+    --engrid__page_background-color: transparent;
+    }
 
 [data-engrid-theme="engrid-oceana"] {
   /** Donation Page: Radio to Button Styling **/
@@ -330,6 +371,18 @@
       margin-bottom: 3.75rem;
     }
   }
+  
+  // Header: Mobile Style - Adds padding to the logo
+  @media (max-width: 768px) {
+  .content-header #header-logo img {
+    padding: 2em 0;
+  }
+  }
+
+// Header: Mobile Style - Remove background color for header
+  @media (max-width: 768px) {
+  --engrid__page_background-color: transparent;
+  }
 
   /* BODY STYLES */
 
@@ -397,7 +450,7 @@
 
   /** DONATION PAGES **/
   /** Donation: Other Amount Styles **/
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field.en__field--withOther
     .en__field__element
     .en__field__item {
@@ -426,7 +479,7 @@
     border-radius: 50%;
     padding: 13px 9px;
   }
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio.en__field--withOther--active
     .en__field__item
     .en__field__input--other {
@@ -435,7 +488,7 @@
     color: #000000;
   }
 
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field.en__field--withOther
     .en__field__element
     .en__field__item:last-child {
@@ -443,7 +496,7 @@
   }
 
   /** Donation Amount Radio Buttons **/
-  .radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
     > .en__field__element
     .en__field__item {
@@ -456,7 +509,7 @@
   /** Footer seals **/
   .footer-col1,
   .footer-col2 {
-    padding: 0rem 1rem;
+    padding: 1rem 1rem;
   }
 
   /** Footer: Background **/
@@ -526,12 +579,14 @@
       margin-top: 10px;
       display: inline-block;
     }
+    .footer-spacer{
+      display: none;
+    }
   }
 
-  // Temporary styles moved in from Page Template
   /** DONATION PAGES **/   
     /** Donation: Other Amount Styles **/
-    .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
+    &.radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item {
       padding-left: 0px;
       padding-right: 0px;
   }
@@ -557,24 +612,24 @@
       border-radius: 50%;
       padding: 13px 9px;
   }
-  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other {
+  &.radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other {
       background-color: #e4e4e4;
       border-color: #8e8e8e;
       color: #000000;
   }
 
-  .radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
+  &.radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child {
       padding-left: 1rem;
   }
 
   /** Donation Amount Radio Buttons **/
-  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
+  &.radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item {
       flex-basis: auto;
       flex-grow: 0;
   }
   
   /** Donation Page: Radio to Button Styling **/
-  .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label {
+  &.radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label {
       background-color: #0686e5;
       background-position-x: 40px;
       border: var(--donation-amount__button_border-width) solid #0686e5;
@@ -603,4 +658,27 @@
       background: rgba(255, 255, 255, 0.6);
     }
   }
+
+
+  input[type=radio]:checked+label:before {
+    background-color:var(--theme-cta);
+    box-shadow: rgb(255,255,255) 0px 0px 0px 2px inset;
+  }
+  
+  // SPACING AROUND BANNER IMAGE
+    --engrid__body-banner_padding: var(--engrid__body-main_padding);
+ 
+  //SPACING ABOVE CAPTCHA
+  .en__captcha {
+    padding-top: 2em;
+  }
+
+  &[data-engrid-layout="centercenter2col"] {
+
+    // Shorten the left side body height
+    height: fit-content; 
+  }
+
+
 }
+
