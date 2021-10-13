@@ -673,12 +673,23 @@
     padding-top: 2em;
   }
 
-  &[data-engrid-layout="centercenter2col"] {
+  // &[data-engrid-layout="centercenter2col"] {
 
-    // Shorten the left side body height
-    height: fit-content; 
+  //   // Shorten the left side body height
+  //   .body-bottom{
+  //   height: fit-content; 
+  //   }
+  // }
+
+
+  @media screen and (min-width: 900px){
+    &[data-engrid-layout=centercenter2col] {
+      .body-top {
+        height: fit-content;
+        padding-bottom: 2.5rem;
+        background: #ffffffde;
+      }
+    }
   }
 
-
 }
-

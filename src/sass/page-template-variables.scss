@@ -394,5 +394,9 @@ $centercenter2col_body-column_column-2_max-width: 580px;
     // RADIO BUTTON STYLES
     --radio_background-color_selected:var(--theme-cta);
     --radio_box-shadow_selected:rgb(255 255 255) 0px 0px 0px 2px inset;
+  
+    // SPACING AROUND BANNER IMAGE
+    --engrid__body-banner_padding: var(--engrid__body-main_padding);
+ 
   }
  
