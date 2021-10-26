@@ -119,6 +119,23 @@
       }
   }
 
+  // ECARD STYLES
+  
+  //Hides the red button
+  button.en__ecarditems__button.en__ecarditems__addrecipient {
+    display: none;
+  }
+
+  // Makes the width 100% for name and email
+  .en__ecardrecipients__name,
+  .en__ecardrecipients__email{
+    width: 100%;
+  }
+
+  .en__ecardrecipients__list{
+    display: none;
+  }
+
 
 }
 
@@ -672,15 +689,6 @@
   .en__captcha {
     padding-top: 2em;
   }
-
-  // &[data-engrid-layout="centercenter2col"] {
-
-  //   // Shorten the left side body height
-  //   .body-bottom{
-  //   height: fit-content; 
-  //   }
-  // }
-
 
   @media screen and (min-width: 900px){
     &[data-engrid-layout=centercenter2col] {
