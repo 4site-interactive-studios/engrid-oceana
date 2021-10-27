@@ -127,15 +127,22 @@
   }
 
   // Makes the width 100% for name and email
-  .en__ecardrecipients__name,
-  .en__ecardrecipients__email{
+  .en__ecardrecipients__email input, .en__ecardrecipients__name input {
+    margin: 0 2rem 0 0;
+    padding: .375rem .625rem;
     width: 100%;
-  }
+}
 
   .en__ecardrecipients__list{
     display: none;
   }
 
+// ADVOCACY STYLES
+
+  //Removes the expand for the contact target block
+  .en__contact__toggle {
+    display: none;
+  }
 
 }
 
