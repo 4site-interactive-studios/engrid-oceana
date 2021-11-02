@@ -17,386 +17,480 @@ $centercenter2col_body-column_column-1_max-width: 500px;
 $centercenter2col_body-column_column-2_max-width: 580px;
 
 /* All CSS Custom Properties should be scoped to the theme using CSS Data Attributes. */
-[data-engrid-theme="engrid-oceana"]{
-    // FIXED COLOR PALETTE
-    --color-transparent: transparent;
-    --color-white: rgba(255, 255, 255, 1);
-    --color-black: rgba(0, 0, 0, 1);
-    --en-pagebuilder-background-color: #C1C0C0;
- 
-    // GRAYSCALE COLOR PALETTE
-    --theme-off-white: #DFDFDF;
-    --theme-light-gray: #BFBFBF;
-    --theme-gray: #9F9F9F;
-    --theme-dark-gray: #808080;
-    --theme-off-black: #404040;
- 
-    // SEMANTIC COLOR PALETTE
-    --theme-success: #677727;
-    --theme-warning: #C78F0B;
-    --theme-error: #C30D02;
- 
-     // SEMANTIC GEOMETRIC SCALING
-     --scale-up-20pct: 1.2;
-     --scale-up-40pct: 1.4;
-     --scale-up-80pct: 1.8;
-     --scale-up-160pct: 2.6;
-     --scale-down-20pct: 0.8;
-     --scale-down-40pct: 0.6;
-     --scale-down-80pct: 0.2;
- 
-    // FONT STACKS
-    --theme-font-stack-browser-fonts: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    // TYPOGRAPHY DEFAULT
-    --theme-typography-default-font-family: 'Lato', sans-serif;
-    --theme-typography-default-color: initial;
-    --theme-typography-default-font-size: var(--theme-root-font-size);
-    --theme-typography-default-font-weight: initial;
-    --theme-typography-default-line-height: initial;
-        
-    // TYPOGRAPHY H1
-    --theme-typography-h1-font-family: 'ff-good-headline-web-pro-con', sans-serif;
-    --theme-typography-h1-color: #0686e5;
-    --theme-typography-h1-font-size: calc(var(--theme-root-font-size) * var(--scale-up-160pct));
-    --theme-typography-h1-font-weight: 700;
-    --theme-typography-h1-line-height: initial;
-    --theme-typography-h2-text-transform: uppercase;
-        
-    // TYPOGRAPHY H2
-    --theme-typography-h2-font-family: var(--theme-typography-h1-font-family);
-    --theme-typography-h2-color:var(--theme-typography-h1-font-color);
-    --theme-typography-h2-font-size: calc(var(--theme-root-font-size) * var(--scale-up-80pct));
-    --theme-typography-h2-font-weight: var(--theme-typography-h1-font-weight);
-    --theme-typography-h2-line-height: initial;
-    --theme-typography-h2-text-transform: uppercase;
-           
-    // TYPOGRAPHY H3
-    --theme-typography-h3-font-family: var(--theme-typography-h1-font-family);
-    --theme-typography-h3-color: var(--theme-typography-h1-font-color);
-    --theme-typography-h3-font-size: calc(var(--theme-root-font-size) * var(--scale-up-40pct));
-    --theme-typography-h3-font-weight: initial;
-    --theme-typography-h3-line-height: initial;
-        
-    // TYPOGRAPHY P
-    --theme-typography-p-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-p-color: initial;
-    --theme-typography-p-font-size: 18px;
-    --theme-typography-p-font-weight: initial;
-    --theme-typography-p-line-height: initial;
-        
-    // TYPOGRAPHY STRONG
-    --theme-typography-strong-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-strong-color: initial;
-    --theme-typography-strong-font-size: var(--theme-root-font-size);
-    --theme-typography-strong-font-weight: bold;
-    --theme-typography-strong-line-height: initial;
-        
-    // TYPOGRAPHY LABEL
-    --theme-typography-label-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-label-color: initial;
-    // --theme-typography-label-font-size: var(--theme-root-font-size);
-    --theme-typography-label-font-size: 13px;
-    // --theme-typography-label-font-weight: initial;
-    --theme-typography-label-font-weight: bold;
-    --theme-typography-label-line-height: initial;
-        
-    // TYPOGRAPHY INPUT
-    --theme-typography-input-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-input-color: initial;
-    --theme-typography-input-font-size: var(--theme-root-font-size);
-    --theme-typography-input-font-weight: initial;
-    --theme-typography-input-line-height: initial;
-    --theme-typography-input-background-color: var(--color-white);
-    --theme-typography-input-border-width: 1px;
-    --theme-typography-input-border-color: var(--color-black);
-    --theme-typography-input-border-radius: 4px;
-    --theme-typography-input-placeholder-color: var(--theme-light-gray);
-    --theme-typography-input-box-shadow: inset 0 1px 2px var(--theme-light-gray);
-        
-    // TYPOGRAPHY INPUT:FOCUS
-    // TYPOGRAPHY INPUT:HOVER
-    --theme-typography-input-focus-hover-color: var(--theme-typography-input-color);
-    --theme-typography-input-focus-hover-background-color: var(--theme-typography-input-background-color);
-    --theme-typography-input-focus-hover-border-color: var(--theme-cta);
-    --theme-typography-input-focus-hover-border-bottom-color: var(--theme-typography-input-focus-hover-border-color);
-    --theme-typography-input-focus-hover-box-shadow: 0 0 0.3125rem var(--theme-light-gray);
-        
-    // TYPOGRAPHY RADIO
-    --theme-typography-radio-content: initial;
-    --theme-typography-radio-color: var(--theme-cta);
-    --theme-typography-radio-background-color: var(--color-white);
-    --theme-typography-radio-border-width: 1px;
-    --theme-typography-radio-border-color: var(--color-black);
-    --theme-typography-radio-border-radius: 50%
- 
-    // TYPOGRAPHY RADIO INPUT:FOCUS
-    // TYPOGRAPHY RADIO INPUT:HOVER
-    --theme-typography-radio-focus-hover-color: var(--theme-typography-radio-color);
-    --theme-typography-radio-focus-hover-background-color: var(--theme-typography-radio-background-color);
-    --theme-typography-radio-focus-hover-border-color: var(--theme-typography-radio-border-color);
- 
-    // TYPOGRAPHY RADIO INPUT:CHECKED
-    --theme-typography-radio-selected-color: var(--theme-typography-radio-background-color);
-    --theme-typography-radio-selected-background-color: var(--theme-cta);
-    --theme-typography-radio-selected-border-color: var(--theme-typography-radio-border-color);
- 
-    // TYPOGRAPHY CHECKBOX
-    --theme-typography-checkbox-color: var(--color-white);
-    --theme-typography-checkbox-background-color: var(--color-white);
-    --theme-typography-checkbox-border-width: 1px;
-    --theme-typography-checkbox-border-color: var(--theme-black);
-    --theme-typography-checkbox-border-radius: 4px;
- 
-    // TYPOGRAPHY CHECKBOX INPUT:FOCUS
-    // TYPOGRAPHY CHECKBOX INPUT:HOVER
-    --theme-typography-checkbox-focus-hover-color: var(--theme-typography-checkbox-color);
-    --theme-typography-checkbox-focus-hover-background-color: var(--theme-typography-checkbox-background-color);
-    --theme-typography-checkbox-focus-hover-border-color: var(--theme-typography-checkbox-border-color);
- 
-    // TYPOGRAPHY CHECKBOX INPUT:CHECKED
-    //--theme-typography-checkbox-checked-content:"url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E")";
-    --theme-typography-checkbox-checked-color: var(--theme-typography-checkbox-background-color);
-    --theme-typography-checkbox-checked-background-color: var(--theme-cta);
-    --theme-typography-checkbox-checked-border-color: var(--theme-typography-checkbox-border-color);
- 
-    // TYPOGRAPHY SELECT
-    --theme-typography-select-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-select-color: var(--color-black);
-    --theme-typography-select-font-size: var(--theme-root-font-size);
-    --theme-typography-select-font-weight: initial;
-    --theme-typography-select-line-height: initial;
-    --theme-typography-select-background-color: var(--color-white);
-    --theme-typography-select-border-width: 1px;
-    --theme-typography-select-border-color: var(--color-black);
-    --theme-typography-select-border-radius: 4px;
-    --theme-typography-select-box-shadow: var(--theme-typography-input-box-shadow);
- 
-    // TYPOGRAPHY SELECT:FOCUS
-    // TYPOGRAPHY SELECT:HOVER
-    --theme-typography-select-focus-hover-color: var(--theme-typography-select-color);
-    --theme-typography-select-focus-hover-background-color: var(--theme-typography-select-background-color);
-    --theme-typography-select-focus-hover-border-color: var(--theme-cta-hover);
-    --theme-typography-select-focus-hover-border-bottom-color: var(--theme-typography-select-focus-hover-border-color);
-    --theme-typography-select-focus-hover-box-shadow: var(--theme-typography-input-focus-hover-box-shadow);
- 
-    // TYPOGRAPHY TEXTAREA
-    --theme-typography-textarea-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-textarea-color: initial;
-    --theme-typography-textarea-font-size: var(--theme-root-font-size);
-    --theme-typography-textarea-font-weight: initial;
-    --theme-typography-textarea-line-height: initial;
-    --theme-typography-textarea-background-color: var(--color-white);
-    --theme-typography-textarea-border-width: 1px;
-    --theme-typography-textarea-border-color: var(--color-black);
-    --theme-typography-textarea-border-radius: 4px;
-    --theme-typography-textarea-placeholder-color: var(--theme-light-gray);
-    --theme-typography-textarea-box-shadow: var(--theme-typography-input-box-shadow);
-        
-    // TYPOGRAPHY TEXTAREA:FOCUS
-    // TYPOGRAPHY TEXTAREA:HOVER
-    --theme-typography-textarea-focus-hover-color: var(--theme-typography-textarea-color);
-    --theme-typography-textarea-focus-hover-background-color: var(--theme-typography-textarea-background-color);
-    --theme-typography-textarea-focus-hover-border-color: var(--theme-cta);
-    --theme-typography-textarea-focus-hover-box-shadow: var(--theme-typography-input-focus-hover-box-shadow);
- 
-    // TYPOGRAPHY BUTTON
-    --theme-typography-button-font-family: var(--theme-typography-default-font-family);
-    --theme-typography-button-color: var(--color-white);
-    --theme-typography-button-font-size: var(--theme-root-font-size);
-    --theme-typography-button-font-weight: initial;
-    --theme-typography-button-line-height: initial;
-    --theme-typography-button-background-color: var(--color-black);
-    --theme-typography-button-border-width: initial;
-    --theme-typography-button-border-color: var(--color-black);
-    --theme-typography-button-border-radius: 4px;
-    
-    // TYPOGRAPHY BUTTON:FOCUS
-    // TYPOGRAPHY BUTTON:HOVER
-    --theme-typography-button-focus-hover-color: var(--theme-typography-button-color);
-    --theme-typography-button-focus-hover-background-color: var(--theme-cta-hover);
-    --theme-typography-button-focus-hover-border-color: var(--theme-cta-hover);
- 
-    // TYPOGRAPHY PRIMARY BUTTON
-    --theme-typography-primary-button-font-family: var(--theme-typography-button-font-family);
-    --theme-typography-primary-button-color: var(--color-white);
-    --theme-typography-primary-button-font-size: var(--theme-typography-button-font-size);
-    --theme-typography-primary-button-font-weight: var(--theme-typography-button-font-weight);
-    --theme-typography-primary-button-line-height: var(--theme-typography-button-line-height);
-    --theme-typography-primary-button-background-color: var(--theme-cta);
-    --theme-typography-primary-button-border-width: var(--theme-typography-button-border-width);
-    --theme-typography-primary-button-border-color: var(--theme-cta);
-    --theme-typography-primary-button-border-radius: var(--theme-typography-button-border-radius);
- 
-    // TYPOGRAPHY PRIMARY BUTTON:FOCUS
-    // TYPOGRAPHY PRIMARY BUTTON:HOVER  
-    --theme-typography-primary-button-focus-hover-color: var(--theme-typography-button-focus-hover-color);
-    --theme-typography-primary-button-focus-hover-background-color: var(--theme-cta-hover);
-    --theme-typography-primary-button-focus-hover-border-color: var(--theme-typography-button-focus-hover-border-color);
-    
-    // TYPOGRAPHY A
-    --theme-typography-a-font-family: inherit;
-    --theme-typography-a-color: var(--theme-cta);
-    --theme-typography-a-font-size: unset;
-    --theme-typography-a-font-weight: inherit;
-    --theme-typography-a-line-height: inherit;
-    --theme-typography-a-text-decoration: underline;
- 
-    // TYPOGRAPHY A:FOCUS
-    // TYPOGRAPHY A:HOVER
-    --theme-typography-a-focus-hover-color: var(--theme-typography-a-color);
-    --theme-typography-a-focus-hover-text-decoration: initial;
- 
-    // CTA COLORS
-    --theme-cta: #0686E5;
-    --theme-cta-hover:#0686E5;
- 
-    // PAGE, CONTENT, and BODY BACKGROUND COLOR
-    // Quick set the background color on all corresponding sections
-    --theme-page-background-color: var(--color-transparent);
-    --theme-content-background-color: var(--theme-cta);
-    --theme-body-background-color: var(--color-white);
-    // ENGRID SECTIONS BACKGROUND COLOR
-    --theme-page-alert-background-color: var(--theme-page-background-color);
-    --theme-content-header-background-color: var(--theme-content-background-color);
-    --theme-body-headerOutside-background-color: var(--color-transparent);
-    --theme-body-header-background-color: var(--theme-body-background-color);
-    --theme-body-title-background-color: var(--theme-body-background-color);
-    --theme-body-banner-background-color: var(--theme-body-background-color);
-    --theme-body-bannerOverlay-background-color: var(--color-transparent);
-    --theme-body-top-background-color: var(--theme-body-background-color);
-    --theme-body-side-background-color: var(--theme-body-background-color);
-    --theme-body-main-background-color: var(--theme-body-background-color);
-    --theme-body-bottom-background-color: var(--theme-body-background-color);
-    --theme-body-footer-background-color: var(--theme-body-background-color);
-    --theme-body-footerOutside-background-color: var(--color-transparent);
-    --theme-content-footerSpacer-background-color: var(--color-transparent);
-    --theme-content-preFooter-background-color: var(--theme-content-background-color);
-    --theme-content-footer-background-color: var(--theme-cta);
-    --theme-page-backgroundImage-background-color: var(--theme-page-background-color);
-    --theme-page-backgroundImageOverlay-background-color: var(--color-transparent);
-    --theme-page-customCode-background-color: var(--theme-page-background-color);
- 
-        // ENGRID SECTIONS PADDING
-     // QUICK SETTINGS
-     --theme-page-padding: 0px;
-     --theme-content-padding: 0px;
-     --theme-body-padding: 0px 60px;
-     // DETAIL SETTINGS
-     --theme-page-alert-padding: var(--theme-page-padding);
-     --theme-content-header-padding: var(--theme-content-padding);
-     --theme-body-headerOutside-padding: var(--theme-body-padding);
-     --theme-body-header-padding: var(--theme-body-padding);
-     --theme-body-title-padding: var(--theme-body-padding);
-     --theme-body-banner-padding: 0px;
-     --theme-body-bannerOverlay-padding: var(--theme-body-padding);
-     --theme-body-top-padding: var(--theme-body-padding);
-     --theme-body-side-padding: var(--theme-body-padding);
-     --theme-body-main-padding: var(--theme-body-padding);
-     --theme-body-bottom-padding: var(--theme-body-padding);
-     --theme-body-footer-padding: var(--theme-body-padding);
-     --theme-body-footerOutside-padding: var(--theme-body-padding);
-     --theme-content-footerSpacer-padding: var(--theme-content-padding);
-     --theme-content-preFooter-padding: var(--theme-content-padding);
-     --theme-content-footer-padding: var(--theme-content-padding);
-     --theme-page-backgroundImage-padding: 0px;
-     --theme-page-backgroundImageOverlay-padding: var(--theme-page-padding);
-     --theme-page-customCode-padding: var(--theme-page-padding);    
- 
-     // ENGRID SECTIONS MARGIN
-     // QUICK SETTINGS
-     --theme-page-margin: 0px;
-     --theme-content-margin: 0px;
-     --theme-body-margin: 0px;
-     // DETAIL SETTINGS
-     --theme-page-alert-margin: var(--theme-page-margin);
-     --theme-content-header-margin: var(--theme-content-margin);
-     --theme-body-headerOutside-margin: var(--theme-body-margin);
-     --theme-body-header-margin: var(--theme-body-margin);
-     --theme-body-title-margin: var(--theme-body-margin);
-     --theme-body-banner-margin: var(--theme-body-margin);
-     --theme-body-bannerOverlay-margin: var(--theme-body-margin);
-     --theme-body-top-margin: var(--theme-body-margin);
-     --theme-body-side-margin: var(--theme-body-margin);
-     --theme-body-main-margin: var(--theme-body-margin);
-     --theme-body-bottom-margin: var(--theme-body-margin);
-     --theme-body-footer-margin: var(--theme-body-margin);
-     --theme-body-footerOutside-margin: var(--theme-body-margin);
-     --theme-content-footerSpacer-margin: var(--theme-content-margin);
-     --theme-content-preFooter-margin: var(--theme-content-margin);
-     --theme-content-footer-margin: var(--theme-content-margin);
-     --theme-page-backgroundImage-margin: var(--theme-page-margin);
-     --theme-page-backgroundImageOverlay-margin: var(--theme-page-margin);
-     --theme-page-customCode-margin: var(--theme-page-margin);   
- 
- 
-    // LAZY LOADED BANNER IMAGE PLACEHOLDER COLOR
-    --theme-body-banner-image-background-color: var(--color-transparent);
- 
-    // BODY BORDER RADIUS
-    // @TODO This doesn't do anything at the moment
-    --theme-body-border-radius: var(--theme-typography-input-border-radius);
-    
-    // ENGRID BACKGROUND IMAGE SECTION'S BACKGROUND PATTERN
-    // This is a background pattern that is shown before the hi-resolution background image is lazy loaded in, if at all
-    // It's background color "--theme-page-backgroundImage-background-color" should be the average color of the image 
-    // REF: (https://doodad.dev/pattern-generator/)
-    --theme-page-backgroundImage-background-pattern: "url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"; // Invisible GIF
- 
-    // REF: http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
-    --theme-root-font-size: 16px; // Sets a baseline font size for all other REM based font-sizes to relatively build off of
- 
-    --theme-page-backgroundImage-url: "url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"; // Invisible GIF
- 
-    // @TODO Revisit these spacing values and calculations
-    // @BODY Look into replicating "Teach a System of Space Visually" as a Development page that shows all styling decisions for the brand https://medium.com/eightshapes-llc/space-in-design-systems-188bcbae0d62#.fwng4aef7
-    --theme-spacing-sm: 0.8652rem;
-    --theme-spacing: calc(0.8652rem * 0.75);
-    --theme-spacing-lg: calc(0.8652rem * 2.5);
-    --theme-spacing-xlg: calc(0.8652rem * 5);
- 
-    // ERRORS
-    --theme-error-red: var(--theme-error);
-    --theme-error-red-grayscale: #949494;
-    --theme-error-red-faded: #FFEAE9;
-    --theme-error-page-group-background: #FFEAE9;
-    --theme-error-input-border-width: var(--theme-typography-input-border-width);
- 
-    // HIGHLIGHTS
-    --theme-highlight-background-color: #227F9E;
-    --theme-highlight-font-color: #FFFFFF;
- 
-    // CLICK TO EXPAND
-    --theme-click-to-expand-copy-height-before-fade-starts: 100px;
-    --theme-click-to-expand-copy-total-height: 250px;
-    --theme-click-to-expand-cta-image-url: url("https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_open.png");
-    --theme-click-to-expand-cta-image-width: 16px;
-    --theme-click-to-expand-cta-image-height: 16px;
- 
-    // LABEL APPENDED TO DONTIONAL GIVING AMOUNTS BASED ON GIVING FREQUENCY
-    --give-monthly-donation-amount-appended-label: "/mo";
-    --give-annual-donation-amount-appended-label: "/yr";
- 
-    // IMAGE ATTRIBUTION OVERLAY
-    --theme-image-attribution-overlay-font-family: var(--theme-typography-default-font-family);
-    --theme-image-attribution-overlay-color: rgba(255, 255, 255, 0.9);
-    --theme-image-attribution-overlay-text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-    --theme-image-attribution-overlay-font-size: 85%; 
-    --theme-image-attribution-overlay-font-style: italic; 
-    --theme-image-attribution-overlay-font-weight: 700;
-    --theme-image-attribution-overlay-text-transform: uppercase;  
-    --theme-image-attribution-overlay-margin: 0;
-    --theme-image-attribution-overlay-padding: 1.25ch 1.5ch;
-    --theme-image-attribution-overlay-background-color: rgba(0, 0, 0, 0.8);    
- 
-    // ADD THEME CUSTOM CSS PROPERTIES HERE
-    --submit__button_border-color:var(--submit__button_background-color);
+[data-engrid-theme="engrid-oceana"] {
+  // FIXED COLOR PALETTE
+  --color-transparent: transparent;
+  --color-white: rgba(255, 255, 255, 1);
+  --color-black: rgba(0, 0, 0, 1);
+  --en-pagebuilder-background-color: #c1c0c0;
 
-    // RADIO BUTTON STYLES
-    --radio_background-color_selected:var(--theme-cta);
-    --radio_box-shadow_selected:rgb(255 255 255) 0px 0px 0px 2px inset;
-  
-    // SPACING AROUND BANNER IMAGE
-    --engrid__body-banner_padding: var(--engrid__body-main_padding);
- 
-  }
- 
+  // GRAYSCALE COLOR PALETTE
+  --theme-off-white: #dfdfdf;
+  --theme-light-gray: #bfbfbf;
+  --theme-gray: #9f9f9f;
+  --theme-dark-gray: #808080;
+  --theme-off-black: #404040;
+
+  // SEMANTIC COLOR PALETTE
+  --theme-success: #677727;
+  --theme-warning: #c78f0b;
+  --theme-error: #c30d02;
+
+  // SEMANTIC GEOMETRIC SCALING
+  --scale-up-20pct: 1.2;
+  --scale-up-40pct: 1.4;
+  --scale-up-80pct: 1.8;
+  --scale-up-160pct: 2.6;
+  --scale-down-20pct: 0.8;
+  --scale-down-40pct: 0.6;
+  --scale-down-80pct: 0.2;
+
+  // FONT STACKS
+  --theme-font-stack-browser-fonts: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  // TYPOGRAPHY DEFAULT
+  --theme-typography-default-font-family: "Lato", sans-serif;
+  --theme-typography-default-color: initial;
+  --theme-typography-default-font-size: var(--theme-root-font-size);
+  --theme-typography-default-font-weight: initial;
+  --theme-typography-default-line-height: initial;
+
+  // TYPOGRAPHY H1
+  --theme-typography-h1-font-family: "ff-good-headline-web-pro-con", sans-serif;
+  --theme-typography-h1-color: #0686e5;
+  --theme-typography-h1-font-size: calc(
+    var(--theme-root-font-size) * var(--scale-up-160pct)
+  );
+  --theme-typography-h1-font-weight: 700;
+  --theme-typography-h1-line-height: initial;
+  --theme-typography-h2-text-transform: uppercase;
+
+  // TYPOGRAPHY H2
+  --theme-typography-h2-font-family: var(--theme-typography-h1-font-family);
+  --theme-typography-h2-color: var(--theme-typography-h1-font-color);
+  --theme-typography-h2-font-size: calc(
+    var(--theme-root-font-size) * var(--scale-up-80pct)
+  );
+  --theme-typography-h2-font-weight: var(--theme-typography-h1-font-weight);
+  --theme-typography-h2-line-height: initial;
+  --theme-typography-h2-text-transform: uppercase;
+
+  // TYPOGRAPHY H3
+  --theme-typography-h3-font-family: var(--theme-typography-h1-font-family);
+  --theme-typography-h3-color: var(--theme-typography-h1-font-color);
+  --theme-typography-h3-font-size: calc(
+    var(--theme-root-font-size) * var(--scale-up-40pct)
+  );
+  --theme-typography-h3-font-weight: initial;
+  --theme-typography-h3-line-height: initial;
+
+  // TYPOGRAPHY P
+  --theme-typography-p-font-family: var(--theme-typography-default-font-family);
+  --theme-typography-p-color: initial;
+  --theme-typography-p-font-size: 18px;
+  --theme-typography-p-font-weight: initial;
+  --theme-typography-p-line-height: initial;
+
+  // TYPOGRAPHY STRONG
+  --theme-typography-strong-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-strong-color: initial;
+  --theme-typography-strong-font-size: var(--theme-root-font-size);
+  --theme-typography-strong-font-weight: bold;
+  --theme-typography-strong-line-height: initial;
+
+  // TYPOGRAPHY LABEL
+  --theme-typography-label-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-label-color: initial;
+  // --theme-typography-label-font-size: var(--theme-root-font-size);
+  --theme-typography-label-font-size: 13px;
+  // --theme-typography-label-font-weight: initial;
+  --theme-typography-label-font-weight: bold;
+  --theme-typography-label-line-height: initial;
+
+  // TYPOGRAPHY INPUT
+  --theme-typography-input-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-input-color: initial;
+  --theme-typography-input-font-size: var(--theme-root-font-size);
+  --theme-typography-input-font-weight: initial;
+  --theme-typography-input-line-height: initial;
+  --theme-typography-input-background-color: var(--color-white);
+  --theme-typography-input-border-width: 1px;
+  --theme-typography-input-border-color: var(--color-black);
+  --theme-typography-input-border-radius: 4px;
+  --theme-typography-input-placeholder-color: var(--theme-light-gray);
+  --theme-typography-input-box-shadow: inset 0 1px 2px var(--theme-light-gray);
+
+  // TYPOGRAPHY INPUT:FOCUS
+  // TYPOGRAPHY INPUT:HOVER
+  --theme-typography-input-focus-hover-color: var(
+    --theme-typography-input-color
+  );
+  --theme-typography-input-focus-hover-background-color: var(
+    --theme-typography-input-background-color
+  );
+  --theme-typography-input-focus-hover-border-color: var(--theme-cta);
+  --theme-typography-input-focus-hover-border-bottom-color: var(
+    --theme-typography-input-focus-hover-border-color
+  );
+  --theme-typography-input-focus-hover-box-shadow: 0 0 0.3125rem
+    var(--theme-light-gray);
+
+  // TYPOGRAPHY RADIO
+  --theme-typography-radio-content: initial;
+  --theme-typography-radio-color: var(--theme-cta);
+  --theme-typography-radio-background-color: var(--color-white);
+  --theme-typography-radio-border-width: 1px;
+  --theme-typography-radio-border-color: var(--color-black);
+  --theme-typography-radio-border-radius: 50%;
+
+  // TYPOGRAPHY RADIO INPUT:FOCUS
+  // TYPOGRAPHY RADIO INPUT:HOVER
+  --theme-typography-radio-focus-hover-color: var(
+    --theme-typography-radio-color
+  );
+  --theme-typography-radio-focus-hover-background-color: var(
+    --theme-typography-radio-background-color
+  );
+  --theme-typography-radio-focus-hover-border-color: var(
+    --theme-typography-radio-border-color
+  );
+
+  // TYPOGRAPHY RADIO INPUT:CHECKED
+  --theme-typography-radio-selected-color: var(
+    --theme-typography-radio-background-color
+  );
+  --theme-typography-radio-selected-background-color: var(--theme-cta);
+  --theme-typography-radio-selected-border-color: var(
+    --theme-typography-radio-border-color
+  );
+
+  // TYPOGRAPHY CHECKBOX
+  --theme-typography-checkbox-color: var(--color-white);
+  --theme-typography-checkbox-background-color: var(--color-white);
+  --theme-typography-checkbox-border-width: 1px;
+  --theme-typography-checkbox-border-color: var(--theme-black);
+  --theme-typography-checkbox-border-radius: 4px;
+
+  // TYPOGRAPHY CHECKBOX INPUT:FOCUS
+  // TYPOGRAPHY CHECKBOX INPUT:HOVER
+  --theme-typography-checkbox-focus-hover-color: var(
+    --theme-typography-checkbox-color
+  );
+  --theme-typography-checkbox-focus-hover-background-color: var(
+    --theme-typography-checkbox-background-color
+  );
+  --theme-typography-checkbox-focus-hover-border-color: var(
+    --theme-typography-checkbox-border-color
+  );
+
+  // TYPOGRAPHY CHECKBOX INPUT:CHECKED
+  //--theme-typography-checkbox-checked-content:"url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E")";
+  --theme-typography-checkbox-checked-color: var(
+    --theme-typography-checkbox-background-color
+  );
+  --theme-typography-checkbox-checked-background-color: var(--theme-cta);
+  --theme-typography-checkbox-checked-border-color: var(
+    --theme-typography-checkbox-border-color
+  );
+
+  // TYPOGRAPHY SELECT
+  --theme-typography-select-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-select-color: var(--color-black);
+  --theme-typography-select-font-size: var(--theme-root-font-size);
+  --theme-typography-select-font-weight: initial;
+  --theme-typography-select-line-height: initial;
+  --theme-typography-select-background-color: var(--color-white);
+  --theme-typography-select-border-width: 1px;
+  --theme-typography-select-border-color: var(--color-black);
+  --theme-typography-select-border-radius: 4px;
+  --theme-typography-select-box-shadow: var(
+    --theme-typography-input-box-shadow
+  );
+
+  // TYPOGRAPHY SELECT:FOCUS
+  // TYPOGRAPHY SELECT:HOVER
+  --theme-typography-select-focus-hover-color: var(
+    --theme-typography-select-color
+  );
+  --theme-typography-select-focus-hover-background-color: var(
+    --theme-typography-select-background-color
+  );
+  --theme-typography-select-focus-hover-border-color: var(--theme-cta-hover);
+  --theme-typography-select-focus-hover-border-bottom-color: var(
+    --theme-typography-select-focus-hover-border-color
+  );
+  --theme-typography-select-focus-hover-box-shadow: var(
+    --theme-typography-input-focus-hover-box-shadow
+  );
+
+  // TYPOGRAPHY TEXTAREA
+  --theme-typography-textarea-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-textarea-color: initial;
+  --theme-typography-textarea-font-size: var(--theme-root-font-size);
+  --theme-typography-textarea-font-weight: initial;
+  --theme-typography-textarea-line-height: initial;
+  --theme-typography-textarea-background-color: var(--color-white);
+  --theme-typography-textarea-border-width: 1px;
+  --theme-typography-textarea-border-color: var(--color-black);
+  --theme-typography-textarea-border-radius: 4px;
+  --theme-typography-textarea-placeholder-color: var(--theme-light-gray);
+  --theme-typography-textarea-box-shadow: var(
+    --theme-typography-input-box-shadow
+  );
+
+  // TYPOGRAPHY TEXTAREA:FOCUS
+  // TYPOGRAPHY TEXTAREA:HOVER
+  --theme-typography-textarea-focus-hover-color: var(
+    --theme-typography-textarea-color
+  );
+  --theme-typography-textarea-focus-hover-background-color: var(
+    --theme-typography-textarea-background-color
+  );
+  --theme-typography-textarea-focus-hover-border-color: var(--theme-cta);
+  --theme-typography-textarea-focus-hover-box-shadow: var(
+    --theme-typography-input-focus-hover-box-shadow
+  );
+
+  // TYPOGRAPHY BUTTON
+  --theme-typography-button-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-typography-button-color: var(--color-white);
+  --theme-typography-button-font-size: var(--theme-root-font-size);
+  --theme-typography-button-font-weight: initial;
+  --theme-typography-button-line-height: initial;
+  --theme-typography-button-background-color: var(--color-black);
+  --theme-typography-button-border-width: initial;
+  --theme-typography-button-border-color: var(--color-black);
+  --theme-typography-button-border-radius: 4px;
+
+  // TYPOGRAPHY BUTTON:FOCUS
+  // TYPOGRAPHY BUTTON:HOVER
+  --theme-typography-button-focus-hover-color: var(
+    --theme-typography-button-color
+  );
+  --theme-typography-button-focus-hover-background-color: var(
+    --theme-cta-hover
+  );
+  --theme-typography-button-focus-hover-border-color: var(--theme-cta-hover);
+
+  // TYPOGRAPHY PRIMARY BUTTON
+  --theme-typography-primary-button-font-family: var(
+    --theme-typography-button-font-family
+  );
+  --theme-typography-primary-button-color: var(--color-white);
+  --theme-typography-primary-button-font-size: var(
+    --theme-typography-button-font-size
+  );
+  --theme-typography-primary-button-font-weight: var(
+    --theme-typography-button-font-weight
+  );
+  --theme-typography-primary-button-line-height: var(
+    --theme-typography-button-line-height
+  );
+  --theme-typography-primary-button-background-color: var(--theme-cta);
+  --theme-typography-primary-button-border-width: var(
+    --theme-typography-button-border-width
+  );
+  --theme-typography-primary-button-border-color: var(--theme-cta);
+  --theme-typography-primary-button-border-radius: var(
+    --theme-typography-button-border-radius
+  );
+
+  // TYPOGRAPHY PRIMARY BUTTON:FOCUS
+  // TYPOGRAPHY PRIMARY BUTTON:HOVER
+  --theme-typography-primary-button-focus-hover-color: var(
+    --theme-typography-button-focus-hover-color
+  );
+  --theme-typography-primary-button-focus-hover-background-color: var(
+    --theme-cta-hover
+  );
+  --theme-typography-primary-button-focus-hover-border-color: var(
+    --theme-typography-button-focus-hover-border-color
+  );
+
+  // TYPOGRAPHY A
+  --theme-typography-a-font-family: inherit;
+  --theme-typography-a-color: var(--theme-cta);
+  --theme-typography-a-font-size: unset;
+  --theme-typography-a-font-weight: inherit;
+  --theme-typography-a-line-height: inherit;
+  --theme-typography-a-text-decoration: underline;
+
+  // TYPOGRAPHY A:FOCUS
+  // TYPOGRAPHY A:HOVER
+  --theme-typography-a-focus-hover-color: var(--theme-typography-a-color);
+  --theme-typography-a-focus-hover-text-decoration: initial;
+
+  // CTA COLORS
+  --theme-cta: #0686e5;
+  --theme-cta-hover: #0686e5;
+
+  // PAGE, CONTENT, and BODY BACKGROUND COLOR
+  // Quick set the background color on all corresponding sections
+  --theme-page-background-color: var(--color-transparent);
+  --theme-content-background-color: var(--theme-cta);
+  --theme-body-background-color: var(--color-white);
+  // ENGRID SECTIONS BACKGROUND COLOR
+  --theme-page-alert-background-color: var(--theme-page-background-color);
+  --theme-content-header-background-color: var(
+    --theme-content-background-color
+  );
+  --theme-body-headerOutside-background-color: var(--color-transparent);
+  --theme-body-header-background-color: var(--theme-body-background-color);
+  --theme-body-title-background-color: var(--theme-body-background-color);
+  --theme-body-banner-background-color: var(--theme-body-background-color);
+  --theme-body-bannerOverlay-background-color: var(--color-transparent);
+  --theme-body-top-background-color: var(--theme-body-background-color);
+  --theme-body-side-background-color: var(--theme-body-background-color);
+  --theme-body-main-background-color: var(--theme-body-background-color);
+  --theme-body-bottom-background-color: var(--theme-body-background-color);
+  --theme-body-footer-background-color: var(--theme-body-background-color);
+  --theme-body-footerOutside-background-color: var(--color-transparent);
+  --theme-content-footerSpacer-background-color: var(--color-transparent);
+  --theme-content-preFooter-background-color: var(
+    --theme-content-background-color
+  );
+  --theme-content-footer-background-color: var(--theme-cta);
+  --theme-page-backgroundImage-background-color: var(
+    --theme-page-background-color
+  );
+  --theme-page-backgroundImageOverlay-background-color: var(
+    --color-transparent
+  );
+  --theme-page-customCode-background-color: var(--theme-page-background-color);
+
+  // ENGRID SECTIONS PADDING
+  // QUICK SETTINGS
+  --theme-page-padding: 0px;
+  --theme-content-padding: 0px;
+  --theme-body-padding: 0px 60px;
+  // DETAIL SETTINGS
+  --theme-page-alert-padding: var(--theme-page-padding);
+  --theme-content-header-padding: var(--theme-content-padding);
+  --theme-body-headerOutside-padding: var(--theme-body-padding);
+  --theme-body-header-padding: var(--theme-body-padding);
+  --theme-body-title-padding: var(--theme-body-padding);
+  --theme-body-banner-padding: 0px;
+  --theme-body-bannerOverlay-padding: var(--theme-body-padding);
+  --theme-body-top-padding: var(--theme-body-padding);
+  --theme-body-side-padding: var(--theme-body-padding);
+  --theme-body-main-padding: var(--theme-body-padding);
+  --theme-body-bottom-padding: var(--theme-body-padding);
+  --theme-body-footer-padding: var(--theme-body-padding);
+  --theme-body-footerOutside-padding: var(--theme-body-padding);
+  --theme-content-footerSpacer-padding: var(--theme-content-padding);
+  --theme-content-preFooter-padding: var(--theme-content-padding);
+  --theme-content-footer-padding: var(--theme-content-padding);
+  --theme-page-backgroundImage-padding: 0px;
+  --theme-page-backgroundImageOverlay-padding: var(--theme-page-padding);
+  --theme-page-customCode-padding: var(--theme-page-padding);
+
+  // ENGRID SECTIONS MARGIN
+  // QUICK SETTINGS
+  --theme-page-margin: 0px;
+  --theme-content-margin: 0px;
+  --theme-body-margin: 0px;
+  // DETAIL SETTINGS
+  --theme-page-alert-margin: var(--theme-page-margin);
+  --theme-content-header-margin: var(--theme-content-margin);
+  --theme-body-headerOutside-margin: var(--theme-body-margin);
+  --theme-body-header-margin: var(--theme-body-margin);
+  --theme-body-title-margin: var(--theme-body-margin);
+  --theme-body-banner-margin: var(--theme-body-margin);
+  --theme-body-bannerOverlay-margin: var(--theme-body-margin);
+  --theme-body-top-margin: var(--theme-body-margin);
+  --theme-body-side-margin: var(--theme-body-margin);
+  --theme-body-main-margin: var(--theme-body-margin);
+  --theme-body-bottom-margin: var(--theme-body-margin);
+  --theme-body-footer-margin: var(--theme-body-margin);
+  --theme-body-footerOutside-margin: var(--theme-body-margin);
+  --theme-content-footerSpacer-margin: var(--theme-content-margin);
+  --theme-content-preFooter-margin: var(--theme-content-margin);
+  --theme-content-footer-margin: var(--theme-content-margin);
+  --theme-page-backgroundImage-margin: var(--theme-page-margin);
+  --theme-page-backgroundImageOverlay-margin: var(--theme-page-margin);
+  --theme-page-customCode-margin: var(--theme-page-margin);
+
+  // LAZY LOADED BANNER IMAGE PLACEHOLDER COLOR
+  --theme-body-banner-image-background-color: var(--color-transparent);
+
+  // BODY BORDER RADIUS
+  // @TODO This doesn't do anything at the moment
+  --theme-body-border-radius: var(--theme-typography-input-border-radius);
+
+  // ENGRID BACKGROUND IMAGE SECTION'S BACKGROUND PATTERN
+  // This is a background pattern that is shown before the hi-resolution background image is lazy loaded in, if at all
+  // It's background color "--theme-page-backgroundImage-background-color" should be the average color of the image
+  // REF: (https://doodad.dev/pattern-generator/)
+  --theme-page-backgroundImage-background-pattern: "url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"; // Invisible GIF
+
+  // REF: http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
+  --theme-root-font-size: 16px; // Sets a baseline font size for all other REM based font-sizes to relatively build off of
+
+  --theme-page-backgroundImage-url: "url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"; // Invisible GIF
+
+  // @TODO Revisit these spacing values and calculations
+  // @BODY Look into replicating "Teach a System of Space Visually" as a Development page that shows all styling decisions for the brand https://medium.com/eightshapes-llc/space-in-design-systems-188bcbae0d62#.fwng4aef7
+  --theme-spacing-sm: 0.8652rem;
+  --theme-spacing: calc(0.8652rem * 0.75);
+  --theme-spacing-lg: calc(0.8652rem * 2.5);
+  --theme-spacing-xlg: calc(0.8652rem * 5);
+
+  // ERRORS
+  --theme-error-red: var(--theme-error);
+  --theme-error-red-grayscale: #949494;
+  --theme-error-red-faded: #ffeae9;
+  --theme-error-page-group-background: #ffeae9;
+  --theme-error-input-border-width: var(--theme-typography-input-border-width);
+
+  // HIGHLIGHTS
+  --theme-highlight-background-color: #227f9e;
+  --theme-highlight-font-color: #ffffff;
+
+  // CLICK TO EXPAND
+  --theme-click-to-expand-copy-height-before-fade-starts: 100px;
+  --theme-click-to-expand-copy-total-height: 250px;
+  --theme-click-to-expand-cta-image-url: url("https://e-activist.com/ea-demo/frontend/pbAssets/build/images/en_open.png");
+  --theme-click-to-expand-cta-image-width: 16px;
+  --theme-click-to-expand-cta-image-height: 16px;
+
+  // LABEL APPENDED TO DONTIONAL GIVING AMOUNTS BASED ON GIVING FREQUENCY
+  --give-monthly-donation-amount-appended-label: "/mo";
+  --give-annual-donation-amount-appended-label: "/yr";
+
+  // IMAGE ATTRIBUTION OVERLAY
+  --theme-image-attribution-overlay-font-family: var(
+    --theme-typography-default-font-family
+  );
+  --theme-image-attribution-overlay-color: rgba(255, 255, 255, 0.9);
+  --theme-image-attribution-overlay-text-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
+  --theme-image-attribution-overlay-font-size: 85%;
+  --theme-image-attribution-overlay-font-style: italic;
+  --theme-image-attribution-overlay-font-weight: 700;
+  --theme-image-attribution-overlay-text-transform: uppercase;
+  --theme-image-attribution-overlay-margin: 0;
+  --theme-image-attribution-overlay-padding: 1.25ch 1.5ch;
+  --theme-image-attribution-overlay-background-color: rgba(0, 0, 0, 0.8);
+
+  // ADD THEME CUSTOM CSS PROPERTIES HERE
+  --submit__button_border-color: var(--submit__button_background-color);
+
+  // RADIO BUTTON STYLES
+  --radio_background-color_selected: var(--theme-cta);
+  --radio_box-shadow_selected: rgb(255 255 255) 0px 0px 0px 2px inset;
+
+  // SPACING AROUND BANNER IMAGE
+  --engrid__body-banner_padding: var(--engrid__body-main_padding);
+}

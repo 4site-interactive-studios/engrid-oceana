@@ -21,7 +21,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, October 29, 2021 @ 13:58:46 ET
+ *  Date: Tuesday, November 2, 2021 @ 18:33:56 ET
  *  By: fe
  *  ENGrid styles: v0.5.2
  *  ENGrid scripts: v0.5.3
@@ -314,7 +314,9 @@ template{
   --scale-down-20pct:0.8;
   --scale-down-40pct:0.6;
   --scale-down-80pct:0.2;
-  --theme-font-stack-browser-fonts:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  --theme-font-stack-browser-fonts:-apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
   --theme-typography-default-font-family:"Lato", sans-serif;
   --theme-typography-default-color:initial;
   --theme-typography-default-font-size:var(--theme-root-font-size);
@@ -341,17 +343,23 @@ template{
   --theme-typography-p-font-size:18px;
   --theme-typography-p-font-weight:initial;
   --theme-typography-p-line-height:initial;
-  --theme-typography-strong-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-strong-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-strong-color:initial;
   --theme-typography-strong-font-size:var(--theme-root-font-size);
   --theme-typography-strong-font-weight:bold;
   --theme-typography-strong-line-height:initial;
-  --theme-typography-label-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-label-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-label-color:initial;
   --theme-typography-label-font-size:13px;
   --theme-typography-label-font-weight:bold;
   --theme-typography-label-line-height:initial;
-  --theme-typography-input-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-input-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-input-color:initial;
   --theme-typography-input-font-size:var(--theme-root-font-size);
   --theme-typography-input-font-weight:initial;
@@ -362,38 +370,64 @@ template{
   --theme-typography-input-border-radius:4px;
   --theme-typography-input-placeholder-color:var(--theme-light-gray);
   --theme-typography-input-box-shadow:inset 0 1px 2px var(--theme-light-gray);
-  --theme-typography-input-focus-hover-color:var(--theme-typography-input-color);
-  --theme-typography-input-focus-hover-background-color:var(--theme-typography-input-background-color);
+  --theme-typography-input-focus-hover-color:var(
+    --theme-typography-input-color
+  );
+  --theme-typography-input-focus-hover-background-color:var(
+    --theme-typography-input-background-color
+  );
   --theme-typography-input-focus-hover-border-color:var(--theme-cta);
-  --theme-typography-input-focus-hover-border-bottom-color:var(--theme-typography-input-focus-hover-border-color);
-  --theme-typography-input-focus-hover-box-shadow:0 0 0.3125rem var(--theme-light-gray);
+  --theme-typography-input-focus-hover-border-bottom-color:var(
+    --theme-typography-input-focus-hover-border-color
+  );
+  --theme-typography-input-focus-hover-box-shadow:0 0 0.3125rem
+    var(--theme-light-gray);
   --theme-typography-radio-content:initial;
   --theme-typography-radio-color:var(--theme-cta);
   --theme-typography-radio-background-color:var(--color-white);
   --theme-typography-radio-border-width:1px;
   --theme-typography-radio-border-color:var(--color-black);
-  --theme-typography-radio-border-radius:50%
- 
-    // TYPOGRAPHY RADIO INPUT:FOCUS
-    // TYPOGRAPHY RADIO INPUT:HOVER
-    --theme-typography-radio-focus-hover-color: var(--theme-typography-radio-color);
-  --theme-typography-radio-focus-hover-background-color:var(--theme-typography-radio-background-color);
-  --theme-typography-radio-focus-hover-border-color:var(--theme-typography-radio-border-color);
-  --theme-typography-radio-selected-color:var(--theme-typography-radio-background-color);
+  --theme-typography-radio-border-radius:50%;
+  --theme-typography-radio-focus-hover-color:var(
+    --theme-typography-radio-color
+  );
+  --theme-typography-radio-focus-hover-background-color:var(
+    --theme-typography-radio-background-color
+  );
+  --theme-typography-radio-focus-hover-border-color:var(
+    --theme-typography-radio-border-color
+  );
+  --theme-typography-radio-selected-color:var(
+    --theme-typography-radio-background-color
+  );
   --theme-typography-radio-selected-background-color:var(--theme-cta);
-  --theme-typography-radio-selected-border-color:var(--theme-typography-radio-border-color);
+  --theme-typography-radio-selected-border-color:var(
+    --theme-typography-radio-border-color
+  );
   --theme-typography-checkbox-color:var(--color-white);
   --theme-typography-checkbox-background-color:var(--color-white);
   --theme-typography-checkbox-border-width:1px;
   --theme-typography-checkbox-border-color:var(--theme-black);
   --theme-typography-checkbox-border-radius:4px;
-  --theme-typography-checkbox-focus-hover-color:var(--theme-typography-checkbox-color);
-  --theme-typography-checkbox-focus-hover-background-color:var(--theme-typography-checkbox-background-color);
-  --theme-typography-checkbox-focus-hover-border-color:var(--theme-typography-checkbox-border-color);
-  --theme-typography-checkbox-checked-color:var(--theme-typography-checkbox-background-color);
+  --theme-typography-checkbox-focus-hover-color:var(
+    --theme-typography-checkbox-color
+  );
+  --theme-typography-checkbox-focus-hover-background-color:var(
+    --theme-typography-checkbox-background-color
+  );
+  --theme-typography-checkbox-focus-hover-border-color:var(
+    --theme-typography-checkbox-border-color
+  );
+  --theme-typography-checkbox-checked-color:var(
+    --theme-typography-checkbox-background-color
+  );
   --theme-typography-checkbox-checked-background-color:var(--theme-cta);
-  --theme-typography-checkbox-checked-border-color:var(--theme-typography-checkbox-border-color);
-  --theme-typography-select-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-checkbox-checked-border-color:var(
+    --theme-typography-checkbox-border-color
+  );
+  --theme-typography-select-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-select-color:var(--color-black);
   --theme-typography-select-font-size:var(--theme-root-font-size);
   --theme-typography-select-font-weight:initial;
@@ -402,13 +436,25 @@ template{
   --theme-typography-select-border-width:1px;
   --theme-typography-select-border-color:var(--color-black);
   --theme-typography-select-border-radius:4px;
-  --theme-typography-select-box-shadow:var(--theme-typography-input-box-shadow);
-  --theme-typography-select-focus-hover-color:var(--theme-typography-select-color);
-  --theme-typography-select-focus-hover-background-color:var(--theme-typography-select-background-color);
+  --theme-typography-select-box-shadow:var(
+    --theme-typography-input-box-shadow
+  );
+  --theme-typography-select-focus-hover-color:var(
+    --theme-typography-select-color
+  );
+  --theme-typography-select-focus-hover-background-color:var(
+    --theme-typography-select-background-color
+  );
   --theme-typography-select-focus-hover-border-color:var(--theme-cta-hover);
-  --theme-typography-select-focus-hover-border-bottom-color:var(--theme-typography-select-focus-hover-border-color);
-  --theme-typography-select-focus-hover-box-shadow:var(--theme-typography-input-focus-hover-box-shadow);
-  --theme-typography-textarea-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-select-focus-hover-border-bottom-color:var(
+    --theme-typography-select-focus-hover-border-color
+  );
+  --theme-typography-select-focus-hover-box-shadow:var(
+    --theme-typography-input-focus-hover-box-shadow
+  );
+  --theme-typography-textarea-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-textarea-color:initial;
   --theme-typography-textarea-font-size:var(--theme-root-font-size);
   --theme-typography-textarea-font-weight:initial;
@@ -418,12 +464,22 @@ template{
   --theme-typography-textarea-border-color:var(--color-black);
   --theme-typography-textarea-border-radius:4px;
   --theme-typography-textarea-placeholder-color:var(--theme-light-gray);
-  --theme-typography-textarea-box-shadow:var(--theme-typography-input-box-shadow);
-  --theme-typography-textarea-focus-hover-color:var(--theme-typography-textarea-color);
-  --theme-typography-textarea-focus-hover-background-color:var(--theme-typography-textarea-background-color);
+  --theme-typography-textarea-box-shadow:var(
+    --theme-typography-input-box-shadow
+  );
+  --theme-typography-textarea-focus-hover-color:var(
+    --theme-typography-textarea-color
+  );
+  --theme-typography-textarea-focus-hover-background-color:var(
+    --theme-typography-textarea-background-color
+  );
   --theme-typography-textarea-focus-hover-border-color:var(--theme-cta);
-  --theme-typography-textarea-focus-hover-box-shadow:var(--theme-typography-input-focus-hover-box-shadow);
-  --theme-typography-button-font-family:var(--theme-typography-default-font-family);
+  --theme-typography-textarea-focus-hover-box-shadow:var(
+    --theme-typography-input-focus-hover-box-shadow
+  );
+  --theme-typography-button-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-typography-button-color:var(--color-white);
   --theme-typography-button-font-size:var(--theme-root-font-size);
   --theme-typography-button-font-weight:initial;
@@ -432,21 +488,43 @@ template{
   --theme-typography-button-border-width:initial;
   --theme-typography-button-border-color:var(--color-black);
   --theme-typography-button-border-radius:4px;
-  --theme-typography-button-focus-hover-color:var(--theme-typography-button-color);
-  --theme-typography-button-focus-hover-background-color:var(--theme-cta-hover);
+  --theme-typography-button-focus-hover-color:var(
+    --theme-typography-button-color
+  );
+  --theme-typography-button-focus-hover-background-color:var(
+    --theme-cta-hover
+  );
   --theme-typography-button-focus-hover-border-color:var(--theme-cta-hover);
-  --theme-typography-primary-button-font-family:var(--theme-typography-button-font-family);
+  --theme-typography-primary-button-font-family:var(
+    --theme-typography-button-font-family
+  );
   --theme-typography-primary-button-color:var(--color-white);
-  --theme-typography-primary-button-font-size:var(--theme-typography-button-font-size);
-  --theme-typography-primary-button-font-weight:var(--theme-typography-button-font-weight);
-  --theme-typography-primary-button-line-height:var(--theme-typography-button-line-height);
+  --theme-typography-primary-button-font-size:var(
+    --theme-typography-button-font-size
+  );
+  --theme-typography-primary-button-font-weight:var(
+    --theme-typography-button-font-weight
+  );
+  --theme-typography-primary-button-line-height:var(
+    --theme-typography-button-line-height
+  );
   --theme-typography-primary-button-background-color:var(--theme-cta);
-  --theme-typography-primary-button-border-width:var(--theme-typography-button-border-width);
+  --theme-typography-primary-button-border-width:var(
+    --theme-typography-button-border-width
+  );
   --theme-typography-primary-button-border-color:var(--theme-cta);
-  --theme-typography-primary-button-border-radius:var(--theme-typography-button-border-radius);
-  --theme-typography-primary-button-focus-hover-color:var(--theme-typography-button-focus-hover-color);
-  --theme-typography-primary-button-focus-hover-background-color:var(--theme-cta-hover);
-  --theme-typography-primary-button-focus-hover-border-color:var(--theme-typography-button-focus-hover-border-color);
+  --theme-typography-primary-button-border-radius:var(
+    --theme-typography-button-border-radius
+  );
+  --theme-typography-primary-button-focus-hover-color:var(
+    --theme-typography-button-focus-hover-color
+  );
+  --theme-typography-primary-button-focus-hover-background-color:var(
+    --theme-cta-hover
+  );
+  --theme-typography-primary-button-focus-hover-border-color:var(
+    --theme-typography-button-focus-hover-border-color
+  );
   --theme-typography-a-font-family:inherit;
   --theme-typography-a-color:var(--theme-cta);
   --theme-typography-a-font-size:unset;
@@ -459,7 +537,9 @@ template{
   --theme-content-background-color:var(--theme-cta);
   --theme-body-background-color:var(--color-white);
   --theme-page-alert-background-color:var(--theme-page-background-color);
-  --theme-content-header-background-color:var(--theme-content-background-color);
+  --theme-content-header-background-color:var(
+    --theme-content-background-color
+  );
   --theme-body-headerOutside-background-color:var(--color-transparent);
   --theme-body-header-background-color:var(--theme-body-background-color);
   --theme-body-title-background-color:var(--theme-body-background-color);
@@ -472,10 +552,16 @@ template{
   --theme-body-footer-background-color:var(--theme-body-background-color);
   --theme-body-footerOutside-background-color:var(--color-transparent);
   --theme-content-footerSpacer-background-color:var(--color-transparent);
-  --theme-content-preFooter-background-color:var(--theme-content-background-color);
+  --theme-content-preFooter-background-color:var(
+    --theme-content-background-color
+  );
   --theme-content-footer-background-color:var(--theme-cta);
-  --theme-page-backgroundImage-background-color:var(--theme-page-background-color);
-  --theme-page-backgroundImageOverlay-background-color:var(--color-transparent);
+  --theme-page-backgroundImage-background-color:var(
+    --theme-page-background-color
+  );
+  --theme-page-backgroundImageOverlay-background-color:var(
+    --color-transparent
+  );
   --theme-page-customCode-background-color:var(--theme-page-background-color);
   --theme-page-padding:0px;
   --theme-content-padding:0px;
@@ -544,7 +630,9 @@ template{
   --theme-click-to-expand-cta-image-height:16px;
   --give-monthly-donation-amount-appended-label:"/mo";
   --give-annual-donation-amount-appended-label:"/yr";
-  --theme-image-attribution-overlay-font-family:var(--theme-typography-default-font-family);
+  --theme-image-attribution-overlay-font-family:var(
+    --theme-typography-default-font-family
+  );
   --theme-image-attribution-overlay-color:#ffffffe6;
   --theme-image-attribution-overlay-text-shadow:0px 0px 5px #00000026;
   --theme-image-attribution-overlay-font-size:85%;
@@ -6408,6 +6496,7 @@ body:not(#en__pagebuilder)[data-engrid-no-body-banner]
   outline:0;
   position:relative;
   transition-property:transform,visibility,opacity;
+  white-space:normal;
 }
 
 .tippy-box[data-placement^=top]>.tippy-arrow{
@@ -7488,7 +7577,15 @@ body:not([data-engrid-debug]) #debug-bar{
   width:100%;
 }
 
-[data-engrid-theme=engrid-oceana] .en__contact__toggle,[data-engrid-theme=engrid-oceana] .en__ecardrecipients__list{
+[data-engrid-theme=engrid-oceana] .en__ecardrecipients__list{
+  display:none;
+}
+
+[data-engrid-theme=engrid-oceana] .en__contactMessage__plainText{
+  min-height:500px;
+}
+
+[data-engrid-theme=engrid-oceana] .en__contact__toggle{
   display:none;
 }
 
@@ -7569,24 +7666,6 @@ body:not([data-engrid-debug]) #debug-bar{
 
 [data-engrid-theme=engrid-oceana]{
   --engrid__body-banner_padding:var(--engrid__body-main_padding);
-}
-
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio
-input[type=radio]+label{
-  background-color:#0686e5;
-  background-position-x:40px;
-  border:var(--donation-amount__button_border-width) solid #0686e5;
-  border-radius:50%;
-  color:var(--donation-amount__button_color);
-  font-family:Lato,sans-serif;
-  font-size:17px;
-  font-weight:700;
-  height:69px;
-  line-height:1;
-  margin:0 0 10px 12px;
-  padding:24px 0;
-  text-align:center;
-  width:69px;
 }
 
 [data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio
@@ -7710,33 +7789,6 @@ input[type=radio]:checked+label{
   width:2rem;
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther
-.en__field__element
-.en__field__item{
-  padding-left:0;
-  padding-right:0;
-}
-
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active
-.en__field__item
-.en__field__input--other{
-  background-color:#e4e4e4;
-  border-color:#8e8e8e;
-  color:#000;
-}
-
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther
-.en__field__element
-.en__field__item:last-child{
-  padding-left:1rem;
-}
-
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element
-.en__field__item{
-  flex-basis:auto;
-  flex-grow:0;
-}
-
 [data-engrid-theme=engrid-oceana] .footer-col1,[data-engrid-theme=engrid-oceana] .footer-col2{
   padding:1rem;
 }
@@ -7807,7 +7859,9 @@ input[type=radio]:checked+label{
   }
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item{
+[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther
+.en__field__element
+.en__field__item{
   padding-left:0;
   padding-right:0;
 }
@@ -7837,22 +7891,28 @@ input[type=radio]:checked+label{
   top:calc(50% - 14px);
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active .en__field__item .en__field__input--other{
+[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio.en__field--withOther--active
+.en__field__item
+.en__field__input--other{
   background-color:#e4e4e4;
   border-color:#8e8e8e;
   color:#000;
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther .en__field__element .en__field__item:last-child{
+[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field.en__field--withOther
+.en__field__element
+.en__field__item:last-child{
   padding-left:1rem;
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element .en__field__item{
+[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio>.en__field__element
+.en__field__item{
   flex-basis:auto;
   flex-grow:0;
 }
 
-[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label{
+[data-engrid-theme=engrid-oceana].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio
+input[type=radio]+label{
   background-color:#0686e5;
   background-position-x:40px;
   border:var(--donation-amount__button_border-width) solid #0686e5;
@@ -7869,7 +7929,10 @@ input[type=radio]:checked+label{
   width:69px;
 }
 
-[data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio .en__field__item input[type=radio]:checked+label{
+[data-engrid-theme=engrid-oceana] .radio-to-buttons_donationAmt
+.en__field--donationAmt.en__field--radio
+.en__field__item
+input[type=radio]:checked+label{
   background-color:var(--color-white);
   border:3px solid var(--theme-cta);
   color:var(--theme-cta);
