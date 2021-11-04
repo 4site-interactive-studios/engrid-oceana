@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 3, 2021 @ 21:50:01 ET
+ *  Date: Thursday, November 4, 2021 @ 13:55:42 ET
  *  By: fe
  *  ENGrid styles: v0.5.2
  *  ENGrid scripts: v0.5.3
@@ -13219,8 +13219,7 @@ const customScript = function () {
       }
     }
 
-    countrySelect.addEventListener("change", function () {
-      const country = this.value;
+    function setOptIn(country) {
       hideAllCheckboxes();
 
       if (country === "United States" || country === "American Samoa" || country === "Guam" || country === "Northern Mariana Islands" || country === "Puerto Rico" || country === "Virgin Islands, U.S.") {
@@ -13243,7 +13242,13 @@ const customScript = function () {
           defaultCheckbox.checked = false;
         }
       }
+    }
+
+    countrySelect.addEventListener("change", function () {
+      const country = this.value;
+      setOptIn(country);
     });
+    setOptIn(countrySelect.value);
   }
 };
 ;// CONCATENATED MODULE: ./src/index.ts

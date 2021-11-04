@@ -67,8 +67,7 @@ export const customScript = function () {
         brazilCheckbox.checked = false;
       }
     }
-    countrySelect.addEventListener("change", function () {
-      const country = this.value;
+    function setOptIn(country) {
       hideAllCheckboxes();
       if (
         country === "United States" ||
@@ -97,6 +96,11 @@ export const customScript = function () {
           defaultCheckbox.checked = false;
         }
       }
+    }
+    countrySelect.addEventListener("change", function () {
+      const country = this.value;
+      setOptIn(country);
     });
+    setOptIn(countrySelect.value);
   }
 };
