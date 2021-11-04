@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 2, 2021 @ 18:33:56 ET
+ *  Date: Wednesday, November 3, 2021 @ 21:50:01 ET
  *  By: fe
  *  ENGrid styles: v0.5.2
  *  ENGrid scripts: v0.5.3
@@ -13186,6 +13186,63 @@ const customScript = function () {
           tidepoolButton.disabled = true;
         }
       });
+    });
+  }
+
+  const countrySelect = document.querySelector("#en__field_supporter_country");
+
+  if (countrySelect) {
+    const defaultCheckbox = document.querySelector("#en__field_supporter_questions_210910");
+    const usCheckbox = document.querySelector("#en__field_supporter_questions_18912");
+    const canadaCheckbox = document.querySelector("#en__field_supporter_questions_37483");
+    const brazilCheckbox = document.querySelector("#en__field_supporter_questions_409092");
+
+    function hideAllCheckboxes() {
+      if (defaultCheckbox) {
+        defaultCheckbox.closest(".en__field").style.display = "none";
+        defaultCheckbox.checked = false;
+      }
+
+      if (usCheckbox) {
+        usCheckbox.closest(".en__field").style.display = "none";
+        usCheckbox.checked = false;
+      }
+
+      if (canadaCheckbox) {
+        canadaCheckbox.closest(".en__field").style.display = "none";
+        canadaCheckbox.checked = false;
+      }
+
+      if (brazilCheckbox) {
+        brazilCheckbox.closest(".en__field").style.display = "none";
+        brazilCheckbox.checked = false;
+      }
+    }
+
+    countrySelect.addEventListener("change", function () {
+      const country = this.value;
+      hideAllCheckboxes();
+
+      if (country === "United States" || country === "American Samoa" || country === "Guam" || country === "Northern Mariana Islands" || country === "Puerto Rico" || country === "Virgin Islands, U.S.") {
+        if (usCheckbox) {
+          usCheckbox.checked = true;
+        }
+      } else if (country === "Canada") {
+        if (canadaCheckbox) {
+          canadaCheckbox.closest(".en__field").style.display = "block";
+          canadaCheckbox.checked = false;
+        }
+      } else if (country === "Brazil") {
+        if (brazilCheckbox) {
+          brazilCheckbox.closest(".en__field").style.display = "block";
+          brazilCheckbox.checked = false;
+        }
+      } else {
+        if (defaultCheckbox) {
+          defaultCheckbox.closest(".en__field").style.display = "block";
+          defaultCheckbox.checked = false;
+        }
+      }
     });
   }
 };
