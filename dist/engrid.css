@@ -21,7 +21,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 16, 2021 @ 22:03:24 ET
+ *  Date: Tuesday, November 16, 2021 @ 22:12:02 ET
  *  By: bryancasler
  *  ENGrid styles: v0.6.0
  *  ENGrid scripts: v0.6.3
@@ -7521,7 +7521,7 @@ body:not([data-engrid-debug]) #debug-bar{
   --default_line-height:initial;
   --h1_font-family:"ff-good-headline-web-pro-con", sans-serif;
   --h1_color:#0686e5;
-  --h1_font-size:calc(var(--root_font-size)*var(--scale-up_160pct));
+  --h1_font-size:50px;
   --h1_font-weight:bold;
   --h1_line-height:100%;
   --h1_text-transform:uppercase;
