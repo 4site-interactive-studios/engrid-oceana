@@ -2,7 +2,7 @@
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 
-[data-engrid-theme="engrid-oceana"] {
+[data-engrid-theme="oceana"] {
   --engrid__page_background-color: #d8f2fb;
 
   // TYPOGRAPHY DEFAULT
@@ -17,8 +17,15 @@
   --h1_color: #0686e5;
   --h1_font-size: calc(var(--root_font-size) * var(--scale-up_160pct));
   --h1_font-weight: bold;
-  --h1_line-height: initial;
+  --h1_line-height: 100%;
   --h1_text-transform: uppercase;
+
+  // TYPOGRAPHY H2
+  --h2_line-height: 100%;
+  --h2_text-transform: uppercase;
+
+  // TYPOGRAPHY H3
+  --h3_line-height: 100%;
 
   // TYPOGRAPHY P
   --p_font-family: "Lato", sans-serif;
@@ -193,7 +200,7 @@
 }
 
 /* Add your custom theme styles here */
-[data-engrid-theme="engrid-oceana"] {
+[data-engrid-theme="oceana"] {
   @mixin until-mobile-l {
     // STYLES
   }
@@ -305,10 +312,10 @@
 
 // Mobile Style - Remove background color for header
 @media (max-width: 768px) {
-  --engrid__page_background-color: transparent;
+  // --engrid__page_background-color: transparent;
 }
 
-[data-engrid-theme="engrid-oceana"] {
+[data-engrid-theme="oceana"] {
   /** Donation Page: Radio to Button Styling **/
   &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
@@ -420,7 +427,7 @@
   /* BODY STYLES */
 
   h2 {
-    font-size: 50px;
+    // font-size: 50px;
     font-weight: 700;
   }
   h5 {
