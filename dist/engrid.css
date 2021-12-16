@@ -21,10 +21,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 16, 2021 @ 22:12:02 ET
- *  By: bryancasler
- *  ENGrid styles: v0.6.0
- *  ENGrid scripts: v0.6.3
+ *  Date: Thursday, December 16, 2021 @ 09:55:31 ET
+ *  By: fe
+ *  ENGrid styles: v0.6.13
+ *  ENGrid scripts: v0.6.16
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2797,6 +2797,15 @@ input[type=checkbox]:checked+label:before{
   box-shadow:var(--radio_box-shadow_selected);
   color:var(--radio_color_selected);
 }
+
+@-moz-document url-prefix(){
+  .en__pg__select input[type=radio]{
+    accent-color:var(--radio_color_selected);
+    transform:scale(1.4);
+    visibility:visible !important;
+    width:var(--radio_height);
+  }
+}
 input.en__contactDetails__select,input.en__field__input--checkbox,input.en__field__input--radio{
   clip:rect(0 0 0 0);
   border:0;
@@ -5337,6 +5346,48 @@ header .indicator__percentage{
     color:#fff;
   }
 }
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount]:not(.engrid-open):not([class*=animate-]){
+  display:none;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace{
+  transition:opacity .3s cubic-bezier(.4, 0, 1, 1),transform .3s cubic-bezier(1, 0, 0, 1);
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace audio,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace iframe,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace img,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace picture,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace video{
+  transition:opacity .15s cubic-bezier(.4, 0, 1, 1) .2s;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open){
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transform:scaleY(0);
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open) audio,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open) iframe,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open) img,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open) picture,body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace:not(.engrid-open) video{
+  opacity:0;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-replace.engrid-open{
+  max-height:100%;
+  transform:scaleY(1);
+  transform-origin:top;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-vertical-slide{
+  transition:max-height .3s ease-in-out;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-vertical-slide:not(.engrid-open){
+  max-height:0;
+  overflow:hidden;
+}
+
+body:not(#en__pagebuilder):not([data-engrid-debug]) [class*=showifamount].animate-vertical-slide.engrid-open{
+  max-height:100%;
+}
 [data-engrid-theme]{
   --engrid__page_padding:0px;
   --engrid__page_margin:0px;
@@ -7350,6 +7401,10 @@ body:not([data-engrid-debug]) #debug-bar{
 
 #EN__RootElement div:not(.pboAdvancedRow__preview)>.en__component--advrow>.page-backgroundImage,#EN__RootElement div:not(.pboAdvancedRow__preview)>.en__component--advrow>.page-customCode{
   background-color:var(--color_transparent) !important;
+}
+
+#en__pagebuilder [class*=showifamount],[data-engrid-debug] [class*=showifamount]{
+  background-color:#0000ff1a !important;
 }
 #en__pagebuilder
 .edit-warning.en__component.en__component--active.en__component--activeTarget{

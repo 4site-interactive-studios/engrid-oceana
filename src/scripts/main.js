@@ -68,6 +68,11 @@ export const customScript = function () {
       }
     }
     function setOptIn(country) {
+      // If we can find any element with the ".show-optin" class, we don't run this function and keep things default
+      const showOptIn = document.querySelector(".show-optin");
+      if (showOptIn) {
+        return false;
+      }
       hideAllCheckboxes();
       if (
         country === "United States" ||
