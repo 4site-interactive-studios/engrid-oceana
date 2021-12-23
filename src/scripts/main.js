@@ -5,7 +5,8 @@ export const customScript = function () {
     const loadingAnimation = () => {
       tidepoolButton.innerHTML = `<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>Sending...</span></span>`;
     };
-    tidepoolButton.addEventListener("click", () => {
+    tidepoolButton.addEventListener("click", (e) => {
+      e.preventDefault();
       loadingAnimation();
       let formData = new URLSearchParams();
       formData.append("supporter.firstName", tidepoolButton.dataset.firstname);

@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, December 16, 2021 @ 09:55:31 ET
+ *  Date: Thursday, December 23, 2021 @ 08:41:39 ET
  *  By: fe
- *  ENGrid styles: v0.6.13
- *  ENGrid scripts: v0.6.16
+ *  ENGrid styles: v0.7.0
+ *  ENGrid scripts: v0.7.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -9108,6 +9108,7 @@ const TranslateOptionsDefaults = {
 
 class Loader {
     constructor() {
+        this.logger = new EngridLogger("Logger", "gold", "black", "🔁");
         this.cssElement = document.querySelector('link[href*="engrid."][rel="stylesheet"]');
         this.jsElement = document.querySelector('script[src*="engrid."]');
     }
@@ -9117,27 +9118,12 @@ class Loader {
         var _a, _b, _c;
         const isLoaded = engrid_ENGrid.getBodyData("loaded");
         let assets = this.getOption("assets");
-        const enIsLoaded = engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs");
-        if (isLoaded) {
-            if (engrid_ENGrid.debug)
-                console.log("ENgrid Loader: LOADED");
+        if (isLoaded || !assets) {
+            this.logger.success("ENgrid Loader: LOADED");
             return false;
         }
-        if (!assets) {
-            if (!enIsLoaded) {
-                if (engrid_ENGrid.debug)
-                    console.log("ENgrid Loader: EngagingNetworks Script NOT LOADED");
-                assets = "flush";
-            }
-            else {
-                if (engrid_ENGrid.debug)
-                    console.log("ENgrid Loader: LOADED");
-                return false;
-            }
-        }
         // Load the right ENgrid
-        if (engrid_ENGrid.debug)
-            console.log("ENgrid Loader: RELOADING");
+        this.logger.log("ENgrid Loader: RELOADING");
         engrid_ENGrid.setBodyData("loaded", "true"); // Set the loaded flag, so the next time we don't reload
         // Fetch the desired repo, assets location, and override JS/CSS
         const engrid_repo = this.getOption("repo-name");
@@ -9146,8 +9132,7 @@ class Loader {
         let engrid_css_url = "";
         switch (assets) {
             case "local":
-                if (engrid_ENGrid.debug)
-                    console.log("ENgrid Loader: LOADING LOCAL");
+                this.logger.log("ENgrid Loader: LOADING LOCAL");
                 // Find a way to guess local URL if there's no engrid_repo
                 if (!engrid_repo) {
                     const theme = engrid_ENGrid.getBodyData("theme");
@@ -9160,8 +9145,7 @@ class Loader {
                 }
                 break;
             case "flush":
-                if (engrid_ENGrid.debug)
-                    console.log("ENgrid Loader: FLUSHING CACHE");
+                this.logger.log("ENgrid Loader: FLUSHING CACHE");
                 const timestamp = Date.now();
                 const jsCurrentURL = new URL(((_a = this.jsElement) === null || _a === void 0 ? void 0 : _a.getAttribute("src")) || "");
                 jsCurrentURL.searchParams.set("v", timestamp.toString());
@@ -9171,8 +9155,7 @@ class Loader {
                 engrid_css_url = cssCurrentURL.toString();
                 break;
             default:
-                if (engrid_ENGrid.debug)
-                    console.log("ENgrid Loader: LOADING EXTERNAL");
+                this.logger.log("ENgrid Loader: LOADING EXTERNAL");
                 engrid_js_url =
                     "https://cdn.jsdelivr.net/gh/" +
                         engrid_repo_owner +
@@ -9236,6 +9219,7 @@ var dist = __webpack_require__(5363);
 
 class EnForm {
     constructor() {
+        this.logger = new EngridLogger("EnForm");
         this._onSubmit = new dist/* SignalDispatcher */.nz();
         this._onValidate = new dist/* SignalDispatcher */.nz();
         this._onError = new dist/* SignalDispatcher */.nz();
@@ -9250,18 +9234,15 @@ class EnForm {
     }
     dispatchSubmit() {
         this._onSubmit.dispatch();
-        if (engrid_ENGrid.debug)
-            console.log("dispatchSubmit");
+        this.logger.log("dispatchSubmit");
     }
     dispatchValidate() {
         this._onValidate.dispatch();
-        if (engrid_ENGrid.debug)
-            console.log("dispatchValidate");
+        this.logger.log("dispatchValidate");
     }
     dispatchError() {
         this._onError.dispatch();
-        if (engrid_ENGrid.debug)
-            console.log("dispatchError");
+        this.logger.log("dispatchError");
     }
     submitForm() {
         const enForm = document.querySelector("form .en__submit button");
@@ -9271,8 +9252,7 @@ class EnForm {
             if (enModal)
                 enModal.classList.add("is-submitting");
             enForm.click();
-            if (engrid_ENGrid.debug)
-                console.log("submitForm");
+            this.logger.log("submitForm");
         }
     }
     get onSubmit() {
@@ -9833,6 +9813,7 @@ class App extends engrid_ENGrid {
         this._fees = ProcessingFees.getInstance();
         this._amount = DonationAmount.getInstance("transaction.donationAmt", "transaction.donationAmt.other");
         this._frequency = DonationFrequency.getInstance();
+        this.logger = new EngridLogger("App", "black", "white", "🍏");
         this.shouldScroll = () => {
             // If you find a error, scroll
             if (document.querySelector(".en__errorHeader")) {
@@ -9873,8 +9854,15 @@ class App extends engrid_ENGrid {
         };
     }
     run() {
-        // Enable debug if available is the first thing
+        if (!engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs")) {
+            this.logger.danger("Engaging Networks JS Framework NOT FOUND");
+            setTimeout(() => {
+                this.run();
+            }, 10);
+            return;
+        }
         if (this.options.Debug || App.getUrlParameter("debug") == "true")
+            // Enable debug if available is the first thing
             App.setBodyData("debug", "");
         // Page Background
         new PageBackground();
@@ -9916,15 +9904,15 @@ class App extends engrid_ENGrid {
         this._form.onError.subscribe(() => this.onError());
         this._form.onValidate.subscribe(() => this.onValidate());
         // Event Listener Examples
-        this._amount.onAmountChange.subscribe((s) => console.log(`Live Amount: ${s}`));
+        this._amount.onAmountChange.subscribe((s) => this.logger.success(`Live Amount: ${s}`));
         this._frequency.onFrequencyChange.subscribe((s) => {
-            console.log(`Live Frequency: ${s}`);
+            this.logger.success(`Live Frequency: ${s}`);
             setTimeout(() => {
                 this._amount.load();
             }, 150);
         });
-        this._form.onSubmit.subscribe((s) => console.log("Submit: ", s));
-        this._form.onError.subscribe((s) => console.log("Error:", s));
+        this._form.onSubmit.subscribe((s) => this.logger.success("Submit: " + s));
+        this._form.onError.subscribe((s) => this.logger.danger("Error: " + s));
         window.enOnSubmit = () => {
             this._form.dispatchSubmit();
             return this._form.submit;
@@ -9996,16 +9984,14 @@ class App extends engrid_ENGrid {
         }
         if (this.inIframe()) {
             // Scroll to top of iFrame
-            if (App.debug)
-                console.log("iFrame Event - window.onload");
+            this.logger.log("iFrame Event - window.onload");
             sendIframeHeight();
             window.parent.postMessage({
                 scroll: this.shouldScroll(),
             }, "*");
             // On click fire the resize event
             document.addEventListener("click", (e) => {
-                if (App.debug)
-                    console.log("iFrame Event - click");
+                this.logger.log("iFrame Event - click");
                 setTimeout(() => {
                     sendIframeHeight();
                 }, 100);
@@ -10017,22 +10003,19 @@ class App extends engrid_ENGrid {
             this.options.onResize();
         }
         if (this.inIframe()) {
-            if (App.debug)
-                console.log("iFrame Event - window.onload");
+            this.logger.log("iFrame Event - window.onload");
             sendIframeHeight();
         }
     }
     onValidate() {
         if (this.options.onValidate) {
-            if (App.debug)
-                console.log("Client onValidate Triggered");
+            this.logger.log("Client onValidate Triggered");
             this.options.onValidate();
         }
     }
     onSubmit() {
         if (this.options.onSubmit) {
-            if (App.debug)
-                console.log("Client onSubmit Triggered");
+            this.logger.log("Client onSubmit Triggered");
             this.options.onSubmit();
         }
         if (this.inIframe()) {
@@ -10041,8 +10024,7 @@ class App extends engrid_ENGrid {
     }
     onError() {
         if (this.options.onError) {
-            if (App.debug)
-                console.log("Client onError Triggered");
+            this.logger.danger("Client onError Triggered");
             this.options.onError();
         }
     }
@@ -10059,8 +10041,7 @@ class App extends engrid_ENGrid {
             // Add the data-engrid-embedded attribute when inside an iFrame if it wasn't already added by a script in the Page Template
             App.setBodyData("embedded", "");
             // Fire the resize event
-            if (App.debug)
-                console.log("iFrame Event - First Resize");
+            this.logger.log("iFrame Event - First Resize");
             sendIframeHeight();
         }
     }
@@ -13297,14 +13278,14 @@ class RememberMe {
 class ShowIfAmount {
     constructor() {
         this._amount = DonationAmount.getInstance();
+        this.logger = new EngridLogger("ShowIfAmount", "yellow", "black", "👀");
         this._elements = document.querySelectorAll('[class*="showifamount"]');
         if (this._elements.length > 0) {
             this._amount.onAmountChange.subscribe(() => this.init());
             this.init();
             return;
         }
-        if (engrid_ENGrid.debug)
-            console.log("Show If Amount: NO ELEMENTS FOUND");
+        this.logger.log("Show If Amount: NO ELEMENTS FOUND");
     }
     init() {
         const amount = this._amount.amount;
@@ -13331,8 +13312,7 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheck = showifamountClass.split("-").slice(-1)[0];
             if (amount < Number(amountCheck)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (lessthan):", element);
+                this.logger.log("(lessthan):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13345,8 +13325,7 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheck = showifamountClass.split("-").slice(-1)[0];
             if (amount <= Number(amountCheck)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (lessthanorequalto):", element);
+                this.logger.log("(lessthanorequalto):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13359,8 +13338,7 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheck = showifamountClass.split("-").slice(-1)[0];
             if (amount == Number(amountCheck)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (equalto):", element);
+                this.logger.log("(equalto):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13373,8 +13351,7 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheck = showifamountClass.split("-").slice(-1)[0];
             if (amount >= Number(amountCheck)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (greaterthanorequalto):", element);
+                this.logger.log("(greaterthanorequalto):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13387,8 +13364,7 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheck = showifamountClass.split("-").slice(-1)[0];
             if (amount > Number(amountCheck)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (greaterthan):", element);
+                this.logger.log("(greaterthan):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13401,10 +13377,8 @@ class ShowIfAmount {
         if (showifamountClass) {
             let amountCheckMin = showifamountClass.split("-").slice(-2, -1)[0];
             let amountCheckMax = showifamountClass.split("-").slice(-1)[0];
-            if (amount > Number(amountCheckMin) &&
-                amount < Number(amountCheckMax)) {
-                if (engrid_ENGrid.debug)
-                    console.log("Show If Amount (between):", element);
+            if (amount > Number(amountCheckMin) && amount < Number(amountCheckMax)) {
+                this.logger.log("(between):", element);
                 element.classList.add("engrid-open");
             }
             else {
@@ -13414,8 +13388,95 @@ class ShowIfAmount {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/logger.js
+
+/**
+ * A better logger. It only works if debug is enabled.
+ */
+class EngridLogger {
+    constructor(prefix, color, background, emoji) {
+        this.prefix = "";
+        this.color = "black";
+        this.background = "white";
+        this.emoji = "";
+        if (emoji) {
+            this.emoji = emoji;
+        }
+        else {
+            switch (color) {
+                case "red":
+                    this.emoji = "🔴";
+                    break;
+                case "green":
+                    this.emoji = "🟢";
+                    break;
+                case "blue":
+                    this.emoji = "🔵";
+                    break;
+                case "yellow":
+                    this.emoji = "🟡";
+                    this.background = "black";
+                    break;
+                case "purple":
+                    this.emoji = "🟣";
+                    break;
+                case "black":
+                default:
+                    this.emoji = "⚫";
+                    break;
+            }
+        }
+        if (prefix) {
+            this.prefix = `[ENgrid ${prefix}]`;
+        }
+        if (color) {
+            this.color = color;
+        }
+        if (background) {
+            this.background = background;
+        }
+    }
+    get log() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.log.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+    get success() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.log.bind(window.console, "%c ✅ " + this.prefix + " %s", `color: green; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+    get danger() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.log.bind(window.console, "%c ⛔️ " + this.prefix + " %s", `color: red; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+    get warn() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.warn.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+    get dir() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.dir.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+    get error() {
+        if (!engrid_ENGrid.debug) {
+            return () => { };
+        }
+        return console.error.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
@@ -13460,7 +13521,8 @@ const customScript = function () {
       tidepoolButton.innerHTML = `<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>Sending...</span></span>`;
     };
 
-    tidepoolButton.addEventListener("click", () => {
+    tidepoolButton.addEventListener("click", e => {
+      e.preventDefault();
       loadingAnimation();
       let formData = new URLSearchParams();
       formData.append("supporter.firstName", tidepoolButton.dataset.firstname);
