@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, December 23, 2021 @ 08:41:39 ET
- *  By: fe
- *  ENGrid styles: v0.7.0
- *  ENGrid scripts: v0.7.0
+ *  Date: Tuesday, February 22, 2022 @ 17:23:01 ET
+ *  By: fernando
+ *  ENGrid styles: v0.9.9
+ *  ENGrid scripts: v0.9.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4550,45 +4550,6 @@ __webpack_require__.d(__webpack_exports__, {
 
 // UNUSED EXPORTS: animateFill, createSingleton, delegate, followCursor, hideAll, inlinePositioning, roundArrow, sticky
 
-;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
-// import { isHTMLElement } from './instanceOf';
-function getBoundingClientRect(element, // eslint-disable-next-line unused-imports/no-unused-vars
-includeScale) {
-  if (includeScale === void 0) {
-    includeScale = false;
-  }
-
-  var rect = element.getBoundingClientRect();
-  var scaleX = 1;
-  var scaleY = 1; // FIXME:
-  // `offsetWidth` returns an integer while `getBoundingClientRect`
-  // returns a float. This results in `scaleX` or `scaleY` being
-  // non-1 when it should be for elements that aren't a full pixel in
-  // width or height.
-  // if (isHTMLElement(element) && includeScale) {
-  //   const offsetHeight = element.offsetHeight;
-  //   const offsetWidth = element.offsetWidth;
-  //   // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
-  //   // Fallback to 1 in case both values are `0`
-  //   if (offsetWidth > 0) {
-  //     scaleX = rect.width / offsetWidth || 1;
-  //   }
-  //   if (offsetHeight > 0) {
-  //     scaleY = rect.height / offsetHeight || 1;
-  //   }
-  // }
-
-  return {
-    width: rect.width / scaleX,
-    height: rect.height / scaleY,
-    top: rect.top / scaleY,
-    right: rect.right / scaleX,
-    bottom: rect.bottom / scaleY,
-    left: rect.left / scaleX,
-    x: rect.left / scaleX,
-    y: rect.top / scaleY
-  };
-}
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getWindow.js
 function getWindow(node) {
   if (node == null) {
@@ -4601,17 +4562,6 @@ function getWindow(node) {
   }
 
   return node;
-}
-;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
-
-function getWindowScroll(node) {
-  var win = getWindow(node);
-  var scrollLeft = win.pageXOffset;
-  var scrollTop = win.pageYOffset;
-  return {
-    scrollLeft: scrollLeft,
-    scrollTop: scrollTop
-  };
 }
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/instanceOf.js
 
@@ -4637,6 +4587,58 @@ function isShadowRoot(node) {
 }
 
 
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/utils/math.js
+var math_max = Math.max;
+var math_min = Math.min;
+var round = Math.round;
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
+
+
+function getBoundingClientRect(element, includeScale) {
+  if (includeScale === void 0) {
+    includeScale = false;
+  }
+
+  var rect = element.getBoundingClientRect();
+  var scaleX = 1;
+  var scaleY = 1;
+
+  if (isHTMLElement(element) && includeScale) {
+    var offsetHeight = element.offsetHeight;
+    var offsetWidth = element.offsetWidth; // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
+    // Fallback to 1 in case both values are `0`
+
+    if (offsetWidth > 0) {
+      scaleX = round(rect.width) / offsetWidth || 1;
+    }
+
+    if (offsetHeight > 0) {
+      scaleY = round(rect.height) / offsetHeight || 1;
+    }
+  }
+
+  return {
+    width: rect.width / scaleX,
+    height: rect.height / scaleY,
+    top: rect.top / scaleY,
+    right: rect.right / scaleX,
+    bottom: rect.bottom / scaleY,
+    left: rect.left / scaleX,
+    x: rect.left / scaleX,
+    y: rect.top / scaleY
+  };
+}
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
+
+function getWindowScroll(node) {
+  var win = getWindow(node);
+  var scrollLeft = win.pageXOffset;
+  var scrollTop = win.pageYOffset;
+  return {
+    scrollLeft: scrollLeft,
+    scrollTop: scrollTop
+  };
+}
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getHTMLElementScroll.js
 function getHTMLElementScroll(element) {
   return {
@@ -4706,10 +4708,11 @@ function isScrollParent(element) {
 
 
 
+
 function isElementScaled(element) {
   var rect = element.getBoundingClientRect();
-  var scaleX = rect.width / element.offsetWidth || 1;
-  var scaleY = rect.height / element.offsetHeight || 1;
+  var scaleX = round(rect.width) / element.offsetWidth || 1;
+  var scaleY = round(rect.height) / element.offsetHeight || 1;
   return scaleX !== 1 || scaleY !== 1;
 } // Returns the composite rect of an element relative to its offsetParent.
 // Composite means it takes into account transforms as well as layout.
@@ -5401,10 +5404,6 @@ function popperOffsets(_ref) {
   fn: popperOffsets,
   data: {}
 });
-;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/utils/math.js
-var math_max = Math.max;
-var math_min = Math.min;
-var round = Math.round;
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/modifiers/computeStyles.js
 
 
@@ -5430,8 +5429,8 @@ function roundOffsetsByDPR(_ref) {
   var win = window;
   var dpr = win.devicePixelRatio || 1;
   return {
-    x: round(round(x * dpr) / dpr) || 0,
-    y: round(round(y * dpr) / dpr) || 0
+    x: round(x * dpr) / dpr || 0,
+    y: round(y * dpr) / dpr || 0
   };
 }
 
@@ -5446,14 +5445,23 @@ function mapToStyles(_ref2) {
       position = _ref2.position,
       gpuAcceleration = _ref2.gpuAcceleration,
       adaptive = _ref2.adaptive,
-      roundOffsets = _ref2.roundOffsets;
+      roundOffsets = _ref2.roundOffsets,
+      isFixed = _ref2.isFixed;
+  var _offsets$x = offsets.x,
+      x = _offsets$x === void 0 ? 0 : _offsets$x,
+      _offsets$y = offsets.y,
+      y = _offsets$y === void 0 ? 0 : _offsets$y;
 
-  var _ref3 = roundOffsets === true ? roundOffsetsByDPR(offsets) : typeof roundOffsets === 'function' ? roundOffsets(offsets) : offsets,
-      _ref3$x = _ref3.x,
-      x = _ref3$x === void 0 ? 0 : _ref3$x,
-      _ref3$y = _ref3.y,
-      y = _ref3$y === void 0 ? 0 : _ref3$y;
+  var _ref3 = typeof roundOffsets === 'function' ? roundOffsets({
+    x: x,
+    y: y
+  }) : {
+    x: x,
+    y: y
+  };
 
+  x = _ref3.x;
+  y = _ref3.y;
   var hasX = offsets.hasOwnProperty('x');
   var hasY = offsets.hasOwnProperty('y');
   var sideX = left;
@@ -5478,16 +5486,18 @@ function mapToStyles(_ref2) {
     offsetParent = offsetParent;
 
     if (placement === enums_top || (placement === left || placement === right) && variation === end) {
-      sideY = bottom; // $FlowFixMe[prop-missing]
-
-      y -= offsetParent[heightProp] - popperRect.height;
+      sideY = bottom;
+      var offsetY = isFixed && win.visualViewport ? win.visualViewport.height : // $FlowFixMe[prop-missing]
+      offsetParent[heightProp];
+      y -= offsetY - popperRect.height;
       y *= gpuAcceleration ? 1 : -1;
     }
 
     if (placement === left || (placement === enums_top || placement === bottom) && variation === end) {
-      sideX = right; // $FlowFixMe[prop-missing]
-
-      x -= offsetParent[widthProp] - popperRect.width;
+      sideX = right;
+      var offsetX = isFixed && win.visualViewport ? win.visualViewport.width : // $FlowFixMe[prop-missing]
+      offsetParent[widthProp];
+      x -= offsetX - popperRect.width;
       x *= gpuAcceleration ? 1 : -1;
     }
   }
@@ -5495,6 +5505,17 @@ function mapToStyles(_ref2) {
   var commonStyles = Object.assign({
     position: position
   }, adaptive && unsetSides);
+
+  var _ref4 = roundOffsets === true ? roundOffsetsByDPR({
+    x: x,
+    y: y
+  }) : {
+    x: x,
+    y: y
+  };
+
+  x = _ref4.x;
+  y = _ref4.y;
 
   if (gpuAcceleration) {
     var _Object$assign;
@@ -5505,9 +5526,9 @@ function mapToStyles(_ref2) {
   return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
 }
 
-function computeStyles(_ref4) {
-  var state = _ref4.state,
-      options = _ref4.options;
+function computeStyles(_ref5) {
+  var state = _ref5.state,
+      options = _ref5.options;
   var _options$gpuAccelerat = options.gpuAcceleration,
       gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
       _options$adaptive = options.adaptive,
@@ -5522,7 +5543,8 @@ function computeStyles(_ref4) {
     variation: getVariation(state.placement),
     popper: state.elements.popper,
     popperRect: state.rects.popper,
-    gpuAcceleration: gpuAcceleration
+    gpuAcceleration: gpuAcceleration,
+    isFixed: state.options.strategy === 'fixed'
   };
 
   if (state.modifiersData.popperOffsets != null) {
@@ -5643,6 +5665,7 @@ function applyStyles_effect(_ref2) {
 });
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/modifiers/offset.js
 
+ // eslint-disable-next-line import/no-unused-modules
 
 function distanceAndSkiddingToXY(placement, rects, offset) {
   var basePlacement = getBasePlacement(placement);
@@ -5851,7 +5874,7 @@ function getInnerBoundingClientRect(element) {
 }
 
 function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isHTMLElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
 } // A "clipping parent" is an overflowable container with the characteristic of
 // clipping (or hiding) overflowing elements with a position different from
 // `initial`
@@ -6180,6 +6203,10 @@ function getAltAxis(axis) {
 function within(min, value, max) {
   return math_max(min, math_min(value, max));
 }
+function withinMaxClamp(min, value, max) {
+  var v = within(min, value, max);
+  return v > max ? max : v;
+}
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
 
 
@@ -6226,6 +6253,14 @@ function preventOverflow(_ref) {
   var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign({}, state.rects, {
     placement: state.placement
   })) : tetherOffset;
+  var normalizedTetherOffsetValue = typeof tetherOffsetValue === 'number' ? {
+    mainAxis: tetherOffsetValue,
+    altAxis: tetherOffsetValue
+  } : Object.assign({
+    mainAxis: 0,
+    altAxis: 0
+  }, tetherOffsetValue);
+  var offsetModifierState = state.modifiersData.offset ? state.modifiersData.offset[state.placement] : null;
   var data = {
     x: 0,
     y: 0
@@ -6235,13 +6270,15 @@ function preventOverflow(_ref) {
     return;
   }
 
-  if (checkMainAxis || checkAltAxis) {
+  if (checkMainAxis) {
+    var _offsetModifierState$;
+
     var mainSide = mainAxis === 'y' ? enums_top : left;
     var altSide = mainAxis === 'y' ? bottom : right;
     var len = mainAxis === 'y' ? 'height' : 'width';
     var offset = popperOffsets[mainAxis];
-    var min = popperOffsets[mainAxis] + overflow[mainSide];
-    var max = popperOffsets[mainAxis] - overflow[altSide];
+    var min = offset + overflow[mainSide];
+    var max = offset - overflow[altSide];
     var additive = tether ? -popperRect[len] / 2 : 0;
     var minLen = variation === start ? referenceRect[len] : popperRect[len];
     var maxLen = variation === start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
@@ -6261,36 +6298,45 @@ function preventOverflow(_ref) {
     // width or height)
 
     var arrowLen = within(0, referenceRect[len], arrowRect[len]);
-    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - tetherOffsetValue : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
-    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + tetherOffsetValue : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
+    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis : minLen - arrowLen - arrowPaddingMin - normalizedTetherOffsetValue.mainAxis;
+    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis : maxLen + arrowLen + arrowPaddingMax + normalizedTetherOffsetValue.mainAxis;
     var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
     var clientOffset = arrowOffsetParent ? mainAxis === 'y' ? arrowOffsetParent.clientTop || 0 : arrowOffsetParent.clientLeft || 0 : 0;
-    var offsetModifierValue = state.modifiersData.offset ? state.modifiersData.offset[state.placement][mainAxis] : 0;
-    var tetherMin = popperOffsets[mainAxis] + minOffset - offsetModifierValue - clientOffset;
-    var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
+    var offsetModifierValue = (_offsetModifierState$ = offsetModifierState == null ? void 0 : offsetModifierState[mainAxis]) != null ? _offsetModifierState$ : 0;
+    var tetherMin = offset + minOffset - offsetModifierValue - clientOffset;
+    var tetherMax = offset + maxOffset - offsetModifierValue;
+    var preventedOffset = within(tether ? math_min(min, tetherMin) : min, offset, tether ? math_max(max, tetherMax) : max);
+    popperOffsets[mainAxis] = preventedOffset;
+    data[mainAxis] = preventedOffset - offset;
+  }
 
-    if (checkMainAxis) {
-      var preventedOffset = within(tether ? math_min(min, tetherMin) : min, offset, tether ? math_max(max, tetherMax) : max);
-      popperOffsets[mainAxis] = preventedOffset;
-      data[mainAxis] = preventedOffset - offset;
-    }
+  if (checkAltAxis) {
+    var _offsetModifierState$2;
 
-    if (checkAltAxis) {
-      var _mainSide = mainAxis === 'x' ? enums_top : left;
+    var _mainSide = mainAxis === 'x' ? enums_top : left;
 
-      var _altSide = mainAxis === 'x' ? bottom : right;
+    var _altSide = mainAxis === 'x' ? bottom : right;
 
-      var _offset = popperOffsets[altAxis];
+    var _offset = popperOffsets[altAxis];
 
-      var _min = _offset + overflow[_mainSide];
+    var _len = altAxis === 'y' ? 'height' : 'width';
 
-      var _max = _offset - overflow[_altSide];
+    var _min = _offset + overflow[_mainSide];
 
-      var _preventedOffset = within(tether ? math_min(_min, tetherMin) : _min, _offset, tether ? math_max(_max, tetherMax) : _max);
+    var _max = _offset - overflow[_altSide];
 
-      popperOffsets[altAxis] = _preventedOffset;
-      data[altAxis] = _preventedOffset - _offset;
-    }
+    var isOriginSide = [enums_top, left].indexOf(basePlacement) !== -1;
+
+    var _offsetModifierValue = (_offsetModifierState$2 = offsetModifierState == null ? void 0 : offsetModifierState[altAxis]) != null ? _offsetModifierState$2 : 0;
+
+    var _tetherMin = isOriginSide ? _min : _offset - referenceRect[_len] - popperRect[_len] - _offsetModifierValue + normalizedTetherOffsetValue.altAxis;
+
+    var _tetherMax = isOriginSide ? _offset + referenceRect[_len] + popperRect[_len] - _offsetModifierValue - normalizedTetherOffsetValue.altAxis : _max;
+
+    var _preventedOffset = tether && isOriginSide ? withinMaxClamp(_tetherMin, _offset, _tetherMax) : within(tether ? _tetherMin : _min, _offset, tether ? _tetherMax : _max);
+
+    popperOffsets[altAxis] = _preventedOffset;
+    data[altAxis] = _preventedOffset - _offset;
   }
 
   state.modifiersData[name] = data;
@@ -6485,7 +6531,7 @@ var popper_createPopper = /*#__PURE__*/popperGenerator({
 
 ;// CONCATENATED MODULE: ./node_modules/tippy.js/dist/tippy.esm.js
 /**!
-* tippy.js v6.3.2
+* tippy.js v6.3.7
 * (c) 2017-2021 atomiks
 * MIT License
 */
@@ -6629,7 +6675,7 @@ function getOwnerDocument(elementOrElements) {
       element = _normalizeToArray[0]; // Elements created via a <template> have an ownerDocument with no reference to the body
 
 
-  return (element == null ? void 0 : (_element$ownerDocumen = element.ownerDocument) == null ? void 0 : _element$ownerDocumen.body) ? element.ownerDocument : document;
+  return element != null && (_element$ownerDocumen = element.ownerDocument) != null && _element$ownerDocumen.body ? element.ownerDocument : document;
 }
 function isCursorOutsideInteractiveBorder(popperTreeData, event) {
   var clientX = event.clientX,
@@ -6674,13 +6720,13 @@ function actualContains(parent, child) {
   var target = child;
 
   while (target) {
-    var _ref2;
+    var _target$getRootNode;
 
     if (parent.contains(target)) {
       return true;
     }
 
-    target = (_ref2 = target.getRootNode == null ? void 0 : target.getRootNode()) == null ? void 0 : _ref2.host;
+    target = target.getRootNode == null ? void 0 : (_target$getRootNode = target.getRootNode()) == null ? void 0 : _target$getRootNode.host;
   }
 
   return false;
@@ -6857,7 +6903,7 @@ var defaultProps = Object.assign({
   touch: true,
   trigger: 'mouseenter focus',
   triggerTarget: null
-}, pluginProps, {}, renderProps);
+}, pluginProps, renderProps);
 var defaultKeys = Object.keys(defaultProps);
 var setDefaultProps = function setDefaultProps(partialProps) {
   /* istanbul ignore else */
@@ -6882,7 +6928,7 @@ function getExtendedPassedProps(passedProps) {
 
     return acc;
   }, {});
-  return Object.assign({}, passedProps, {}, pluginProps);
+  return Object.assign({}, passedProps, pluginProps);
 }
 function getDataAttributeProps(reference, plugins) {
   var propKeys = plugins ? Object.keys(getExtendedPassedProps(Object.assign({}, defaultProps, {
@@ -6913,7 +6959,7 @@ function evaluateProps(reference, props) {
   var out = Object.assign({}, props, {
     content: invokeWithArgsOrReturn(props.content, [reference])
   }, props.ignoreAttributes ? {} : getDataAttributeProps(reference, props.plugins));
-  out.aria = Object.assign({}, defaultProps.aria, {}, out.aria);
+  out.aria = Object.assign({}, defaultProps.aria, out.aria);
   out.aria = {
     expanded: out.aria.expanded === 'auto' ? props.interactive : out.aria.expanded,
     content: out.aria.content === 'auto' ? props.interactive ? null : 'describedby' : out.aria.content
@@ -7074,7 +7120,7 @@ var mouseMoveListeners = []; // Used by `hideAll()`
 
 var mountedInstances = [];
 function createTippy(reference, passedProps) {
-  var props = evaluateProps(reference, Object.assign({}, defaultProps, {}, getExtendedPassedProps(removeUndefinedProps(passedProps)))); // ===========================================================================
+  var props = evaluateProps(reference, Object.assign({}, defaultProps, getExtendedPassedProps(removeUndefinedProps(passedProps)))); // ===========================================================================
   // 🔒 Private members
   // ===========================================================================
 
@@ -7172,10 +7218,9 @@ function createTippy(reference, passedProps) {
       instance.clearDelayTimeouts();
     }
   });
-  popper.addEventListener('mouseleave', function (event) {
+  popper.addEventListener('mouseleave', function () {
     if (instance.props.interactive && instance.props.trigger.indexOf('mouseenter') >= 0) {
       getDocument().addEventListener('mousemove', debouncedOnMouseMove);
-      debouncedOnMouseMove(event);
     }
   });
   return instance; // ===========================================================================
@@ -7195,7 +7240,7 @@ function createTippy(reference, passedProps) {
     var _instance$props$rende;
 
     // @ts-ignore
-    return !!((_instance$props$rende = instance.props.render) == null ? void 0 : _instance$props$rende.$$tippy);
+    return !!((_instance$props$rende = instance.props.render) != null && _instance$props$rende.$$tippy);
   }
 
   function getCurrentTarget() {
@@ -7222,8 +7267,12 @@ function createTippy(reference, passedProps) {
     return getValueAtIndexOrReturn(instance.props.delay, isShow ? 0 : 1, defaultProps.delay);
   }
 
-  function handleStyles() {
-    popper.style.pointerEvents = instance.props.interactive && instance.state.isVisible ? '' : 'none';
+  function handleStyles(fromHide) {
+    if (fromHide === void 0) {
+      fromHide = false;
+    }
+
+    popper.style.pointerEvents = instance.props.interactive && !fromHide ? '' : 'none';
     popper.style.zIndex = "" + instance.props.zIndex;
   }
 
@@ -7234,7 +7283,7 @@ function createTippy(reference, passedProps) {
 
     pluginsHooks.forEach(function (pluginHooks) {
       if (pluginHooks[hook]) {
-        pluginHooks[hook].apply(void 0, args);
+        pluginHooks[hook].apply(pluginHooks, args);
       }
     });
 
@@ -7309,7 +7358,9 @@ function createTippy(reference, passedProps) {
     } // Clicked on the event listeners target
 
 
-    if (actualContains(getCurrentTarget(), actualTarget)) {
+    if (normalizeToArray(instance.props.triggerTarget || reference).some(function (el) {
+      return actualContains(el, actualTarget);
+    })) {
       if (currentInput.isTouch) {
         return;
       }
@@ -7675,6 +7726,7 @@ function createTippy(reference, passedProps) {
       parentNode.appendChild(popper);
     }
 
+    instance.state.isMounted = true;
     createPopperInstance();
     /* istanbul ignore else */
 
@@ -7777,7 +7829,7 @@ function createTippy(reference, passedProps) {
     invokeHook('onBeforeUpdate', [instance, partialProps]);
     removeListeners();
     var prevProps = instance.props;
-    var nextProps = evaluateProps(reference, Object.assign({}, instance.props, {}, partialProps, {
+    var nextProps = evaluateProps(reference, Object.assign({}, prevProps, removeUndefinedProps(partialProps), {
       ignoreAttributes: true
     }));
     instance.props = nextProps;
@@ -7904,7 +7956,6 @@ function createTippy(reference, passedProps) {
       // popper has been positioned for the first time
 
       (_instance$popperInsta2 = instance.popperInstance) == null ? void 0 : _instance$popperInsta2.forceUpdate();
-      instance.state.isMounted = true;
       invokeHook('onMount', [instance]);
 
       if (instance.props.animation && getIsDefaultRenderFn()) {
@@ -7949,7 +8000,7 @@ function createTippy(reference, passedProps) {
 
     cleanupInteractiveMouseListeners();
     removeDocumentPress();
-    handleStyles();
+    handleStyles(true);
 
     if (getIsDefaultRenderFn()) {
       var _getDefaultTemplateCh4 = getDefaultTemplateChildren(),
@@ -8135,10 +8186,19 @@ var createSingleton = function createSingleton(tippyInstances, optionalProps) {
 
   var individualInstances = tippyInstances;
   var references = [];
+  var triggerTargets = [];
   var currentTarget;
   var overrides = optionalProps.overrides;
   var interceptSetPropsCleanups = [];
   var shownOnCreate = false;
+
+  function setTriggerTargets() {
+    triggerTargets = individualInstances.map(function (instance) {
+      return normalizeToArray(instance.props.triggerTarget || instance.reference);
+    }).reduce(function (acc, item) {
+      return acc.concat(item);
+    }, []);
+  }
 
   function setReferences() {
     references = individualInstances.map(function (instance) {
@@ -8176,7 +8236,7 @@ var createSingleton = function createSingleton(tippyInstances, optionalProps) {
 
 
   function prepareInstance(singleton, target) {
-    var index = references.indexOf(target); // bail-out
+    var index = triggerTargets.indexOf(target); // bail-out
 
     if (target === currentTarget) {
       return;
@@ -8189,13 +8249,16 @@ var createSingleton = function createSingleton(tippyInstances, optionalProps) {
     }, {});
     singleton.setProps(Object.assign({}, overrideProps, {
       getReferenceClientRect: typeof overrideProps.getReferenceClientRect === 'function' ? overrideProps.getReferenceClientRect : function () {
-        return target.getBoundingClientRect();
+        var _references$index;
+
+        return (_references$index = references[index]) == null ? void 0 : _references$index.getBoundingClientRect();
       }
     }));
   }
 
   enableInstances(false);
   setReferences();
+  setTriggerTargets();
   var plugin = {
     fn: function fn() {
       return {
@@ -8225,7 +8288,7 @@ var createSingleton = function createSingleton(tippyInstances, optionalProps) {
   };
   var singleton = tippy(div(), Object.assign({}, removeProperties(optionalProps, ['overrides']), {
     plugins: [plugin].concat(optionalProps.plugins || []),
-    triggerTarget: references,
+    triggerTarget: triggerTargets,
     popperOptions: Object.assign({}, optionalProps.popperOptions, {
       modifiers: [].concat(((_optionalProps$popper = optionalProps.popperOptions) == null ? void 0 : _optionalProps$popper.modifiers) || [], [applyStylesModifier])
     })
@@ -8301,9 +8364,10 @@ var createSingleton = function createSingleton(tippyInstances, optionalProps) {
     individualInstances = nextInstances;
     enableInstances(false);
     setReferences();
-    interceptSetProps(singleton);
+    setTriggerTargets();
+    interceptSetPropsCleanups = interceptSetProps(singleton);
     singleton.setProps({
-      triggerTarget: references
+      triggerTarget: triggerTargets
     });
   };
 
@@ -8334,7 +8398,9 @@ function delegate(targets, props) {
     trigger: 'manual',
     touch: false
   });
-  var childProps = Object.assign({}, nativeProps, {
+  var childProps = Object.assign({
+    touch: defaultProps.touch
+  }, nativeProps, {
     showOnCreate: true
   });
   var returnValue = tippy(targets, parentProps);
@@ -8460,7 +8526,7 @@ var animateFill = {
     var _instance$props$rende;
 
     // @ts-ignore
-    if (!((_instance$props$rende = instance.props.render) == null ? void 0 : _instance$props$rende.$$tippy)) {
+    if (!((_instance$props$rende = instance.props.render) != null && _instance$props$rende.$$tippy)) {
       if (false) {}
 
       return {};
@@ -8720,6 +8786,7 @@ var inlinePositioning = {
     var placement;
     var cursorRectIndex = -1;
     var isInternalUpdate = false;
+    var triedPlacements = [];
     var modifier = {
       name: 'tippyInlinePositioning',
       enabled: true,
@@ -8728,7 +8795,12 @@ var inlinePositioning = {
         var state = _ref2.state;
 
         if (isEnabled()) {
-          if (placement !== state.placement) {
+          if (triedPlacements.indexOf(state.placement) !== -1) {
+            triedPlacements = [];
+          }
+
+          if (placement !== state.placement && triedPlacements.indexOf(state.placement) === -1) {
+            triedPlacements.push(state.placement);
             instance.setProps({
               // @ts-ignore - unneeded DOMRect properties
               getReferenceClientRect: function getReferenceClientRect() {
@@ -9016,6 +9088,10 @@ const OptionsDefaults = {
     ThousandsSeparator: "",
     DecimalSeparator: ".",
     DecimalPlaces: 2,
+    MinAmount: 1,
+    MaxAmount: 100000,
+    MinAmountMessage: "Amount must be at least $1",
+    MaxAmountMessage: "Amount must be less than $100,000",
     SkipToMainContentLink: true,
     SrcDefer: true,
     NeverBounceAPI: null,
@@ -9283,16 +9359,20 @@ class DonationAmount {
         // Watch Radios Inputs for Changes
         document.addEventListener("change", (e) => {
             const element = e.target;
-            if (element && element.name == radios) {
-                element.value = this.removeCommas(element.value);
-                this.amount = parseFloat(element.value);
+            if (element) {
+                if (element.name == radios) {
+                    this.amount = parseFloat(element.value);
+                }
+                else if (element.name == other) {
+                    element.value = this.preformatFloat(element.value);
+                    this.amount = parseFloat(element.value);
+                }
             }
         });
         // Watch Other Amount Field
         const otherField = document.querySelector(`[name='${this._other}']`);
         if (otherField) {
             otherField.addEventListener("keyup", (e) => {
-                otherField.value = this.removeCommas(otherField.value);
                 this.amount = parseFloat(otherField.value);
             });
         }
@@ -9364,17 +9444,26 @@ class DonationAmount {
         const otherWrapper = otherField.parentNode;
         otherWrapper.classList.add("en__field__item--hidden");
     }
-    // Remove commas
-    removeCommas(v) {
-        // replace 5,00 with 5.00
-        if (v.length > 3 && v.charAt(v.length - 3) == ",") {
-            v = v.substr(0, v.length - 3) + "." + v.substr(v.length - 2, 2);
+    preformatFloat(float) {
+        if (!float) {
+            return "";
         }
-        else if (v.length > 2 && v.charAt(v.length - 2) == ",") {
-            v = v.substr(0, v.length - 2) + "." + v.substr(v.length - 1, 1);
+        //Index of first comma
+        const posC = float.indexOf(",");
+        if (posC === -1) {
+            //No commas found, treat as float
+            return float;
         }
-        // replace any remaining commas
-        return v.replace(/,/g, "");
+        //Index of first full stop
+        const posFS = float.indexOf(".");
+        if (posFS === -1) {
+            //Uses commas and not full stops - swap them (e.g. 1,23 --> 1.23)
+            return float.replace(/\,/g, ".");
+        }
+        //Uses both commas and full stops - ensure correct order and remove 1000s separators
+        return posC < posFS
+            ? float.replace(/\,/g, "")
+            : float.replace(/\./g, "").replace(",", ".");
     }
 }
 
@@ -9436,6 +9525,18 @@ class engrid_ENGrid {
         this.enParseDependencies();
         return;
     }
+    // Create a hidden input field
+    static createHiddenInput(name, value = "") {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.classList.add("en__field__input");
+        input.classList.add("en__field__input--text");
+        input.classList.add("engrid-added-input");
+        input.value = value;
+        engrid_ENGrid.enForm.appendChild(input);
+        return input;
+    }
     // Trigger EN Dependencies
     static enParseDependencies() {
         var _a, _b, _c, _d, _e;
@@ -9486,6 +9587,9 @@ class engrid_ENGrid {
                     break;
                 case "emailsubscribeform":
                     return "SUBSCRIBEFORM";
+                    break;
+                case "supporterhub":
+                    return "SUPPORTERHUB";
                     break;
                 default:
                     return "DONATION";
@@ -9601,6 +9705,32 @@ class engrid_ENGrid {
             obj = obj[args[i]];
         }
         return true;
+    }
+    static setError(querySelector, errorMessage) {
+        const errorElement = document.querySelector(querySelector);
+        if (errorElement) {
+            errorElement.classList.add("en__field--validationFailed");
+            let errorMessageElement = errorElement.querySelector(".en__field__error");
+            if (!errorMessageElement) {
+                errorMessageElement = document.createElement("div");
+                errorMessageElement.classList.add("en__field__error");
+                errorMessageElement.innerHTML = errorMessage;
+                errorElement.insertBefore(errorMessageElement, errorElement.firstChild);
+            }
+            else {
+                errorMessageElement.innerHTML = errorMessage;
+            }
+        }
+    }
+    static removeError(querySelector) {
+        const errorElement = document.querySelector(querySelector);
+        if (errorElement) {
+            errorElement.classList.remove("en__field--validationFailed");
+            const errorMessageElement = errorElement.querySelector(".en__field__error");
+            if (errorMessageElement) {
+                errorElement.removeChild(errorMessageElement);
+            }
+        }
     }
 }
 
@@ -9871,7 +10001,6 @@ class App extends engrid_ENGrid {
         preventAutocomplete();
         watchInmemField();
         watchGiveBySelectField();
-        SetEnFieldOtherAmountRadioStepValue();
         simpleUnsubscribe();
         contactDetailLabels();
         easyEdit();
@@ -9914,6 +10043,7 @@ class App extends engrid_ENGrid {
         this._form.onSubmit.subscribe((s) => this.logger.success("Submit: " + s));
         this._form.onError.subscribe((s) => this.logger.danger("Error: " + s));
         window.enOnSubmit = () => {
+            this._form.submit = true;
             this._form.dispatchSubmit();
             return this._form.submit;
         };
@@ -9921,6 +10051,7 @@ class App extends engrid_ENGrid {
             this._form.dispatchError();
         };
         window.enOnValidate = () => {
+            this._form.validate = true;
             this._form.dispatchValidate();
             return this._form.validate;
         };
@@ -9976,6 +10107,8 @@ class App extends engrid_ENGrid {
         if (this.options.NeverBounceAPI)
             new NeverBounce(this.options.NeverBounceAPI, this.options.NeverBounceDateField, this.options.NeverBounceStatusField, this.options.NeverBounceDateFormat);
         new ShowIfAmount();
+        new OtherAmount();
+        new MinMaxAmount();
         this.setDataAttributes();
     }
     onLoad() {
@@ -10047,6 +10180,14 @@ class App extends engrid_ENGrid {
     }
     // Use this function to add any Data Attributes to the Body tag
     setDataAttributes() {
+        // Add the Page Type as a Data Attribute on the video
+        if (engrid_ENGrid.checkNested(window, "pageJson", "pageType")) {
+            App.setBodyData("page-type", window.pageJson.pageType);
+            this.logger.log("Page Type: " + window.pageJson.pageType);
+        }
+        else {
+            this.logger.log("Page Type: Not Found");
+        }
         // Add a body banner data attribute if the banner contains no image
         // @TODO Should this account for video?
         // @TODO Should we merge this with the script that checks the background image?
@@ -10157,10 +10298,10 @@ class AmountLabel {
     // Fix Amount Labels
     fixAmountLabels() {
         let amounts = document.querySelectorAll(".en__field--donationAmt label");
+        const currencySymbol = engrid_ENGrid.getOption("CurrencySymbol") || "";
         amounts.forEach((element) => {
             if (!isNaN(element.innerText)) {
-                element.innerText =
-                    engrid_ENGrid.getOption("CurrencySymbol") + element.innerText;
+                element.innerText = currencySymbol + element.innerText;
             }
         });
     }
@@ -10513,7 +10654,6 @@ const enInput = (() => {
     // get DOM elements
     const init = () => {
         const formInput = document.querySelectorAll(".en__field--text, .en__field--email:not(.en__field--checkbox), .en__field--telephone, .en__field--number, .en__field--textarea, .en__field--select, .en__field--checkbox");
-        const otherInputs = document.querySelectorAll(".en__field__input--other");
         Array.from(formInput).forEach((e) => {
             // @TODO Currently checkboxes always return as having a value, since they do but they're just not checked. Need to update and account for that, should also do Radio's while we're at it
             let element = e.querySelector("input, textarea, select");
@@ -10521,25 +10661,6 @@ const enInput = (() => {
                 e.classList.add("has-value");
             }
             bindEvents(e);
-        });
-        /* @TODO Review Engaging Networks to see if this is still needed */
-        /************************************
-         * Automatically select other radio input when an amount is entered into it.
-         ***********************************/
-        Array.from(otherInputs).forEach((e) => {
-            ["focus", "input"].forEach((evt) => {
-                e.addEventListener(evt, (ev) => {
-                    const target = ev.target;
-                    if (target && target.parentNode && target.parentNode.parentNode) {
-                        const targetWrapper = target.parentNode;
-                        targetWrapper.classList.remove("en__field__item--hidden");
-                        if (targetWrapper.parentNode) {
-                            const lastRadioInput = targetWrapper.parentNode.querySelector(".en__field__item:nth-last-child(2) input");
-                            lastRadioInput.checked = !0;
-                        }
-                    }
-                }, false);
-            });
         });
     };
     return {
@@ -10741,19 +10862,29 @@ const debugBar = () => {
     }
 };
 const inputPlaceholder = () => {
-    // FIND ALL COMMON INPUT FIELDS
-    let enFieldDonationAmt = document.querySelector(".en__field--donationAmt.en__field--withOther .en__field__input--other");
+    // Personal Information
     let enFieldFirstName = document.querySelector("input#en__field_supporter_firstName");
     let enFieldLastName = document.querySelector("input#en__field_supporter_lastName");
     let enFieldEmailAddress = document.querySelector("input#en__field_supporter_emailAddress");
-    let enFieldPhoneNumber = document.querySelector("#inputen__field_supporter_phoneNumber");
+    let enFieldPhoneNumber = document.querySelector("input#en__field_supporter_phoneNumber");
+    let enFieldPhoneNumberRequired = document.querySelector(".en__mandatory > * > input#en__field_supporter_phoneNumber");
     let enFieldPhoneNumber2 = document.querySelector("input#en__field_supporter_phoneNumber2");
+    let enFieldPhoneNumber2Required = document.querySelector(".en__mandatory > * > input#en__field_supporter_phoneNumber2");
+    // Address
     let enFieldCountry = document.querySelector("input#en__field_supporter_country");
     let enFieldAddress1 = document.querySelector("input#en__field_supporter_address1");
     let enFieldAddress2 = document.querySelector("input#en__field_supporter_address2");
     let enFieldCity = document.querySelector("input#en__field_supporter_city");
-    // let enFieldRegion = document.querySelector("input#en__field_supporter_region") as HTMLInputElement
+    let enFieldRegion = document.querySelector("input#en__field_supporter_region");
     let enFieldPostcode = document.querySelector("input#en__field_supporter_postcode");
+    // Donation
+    let enFieldDonationAmt = document.querySelector(".en__field--donationAmt.en__field--withOther .en__field__input--other");
+    let enFieldCcnumber = document.querySelector("input#en__field_transaction_ccnumber");
+    let enFieldCcexpire = document.querySelector("input#en__field_transaction_ccexpire");
+    let enFieldCcvv = document.querySelector("input#en__field_transaction_ccvv");
+    let enFieldBankAccountNumber = document.querySelector("input#en__field_supporter_bankAccountNumber");
+    let enFieldBankRoutingNumber = document.querySelector("input#en__field_supporter_bankRoutingNumber");
+    // In Honor
     let enFieldHonname = document.querySelector("input#en__field_transaction_honname");
     let enFieldInfname = document.querySelector("input#en__field_transaction_infname");
     let enFieldInfemail = document.querySelector("input#en__field_transaction_infemail");
@@ -10762,21 +10893,36 @@ const inputPlaceholder = () => {
     let enFieldInfadd2 = document.querySelector("input#en__field_transaction_infadd2");
     let enFieldInfcity = document.querySelector("input#en__field_transaction_infcity");
     let enFieldInfpostcd = document.querySelector("input#en__field_transaction_infpostcd");
+    // Miscillaneous
     let enFieldGftrsn = document.querySelector("input#en__field_transaction_gftrsn");
-    let enFieldCcnumber = document.querySelector("input#en__field_transaction_ccnumber");
-    let enFieldCcexpire = document.querySelector("input#en__field_transaction_ccexpire");
-    let enFieldCcvv = document.querySelector("input#en__field_transaction_ccvv");
-    let enFieldBankAccountNumber = document.querySelector("input#en__field_supporter_bankAccountNumber");
-    let enFieldBankRoutingNumber = document.querySelector("input#en__field_supporter_bankRoutingNumber");
+    // Shipping Infromation
+    let enFieldShippingFirstName = document.querySelector("input#en__field_transaction_shipfname");
+    let enFieldShippingLastName = document.querySelector("input#en__field_transaction_shiplname");
+    let enFieldShippingEmailAddress = document.querySelector("input#en__field_transaction_shipemail");
+    let enFieldShippingCountry = document.querySelector("input#en__field_transaction_shipcountry");
+    let enFieldShippingAddress1 = document.querySelector("input#en__field_transaction_shipadd1");
+    let enFieldShippingAddress2 = document.querySelector("input#en__field_transaction_shipadd2");
+    let enFieldShippingCity = document.querySelector("input#en__field_transaction_shipcity");
+    let enFieldShippingRegion = document.querySelector("input#en__field_transaction_shipregion");
+    let enFieldShippingPostcode = document.querySelector("input#en__field_transaction_shippostcode");
+    // Billing Infromation
+    let enFieldBillingCountry = document.querySelector("input#en__field_supporter_billingCountry");
+    let enFieldBillingAddress1 = document.querySelector("input#en__field_supporter_billingAddress1");
+    let enFieldBillingAddress2 = document.querySelector("input#en__field_supporter_billingAddress2");
+    let enFieldBillingCity = document.querySelector("input#en__field_supporter_billingCity");
+    let enFieldBillingRegion = document.querySelector("input#en__field_supporter_billingRegion");
+    let enFieldBillingPostcode = document.querySelector("input#en__field_supporter_billingPostcode");
     // CHANGE FIELD INPUT TYPES
     if (enFieldDonationAmt) {
-        enFieldDonationAmt.setAttribute("inputmode", "numeric");
+        enFieldDonationAmt.setAttribute("inputmode", "decimal");
+    }
+    // ADD THE MISSING LABEL FOR IMPROVED ACCESSABILITY
+    if (enFieldDonationAmt) {
+        enFieldDonationAmt.setAttribute("aria-label", "Enter your custom donation amount");
     }
     // ADD FIELD PLACEHOLDERS
     const enAddInputPlaceholder = document.querySelector("[data-engrid-add-input-placeholders]");
-    if (enAddInputPlaceholder && enFieldDonationAmt) {
-        enFieldDonationAmt.placeholder = "Other Amount";
-    }
+    // Personal Information
     if (enAddInputPlaceholder && enFieldFirstName) {
         enFieldFirstName.placeholder = "First Name";
     }
@@ -10786,12 +10932,27 @@ const inputPlaceholder = () => {
     if (enAddInputPlaceholder && enFieldEmailAddress) {
         enFieldEmailAddress.placeholder = "Email Address";
     }
-    if (enAddInputPlaceholder && enFieldPhoneNumber) {
+    if (enAddInputPlaceholder &&
+        enFieldPhoneNumber &&
+        enFieldPhoneNumberRequired) {
         enFieldPhoneNumber.placeholder = "Phone Number";
     }
-    if (enAddInputPlaceholder && enFieldPhoneNumber2) {
+    else if (enAddInputPlaceholder &&
+        enFieldPhoneNumber &&
+        !enFieldPhoneNumberRequired) {
+        enFieldPhoneNumber.placeholder = "Phone Number (Optional)";
+    }
+    if (enAddInputPlaceholder &&
+        enFieldPhoneNumber2 &&
+        enFieldPhoneNumber2Required) {
+        enFieldPhoneNumber2.placeholder = "000-000-0000";
+    }
+    else if (enAddInputPlaceholder &&
+        enFieldPhoneNumber2 &&
+        !enFieldPhoneNumber2Required) {
         enFieldPhoneNumber2.placeholder = "000-000-0000 (Optional)";
     }
+    // Address
     if (enAddInputPlaceholder && enFieldCountry) {
         enFieldCountry.placeholder = "Country";
     }
@@ -10804,36 +10965,15 @@ const inputPlaceholder = () => {
     if (enAddInputPlaceholder && enFieldCity) {
         enFieldCity.placeholder = "City";
     }
-    // if (enAddInputPlaceholder && enFieldRegion){enFieldRegion.placeholder = "TBD";}
+    if (enAddInputPlaceholder && enFieldRegion) {
+        enFieldRegion.placeholder = "Region";
+    }
     if (enAddInputPlaceholder && enFieldPostcode) {
         enFieldPostcode.placeholder = "Postal Code";
     }
-    if (enAddInputPlaceholder && enFieldHonname) {
-        enFieldHonname.placeholder = "Honoree Name";
-    }
-    if (enAddInputPlaceholder && enFieldInfname) {
-        enFieldInfname.placeholder = "Recipient Name";
-    }
-    if (enAddInputPlaceholder && enFieldInfemail) {
-        enFieldInfemail.placeholder = "Recipient Email Address";
-    }
-    if (enAddInputPlaceholder && enFieldInfcountry) {
-        enFieldInfcountry.placeholder = "TBD";
-    }
-    if (enAddInputPlaceholder && enFieldInfadd1) {
-        enFieldInfadd1.placeholder = "Recipient Street Address";
-    }
-    if (enAddInputPlaceholder && enFieldInfadd2) {
-        enFieldInfadd2.placeholder = "Recipient Apt., ste., bldg.";
-    }
-    if (enAddInputPlaceholder && enFieldInfcity) {
-        enFieldInfcity.placeholder = "Recipient City";
-    }
-    if (enAddInputPlaceholder && enFieldInfpostcd) {
-        enFieldInfpostcd.placeholder = "Recipient Postal Code";
-    }
-    if (enAddInputPlaceholder && enFieldGftrsn) {
-        enFieldGftrsn.placeholder = "Reason for your gift";
+    // Donation
+    if (enAddInputPlaceholder && enFieldDonationAmt) {
+        enFieldDonationAmt.placeholder = "Other";
     }
     if (enAddInputPlaceholder && enFieldCcnumber) {
         enFieldCcnumber.placeholder = "•••• •••• •••• ••••";
@@ -10849,6 +10989,82 @@ const inputPlaceholder = () => {
     }
     if (enAddInputPlaceholder && enFieldBankRoutingNumber) {
         enFieldBankRoutingNumber.placeholder = "Bank Routing Number";
+    }
+    // In Honor
+    if (enAddInputPlaceholder && enFieldHonname) {
+        enFieldHonname.placeholder = "Honoree Name";
+    }
+    if (enAddInputPlaceholder && enFieldInfname) {
+        enFieldInfname.placeholder = "Recipient Name";
+    }
+    if (enAddInputPlaceholder && enFieldInfemail) {
+        enFieldInfemail.placeholder = "Recipient Email Address";
+    }
+    if (enAddInputPlaceholder && enFieldInfcountry) {
+        enFieldInfcountry.placeholder = "Country";
+    }
+    if (enAddInputPlaceholder && enFieldInfadd1) {
+        enFieldInfadd1.placeholder = "Recipient Street Address";
+    }
+    if (enAddInputPlaceholder && enFieldInfadd2) {
+        enFieldInfadd2.placeholder = "Recipient Apt., ste., bldg.";
+    }
+    if (enAddInputPlaceholder && enFieldInfcity) {
+        enFieldInfcity.placeholder = "Recipient City";
+    }
+    if (enAddInputPlaceholder && enFieldInfpostcd) {
+        enFieldInfpostcd.placeholder = "Recipient Postal Code";
+    }
+    // Miscillaneous
+    if (enAddInputPlaceholder && enFieldGftrsn) {
+        enFieldGftrsn.placeholder = "Reason for your gift";
+    }
+    // Shipping Infromation
+    if (enAddInputPlaceholder && enFieldShippingFirstName) {
+        enFieldShippingFirstName.placeholder = "Shipping First Name";
+    }
+    if (enAddInputPlaceholder && enFieldShippingLastName) {
+        enFieldShippingLastName.placeholder = "Shipping Last Name";
+    }
+    if (enAddInputPlaceholder && enFieldShippingEmailAddress) {
+        enFieldShippingEmailAddress.placeholder = "Shipping Email Address";
+    }
+    if (enAddInputPlaceholder && enFieldShippingCountry) {
+        enFieldShippingCountry.placeholder = "Shipping Country";
+    }
+    if (enAddInputPlaceholder && enFieldShippingAddress1) {
+        enFieldShippingAddress1.placeholder = "Shipping Street Address";
+    }
+    if (enAddInputPlaceholder && enFieldShippingAddress2) {
+        enFieldShippingAddress2.placeholder = "Shipping Apt., ste., bldg.";
+    }
+    if (enAddInputPlaceholder && enFieldShippingCity) {
+        enFieldShippingCity.placeholder = "Shipping City";
+    }
+    if (enAddInputPlaceholder && enFieldShippingRegion) {
+        enFieldShippingRegion.placeholder = "Shipping Region";
+    }
+    if (enAddInputPlaceholder && enFieldShippingPostcode) {
+        enFieldShippingPostcode.placeholder = "Shipping Postal Code";
+    }
+    // Billing Information
+    if (enAddInputPlaceholder && enFieldBillingCountry) {
+        enFieldBillingCountry.placeholder = "Billing Country";
+    }
+    if (enAddInputPlaceholder && enFieldBillingAddress1) {
+        enFieldBillingAddress1.placeholder = "Billing Street Address";
+    }
+    if (enAddInputPlaceholder && enFieldBillingAddress2) {
+        enFieldBillingAddress2.placeholder = "Billing Apt., ste., bldg.";
+    }
+    if (enAddInputPlaceholder && enFieldBillingCity) {
+        enFieldBillingCity.placeholder = "Billing City";
+    }
+    if (enAddInputPlaceholder && enFieldBillingRegion) {
+        enFieldBillingRegion.placeholder = "Billing Region";
+    }
+    if (enAddInputPlaceholder && enFieldBillingPostcode) {
+        enFieldBillingPostcode.placeholder = "Billing Postal Code";
     }
 };
 const preventAutocomplete = () => {
@@ -10983,19 +11199,6 @@ let field_expiration_parts = document.querySelectorAll(".en__field--ccexpire .en
 const field_country = document.getElementById("en__field_supporter_country");
 let field_expiration_month = field_expiration_parts[0];
 let field_expiration_year = field_expiration_parts[1];
-/* The Donation Other Giving Amount is a "Number" type input field.
-   It also has its step value set to .01 so it increments up/down by once whole cent.
-   This step also client-side prevents users from entering a fraction of a penny.
-   And it has a min set to 5 so nothing less can be submitted
-*/
-const SetEnFieldOtherAmountRadioStepValue = () => {
-    const enFieldOtherAmountRadio = document.querySelector(".en__field--donationAmt .en__field__input--other");
-    if (enFieldOtherAmountRadio) {
-        enFieldOtherAmountRadio.setAttribute("step", ".01");
-        enFieldOtherAmountRadio.setAttribute("type", "number");
-        enFieldOtherAmountRadio.setAttribute("min", "5");
-    }
-};
 /*
  * Helpers
  */
@@ -11415,6 +11618,10 @@ class LiveVariables {
     }
     loadingSubmitButton() {
         const submit = document.querySelector(".en__submit button");
+        // Don't add the Loading element if the button is from an Ajax form (like the supporter hub)
+        if (submit.closest(".en__hubOverlay") !== null) {
+            return true;
+        }
         let submitButtonOriginalHTML = submit.innerHTML;
         let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
             submitButtonOriginalHTML +
@@ -11517,11 +11724,11 @@ class UpsellLightbox {
         this._amount = DonationAmount.getInstance();
         this._fees = ProcessingFees.getInstance();
         this._frequency = DonationFrequency.getInstance();
+        this.logger = new EngridLogger("UpsellLightbox", "black", "pink", "🪟");
         let options = "EngridUpsell" in window ? window.EngridUpsell : {};
         this.options = Object.assign(Object.assign({}, UpsellOptionsDefaults), options);
         if (!this.shouldRun()) {
-            if (engrid_ENGrid.debug)
-                console.log("Upsell script should NOT run");
+            this.logger.log("Upsell script should NOT run");
             // If we're not on a Donation Page, get out
             return;
         }
@@ -11618,8 +11825,7 @@ class UpsellLightbox {
         if (otherField) {
             otherField.addEventListener("keyup", this.popupOtherField.bind(this));
         }
-        if (engrid_ENGrid.debug)
-            console.log("Upsell script rendered");
+        this.logger.log("Upsell script rendered");
     }
     // Should we run the script?
     shouldRun() {
@@ -11668,6 +11874,8 @@ class UpsellLightbox {
             let val = this.options.amountRange[i];
             if (upsellAmount == 0 && amount <= val.max) {
                 upsellAmount = val.suggestion;
+                if (upsellAmount === 0)
+                    return 0;
                 if (typeof upsellAmount !== "number") {
                     const suggestionMath = upsellAmount.replace("amount", amount.toFixed(2));
                     upsellAmount = parseFloat(Function('"use strict";return (' + suggestionMath + ")")());
@@ -11689,18 +11897,15 @@ class UpsellLightbox {
         if (freq == "onetime" &&
             !this.overlay.classList.contains("is-submitting") &&
             upsellAmount > 0) {
-            if (engrid_ENGrid.debug) {
-                console.log("Upsell Frequency", this._frequency.frequency);
-                console.log("Upsell Amount", this._amount.amount);
-                console.log("Upsell Suggested Amount", upsellAmount);
-            }
+            this.logger.log("Upsell Frequency " + this._frequency.frequency);
+            this.logger.log("Upsell Amount " + this._amount.amount);
+            this.logger.log("Upsell Suggested Amount " + upsellAmount);
             return true;
         }
         return false;
     }
     open() {
-        if (engrid_ENGrid.debug)
-            console.log("Upsell Script Triggered");
+        this.logger.log("Upsell script opened");
         if (!this.shouldOpen()) {
             // In the circumstance when the form fails to validate via server-side validation, the page will reload
             // When that happens, we should place the original amount saved in sessionStorage into the upsell original amount field
@@ -11751,8 +11956,7 @@ class UpsellLightbox {
         e.preventDefault();
         if (e.target instanceof Element &&
             ((_a = document.querySelector("#upsellYesButton")) === null || _a === void 0 ? void 0 : _a.contains(e.target))) {
-            if (engrid_ENGrid.debug)
-                console.log("Upsold");
+            this.logger.success("Upsold");
             this.setOriginalAmount(this._amount.amount.toString());
             const upsoldAmount = this.getUpsellAmount();
             this._frequency.setFrequency("monthly");
@@ -12055,8 +12259,8 @@ class TranslateFields {
                 break;
             case "AU":
             case "AUS":
-                this.setStateValues("Province/State", [
-                    { label: "Select Province/State", value: "" },
+                this.setStateValues("Province / State", [
+                    { label: "Select", value: "" },
                     { label: "New South Wales", value: "NSW" },
                     { label: "Victoria", value: "VIC" },
                     { label: "Queensland", value: "QLD" },
@@ -12068,8 +12272,8 @@ class TranslateFields {
                 ]);
                 break;
             case "Australia":
-                this.setStateValues("Province/State", [
-                    { label: "Select Province/State", value: "" },
+                this.setStateValues("Province / State", [
+                    { label: "Select", value: "" },
                     { label: "New South Wales", value: "New South Wales" },
                     { label: "Victoria", value: "Victoria" },
                     { label: "Queensland", value: "Queensland" },
@@ -12198,8 +12402,8 @@ class TranslateFields {
                 break;
             case "CA":
             case "CAN":
-                this.setStateValues("Province/State", [
-                    { label: "Select Province/State", value: "" },
+                this.setStateValues("Province / Territory", [
+                    { label: "Select", value: "" },
                     { label: "Alberta", value: "AB" },
                     { label: "British Columbia", value: "BC" },
                     { label: "Manitoba", value: "MB" },
@@ -12216,8 +12420,8 @@ class TranslateFields {
                 ]);
                 break;
             case "Canada":
-                this.setStateValues("Province/State", [
-                    { label: "Select Province/State", value: "" },
+                this.setStateValues("Province / Territory", [
+                    { label: "Select", value: "" },
                     { label: "Alberta", value: "Alberta" },
                     { label: "British Columbia", value: "British Columbia" },
                     { label: "Manitoba", value: "Manitoba" },
@@ -12310,7 +12514,7 @@ class TranslateFields {
                 ]);
                 break;
             default:
-                this.setStateValues("Province/State", null);
+                this.setStateValues("Province / State", null);
                 break;
         }
     }
@@ -12381,7 +12585,7 @@ class TranslateFields {
 class SimpleCountrySelect {
     constructor() {
         this.countryWrapper = document.querySelector(".simple_country_select");
-        this.countrySelect = document.querySelector("#en__field_supporter_country");
+        this.countrySelect = document.querySelector("select#en__field_supporter_country");
         this.country = null;
         const engridAutofill = get("engrid-autofill");
         const submissionFailed = !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed());
@@ -12998,7 +13202,7 @@ class ProgressBar {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/remember-me.js
 
 
-const tippy = __webpack_require__(3861)/* ["default"] */ .ZP;
+const tippy = (__webpack_require__(3861)/* ["default"] */ .ZP);
 class RememberMe {
     constructor(options) {
         this._form = EnForm.getInstance();
@@ -13388,6 +13592,37 @@ class ShowIfAmount {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/other-amount.js
+// This class automatically select other radio input when an amount is entered into it.
+
+class OtherAmount {
+    constructor() {
+        this.logger = new EngridLogger("OtherAmount", "green", "black", "💰");
+        "focusin input".split(" ").forEach((e) => {
+            var _a;
+            // We're attaching this event to the body because sometimes the other amount input is not in the DOM yet and comes via AJAX.
+            (_a = document.querySelector("body")) === null || _a === void 0 ? void 0 : _a.addEventListener(e, (event) => {
+                const target = event.target;
+                if (target.classList.contains("en__field__input--other")) {
+                    this.logger.log("Other Amount Field Focused");
+                    this.setRadioInput();
+                }
+            });
+        });
+    }
+    setRadioInput() {
+        const target = document.querySelector(".en__field--donationAmt .en__field__input--other");
+        if (target && target.parentNode && target.parentNode.parentNode) {
+            const targetWrapper = target.parentNode;
+            targetWrapper.classList.remove("en__field__item--hidden");
+            if (targetWrapper.parentNode) {
+                const lastRadioInput = targetWrapper.parentNode.querySelector(".en__field__item:nth-last-child(2) input");
+                lastRadioInput.checked = !0;
+            }
+        }
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/logger.js
 
 /**
@@ -13474,8 +13709,76 @@ class EngridLogger {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/min-max-amount.js
+// This script checks if the donations amounts are numbers and if they are, appends the correct currency symbol
+
+class MinMaxAmount {
+    constructor() {
+        var _a, _b;
+        this._form = EnForm.getInstance();
+        this._amount = DonationAmount.getInstance();
+        this.minAmount = (_a = engrid_ENGrid.getOption("MinAmount")) !== null && _a !== void 0 ? _a : 1;
+        this.maxAmount = (_b = engrid_ENGrid.getOption("MaxAmount")) !== null && _b !== void 0 ? _b : 100000;
+        this.minAmountMessage = engrid_ENGrid.getOption("MinAmountMessage");
+        this.maxAmountMessage = engrid_ENGrid.getOption("MaxAmountMessage");
+        this.logger = new EngridLogger("MinMaxAmount", "white", "purple", "🔢");
+        if (!this.shouldRun()) {
+            // If we're not on a Donation Page, get out
+            return;
+        }
+        this._amount.onAmountChange.subscribe((s) => window.setTimeout(this.liveValidate.bind(this), 1000) // Wait 1 second for the amount to be updated
+        );
+        this._form.onValidate.subscribe(this.enOnValidate.bind(this));
+    }
+    // Should we run the script?
+    shouldRun() {
+        return engrid_ENGrid.getPageType() === "DONATION";
+    }
+    // Don't submit the form if the amount is not valid
+    enOnValidate() {
+        const otherAmount = document.querySelector("[name='transaction.donationAmt.other']");
+        if (this._amount.amount < this.minAmount) {
+            this.logger.log("Amount is less than min amount: " + this.minAmount);
+            if (otherAmount) {
+                otherAmount.focus();
+            }
+            this._form.validate = false;
+        }
+        else if (this._amount.amount > this.maxAmount) {
+            this.logger.log("Amount is greater than max amount: " + this.maxAmount);
+            if (otherAmount) {
+                otherAmount.focus();
+            }
+            this._form.validate = false;
+        }
+        window.setTimeout(this.liveValidate.bind(this), 300);
+    }
+    // Disable Submit Button if the amount is not valid
+    liveValidate() {
+        if (this._amount.amount < this.minAmount) {
+            this.logger.log("Amount is less than min amount: " + this.minAmount);
+            engrid_ENGrid.setError(".en__field--withOther", this.minAmountMessage || "Invalid Amount");
+        }
+        else if (this._amount.amount > this.maxAmount) {
+            this.logger.log("Amount is greater than max amount: " + this.maxAmount);
+            engrid_ENGrid.setError(".en__field--withOther", this.maxAmountMessage || "Invalid Amount");
+        }
+        else {
+            engrid_ENGrid.removeError(".en__field--withOther");
+        }
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
+document
+    .getElementsByTagName("body")[0]
+    .setAttribute("data-engrid-scripts-js-loading", "started");
+document
+    .getElementsByTagName("body")[0]
+    .setAttribute("data-engrid-client-js-loading", "waiting");
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
@@ -13510,6 +13813,9 @@ class EngridLogger {
 
 // Events
 
+document
+    .getElementsByTagName("body")[0]
+    .setAttribute("data-engrid-scripts-js-loading", "finished");
 
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 const customScript = function () {
