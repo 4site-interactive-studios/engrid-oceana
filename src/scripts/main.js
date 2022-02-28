@@ -50,6 +50,9 @@ export const customScript = function () {
     const brazilCheckbox = document.querySelector(
       "#en__field_supporter_questions_409092"
     );
+    const sailorsForTheSeaCheckbox = document.querySelector(
+      "#en__field_supporter_questions_395782"
+    );
     function hideAllCheckboxes() {
       if (defaultCheckbox) {
         defaultCheckbox.closest(".en__field").style.display = "none";
@@ -66,6 +69,10 @@ export const customScript = function () {
       if (brazilCheckbox) {
         brazilCheckbox.closest(".en__field").style.display = "none";
         brazilCheckbox.checked = false;
+      }
+      if (sailorsForTheSeaCheckbox) {
+        sailorsForTheSeaCheckbox.closest(".en__field").style.display = "none";
+        sailorsForTheSeaCheckbox.checked = false;
       }
     }
     function setOptIn(country) {
@@ -91,10 +98,30 @@ export const customScript = function () {
           canadaCheckbox.closest(".en__field").style.display = "block";
           canadaCheckbox.checked = false;
         }
+        if (sailorsForTheSeaCheckbox) {
+          sailorsForTheSeaCheckbox.closest(".en__field").style.display =
+            "block";
+          sailorsForTheSeaCheckbox.checked = false;
+        }
       } else if (country === "Brazil") {
         if (brazilCheckbox) {
           brazilCheckbox.closest(".en__field").style.display = "block";
           brazilCheckbox.checked = false;
+        }
+        if (sailorsForTheSeaCheckbox) {
+          sailorsForTheSeaCheckbox.closest(".en__field").style.display =
+            "block";
+          sailorsForTheSeaCheckbox.checked = false;
+        }
+      } else if (country === "United Kingdom") {
+        if (usCheckbox) {
+          usCheckbox.checked = false;
+          usCheckbox.closest(".en__field").style.display = "block";
+        }
+        if (sailorsForTheSeaCheckbox) {
+          sailorsForTheSeaCheckbox.closest(".en__field").style.display =
+            "block";
+          sailorsForTheSeaCheckbox.checked = false;
         }
       } else {
         if (defaultCheckbox) {
