@@ -72,7 +72,7 @@ export const customScript = function () {
       }
       if (sailorsForTheSeaCheckbox) {
         sailorsForTheSeaCheckbox.closest(".en__field").style.display = "none";
-        sailorsForTheSeaCheckbox.checked = false;
+        // sailorsForTheSeaCheckbox.checked = false;
       }
     }
     function setOptIn(country) {
