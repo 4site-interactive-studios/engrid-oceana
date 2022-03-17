@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 16, 2022 @ 16:59:03 ET
+ *  Date: Thursday, March 17, 2022 @ 17:36:14 ET
  *  By: fernando
  *  ENGrid styles: v0.10.12
- *  ENGrid scripts: v0.10.18
+ *  ENGrid scripts: v0.10.19
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10792,6 +10792,9 @@ class engrid_ENGrid {
                     break;
                 case "supporterhub":
                     return "SUPPORTERHUB";
+                    break;
+                case "unsubscribe":
+                    return "UNSUBSCRIBE";
                     break;
                 default:
                     return "DONATION";
