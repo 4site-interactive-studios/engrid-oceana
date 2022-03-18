@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 17, 2022 @ 17:36:14 ET
+ *  Date: Thursday, March 17, 2022 @ 19:56:11 ET
  *  By: fernando
  *  ENGrid styles: v0.10.12
  *  ENGrid scripts: v0.10.19
@@ -7215,7 +7215,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:italic;
   font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u8w4BMUTPHjxsAUi-qNiXg7eU0.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u8w4BMUTPHjxsAUi-qNiXg7eU0.woff2) format("woff2");
   unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
 }
 @font-face{
@@ -7223,7 +7223,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:italic;
   font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u8w4BMUTPHjxsAXC-qNiXg7Q.woff2) format("woff2");
   unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
 }
 @font-face{
@@ -7231,7 +7231,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:italic;
   font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u_w4BMUTPHjxsI5wq_FQftx9897sxZ.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u_w4BMUTPHjxsI5wq_FQftx9897sxZ.woff2) format("woff2");
   unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
 }
 @font-face{
@@ -7239,7 +7239,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:italic;
   font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u_w4BMUTPHjxsI5wq_Gwftx9897g.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u_w4BMUTPHjxsI5wq_Gwftx9897g.woff2) format("woff2");
   unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
 }
 @font-face{
@@ -7247,7 +7247,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:normal;
   font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6uyw4BMUTPHjxAwXiWtFCfQ7A.woff2) format("woff2");
   unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
 }
 @font-face{
@@ -7255,7 +7255,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:normal;
   font-weight:400;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6uyw4BMUTPHjx4wXiWtFCc.woff2) format("woff2");
   unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
 }
 @font-face{
@@ -7263,7 +7263,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:normal;
   font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u9w4BMUTPHh6UVSwaPGQ3q5d0N7w.woff2) format("woff2");
   unicode-range:u+0100-024f, u+0259, u+1e??, u+2020, u+20a0-20ab, u+20ad-20cf, u+2113, u+2c60-2c7f, u+a720-a7ff;
 }
 @font-face{
@@ -7271,7 +7271,7 @@ body:not([data-engrid-debug]) #debug-bar{
   font-family:Lato;
   font-style:normal;
   font-weight:700;
-  src:url(https://fonts.gstatic.com/s/lato/v20/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format("woff2");
+  src:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2) format("woff2");
   unicode-range:u+00??, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+2000-206f, u+2074, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
 }
 @font-face{
