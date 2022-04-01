@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 17, 2022 @ 19:56:11 ET
+ *  Date: Friday, April 1, 2022 @ 10:23:35 ET
  *  By: fernando
  *  ENGrid styles: v0.10.12
  *  ENGrid scripts: v0.10.19
@@ -15260,7 +15260,9 @@ const customScript = function () {
     }
 
     function setOptIn(country) {
+      return false; // Temporarily disable the script per client request
       // If we can find any element with the ".show-optin" class, we don't run this function and keep things default
+
       const showOptIn = document.querySelector(".show-optin");
 
       if (showOptIn) {

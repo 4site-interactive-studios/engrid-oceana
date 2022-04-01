@@ -76,6 +76,7 @@ export const customScript = function () {
       }
     }
     function setOptIn(country) {
+      return false; // Temporarily disable the script per client request
       // If we can find any element with the ".show-optin" class, we don't run this function and keep things default
       const showOptIn = document.querySelector(".show-optin");
       if (showOptIn) {
