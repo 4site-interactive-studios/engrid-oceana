@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 1, 2022 @ 10:23:35 ET
- *  By: fernando
- *  ENGrid styles: v0.10.12
- *  ENGrid scripts: v0.10.19
+ *  Date: Tuesday, May 10, 2022 @ 16:12:26 ET
+ *  By: bryancasler
+ *  ENGrid styles: v0.11.9
+ *  ENGrid scripts: v0.11.15
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -49,9 +49,7 @@
   --scale-down-20pct:0.8;
   --scale-down-40pct:0.6;
   --scale-down-80pct:0.2;
-  --theme-font-stack-browser-fonts:-apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-    sans-serif;
+  --theme-font-stack-browser-fonts:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   --theme-typography-default-font-family:"Lato", sans-serif;
   --theme-typography-default-color:initial;
   --theme-typography-default-font-size:var(--theme-root-font-size);
@@ -115,8 +113,7 @@
   --theme-typography-input-focus-hover-border-bottom-color:var(
     --theme-typography-input-focus-hover-border-color
   );
-  --theme-typography-input-focus-hover-box-shadow:0 0 0.3125rem
-    var(--theme-light-gray);
+  --theme-typography-input-focus-hover-box-shadow:0 0 0.3125rem var(--theme-light-gray);
   --theme-typography-radio-content:initial;
   --theme-typography-radio-color:var(--theme-cta);
   --theme-typography-radio-background-color:var(--color-white);
@@ -2219,8 +2216,7 @@ body[data-engrid-debug]:before{
 }
 
 [data-engrid-theme]{
-  --native-fonts__sans-serif:-apple-system, BlinkMacSystemFont, "Segoe UI",
-    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --native-fonts__sans-serif:-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
   --default_font-family:var(--native-fonts__sans-serif);
   --default_font-size:16px;
   --default_font-weight:initial;
@@ -2482,8 +2478,10 @@ label a.label-tooltip:last-child{
 }
 input,input.en__field__input{
   background-color:var(--input_background-color);
-  border:var(--input_border-width) solid var(--input_border-color);
+  border-color:var(--input_border-color);
   border-radius:var(--input_border-radius);
+  border-style:solid;
+  border-width:var(--input_border-width);
   box-sizing:border-box;
   color:var(--input_color);
   display:block;
@@ -2501,8 +2499,8 @@ input,input.en__field__input{
 }
 input.en__field__input:focus,input.en__field__input:hover,input:focus,input:hover{
   background-color:var(--input_background-color_hover);
-  border-bottom-color:var(--input_border-color_hover);
-  border-color:var(--input_border-color_hover) var(--input_border-color_hover) var(--input_border-bottom-color_hover);
+  border-color:var(--input_border-color_hover);
+  border-bottom-color:var(--input_border-bottom-color_hover);
   color:var(--input_color_hover);
 }
 
@@ -2538,8 +2536,10 @@ input[type=radio]+label{
 input[type=radio]+label:before{
   align-items:center;
   background-color:var(--radio_background-color);
-  border:var(--radio_border-width) solid var(--radio_border-color);
+  border-color:var(--radio_border-color);
   border-radius:var(--radio_border-radius);
+  border-style:solid;
+  border-width:var(--radio_border-width);
   box-shadow:var(--radio_box-shadow);
   color:var(--radio_color);
   content:var(--radio_content);
@@ -2582,8 +2582,10 @@ input[type=checkbox]+label{
 input[type=checkbox]+label:before{
   align-items:center;
   background-color:var(--checkbox_background-color);
-  border:var(--checkbox_border-width) solid var(--checkbox_border-color);
+  border-color:var(--checkbox_border-color);
   border-radius:var(--checkbox_border-radius);
+  border-style:solid;
+  border-width:var(--checkbox_border-width);
   color:var(--checkbox_color);
   content:"";
   display:flex;
@@ -2622,8 +2624,10 @@ input[type=checkbox]:checked+label:before{
 .en__twitterTarget__select:before{
   align-items:center;
   background-color:var(--checkbox_background-color);
-  border:var(--checkbox_border-width) solid var(--checkbox_border-color);
+  border-color:var(--checkbox_border-color);
   border-radius:var(--checkbox_border-radius);
+  border-style:solid;
+  border-width:var(--checkbox_border-width);
   color:var(--checkbox_color);
   content:"";
   display:flex;
@@ -2661,8 +2665,10 @@ input[type=checkbox]:checked+label:before{
 .en__pg__select input:before{
   align-items:center;
   background-color:var(--radio_background-color);
-  border:var(--radio_border-width) solid var(--radio_border-color);
+  border-color:var(--radio_border-color);
   border-radius:var(--radio_border-radius);
+  border-style:solid;
+  border-width:var(--radio_border-width);
   box-shadow:var(--radio_box-shadow);
   color:var(--radio_color);
   content:var(--radio_content);
@@ -2724,8 +2730,10 @@ select,select.en__field__input--select,select.en__field__input--splitselect,sele
   background-position:calc(100% + 1.2ch + .1875rem);
   background-repeat:no-repeat;
   background-size:.5625rem .375rem;
-  border:var(--select_border-width) solid var(--select_border-color);
+  border-color:var(--select_border-color);
   border-radius:var(--select_border-radius);
+  border-style:solid;
+  border-width:var(--select_border-width);
   box-shadow:var(--select_box-shadow);
   box-sizing:border-box;
   color:var(--select_color);
@@ -2747,15 +2755,17 @@ select,select.en__field__input--select,select.en__field__input--splitselect,sele
 select.en__field__input--select:focus,select.en__field__input--select:hover,select.en__field__input--splitselect:focus,select.en__field__input--splitselect:hover,select.en__field__input--tripleselect:focus,select.en__field__input--tripleselect:hover,select:focus,select:hover{
   background-color:var(--select_background-color_hover);
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='32' height='24' viewBox='0 0 32 24'><polygon points='0,0 32,0 16,24' style='fill: rgb(0, 0, 0)'></polygon></svg>");
-  border-bottom-color:var(--select_border-color_hover);
-  border-color:var(--select_border-color_hover) var(--select_border-color_hover) var(--select_border-bottom-color_hover);
+  border-color:var(--select_border-color_hover);
+  border-bottom-color:var(--select_border-bottom-color_hover);
   box-shadow:var(--select_box-shadow_hover);
   color:var(--select_color_hover);
 }
 .en__contactMessage__plainText,.en__field__input--textarea,textarea{
   background-color:var(--textarea_background-color);
-  border:var(--textarea_border-width) solid var(--textarea_border-color);
+  border-color:var(--textarea_border-color);
   border-radius:var(--textarea_border-radius);
+  border-style:solid;
+  border-width:var(--textarea_border-width);
   box-shadow:var(--textarea_box-shadow);
   box-sizing:border-box;
   color:var(--textarea_color);
@@ -2776,8 +2786,8 @@ select.en__field__input--select:focus,select.en__field__input--select:hover,sele
 }
 .en__contactMessage__plainText:focus,.en__contactMessage__plainText:hover,.en__field__input--textarea:focus,.en__field__input--textarea:hover,textarea:focus,textarea:hover{
   background-color:var(--textarea_background-color_hover);
-  border-bottom-color:var(--textarea_border-color_hover);
-  border-color:var(--textarea_border-color_hover) var(--textarea_border-color_hover) var(--textarea_border-bottom-color_hover);
+  border-color:var(--textarea_border-color_hover);
+  border-bottom-color:var(--textarea_border-bottom-color_hover);
   box-shadow:var(--textarea_box-shadow_hover);
   color:var(--textarea_color_hover);
 }
@@ -3054,8 +3064,10 @@ body{
 .button,.en__button,.pseduo__en__submit_button,button,button.en__eventOccurrence__select,button.en__ticketRecurring__select,button.en__ticketSummary__checkout{
   -webkit-appearance:none;
   background-color:var(--button_background-color);
-  border:var(--button_border-width) solid var(--button_border-color);
+  border-color:var(--button_border-color);
   border-radius:var(--button_border-radius);
+  border-style:solid;
+  border-width:var(--button_border-width);
   color:var(--button_color);
   cursor:pointer;
   display:block;
@@ -3452,14 +3464,19 @@ body:not(#en__pagebuilder) .click-to-expand.expanded .click-to-expand-text-wrapp
 .i1-75 .en__field:first-of-type,.i10-75 .en__field:nth-of-type(10),.i11-75 .en__field:nth-of-type(11),.i2-75 .en__field:nth-of-type(2),.i3-75 .en__field:nth-of-type(3),.i4-75 .en__field:nth-of-type(4),.i5-75 .en__field:nth-of-type(5),.i6-75 .en__field:nth-of-type(6),.i7-75 .en__field:nth-of-type(7),.i8-75 .en__field:nth-of-type(8),.i9-75 .en__field:nth-of-type(9){
   flex-basis:75%;
 }
+
 .i1-center .en__field:first-of-type,.i10-center .en__field:nth-of-type(10),.i11-center .en__field:nth-of-type(11),.i2-center .en__field:nth-of-type(2),.i3-center .en__field:nth-of-type(3),.i4-center .en__field:nth-of-type(4),.i5-center .en__field:nth-of-type(5),.i6-center .en__field:nth-of-type(6),.i7-center .en__field:nth-of-type(7),.i8-center .en__field:nth-of-type(8),.i9-center .en__field:nth-of-type(9){
   align-items:center;
 }
-#en__pagebuilder .hide,#en__pagebuilder .hide-until-client-js-loading-finished,#en__pagebuilder .hide-until-engrid-js-loading-finished,#en__pagebuilder .i1-hide .en__field:first-of-type,#en__pagebuilder .i1-hide-label .en__field:first-of-type>label,#en__pagebuilder .i10-hide .en__field:nth-of-type(10),#en__pagebuilder .i10-hide-label .en__field:nth-of-type(10)>label,#en__pagebuilder .i11-hide .en__field:nth-of-type(11),#en__pagebuilder .i11-hide-label .en__field:nth-of-type(11)>label,#en__pagebuilder .i2-hide .en__field:nth-of-type(2),#en__pagebuilder .i2-hide-label .en__field:nth-of-type(2)>label,#en__pagebuilder .i3-hide .en__field:nth-of-type(3),#en__pagebuilder .i3-hide-label .en__field:nth-of-type(3)>label,#en__pagebuilder .i4-hide .en__field:nth-of-type(4),#en__pagebuilder .i4-hide-label .en__field:nth-of-type(4)>label,#en__pagebuilder .i5-hide .en__field:nth-of-type(5),#en__pagebuilder .i5-hide-label .en__field:nth-of-type(5)>label,#en__pagebuilder .i6-hide .en__field:nth-of-type(6),#en__pagebuilder .i6-hide-label .en__field:nth-of-type(6)>label,#en__pagebuilder .i7-hide .en__field:nth-of-type(7),#en__pagebuilder .i7-hide-label .en__field:nth-of-type(7)>label,#en__pagebuilder .i8-hide .en__field:nth-of-type(8),#en__pagebuilder .i8-hide-label .en__field:nth-of-type(8)>label,#en__pagebuilder .i9-hide .en__field:nth-of-type(9),#en__pagebuilder .i9-hide-label .en__field:nth-of-type(9)>label,[data-engrid-debug] .hide,[data-engrid-debug] .hide-until-client-js-loading-finished,[data-engrid-debug] .hide-until-engrid-js-loading-finished,[data-engrid-debug] .i1-hide .en__field:first-of-type,[data-engrid-debug] .i1-hide-label .en__field:first-of-type>label,[data-engrid-debug] .i10-hide .en__field:nth-of-type(10),[data-engrid-debug] .i10-hide-label .en__field:nth-of-type(10)>label,[data-engrid-debug] .i11-hide .en__field:nth-of-type(11),[data-engrid-debug] .i11-hide-label .en__field:nth-of-type(11)>label,[data-engrid-debug] .i2-hide .en__field:nth-of-type(2),[data-engrid-debug] .i2-hide-label .en__field:nth-of-type(2)>label,[data-engrid-debug] .i3-hide .en__field:nth-of-type(3),[data-engrid-debug] .i3-hide-label .en__field:nth-of-type(3)>label,[data-engrid-debug] .i4-hide .en__field:nth-of-type(4),[data-engrid-debug] .i4-hide-label .en__field:nth-of-type(4)>label,[data-engrid-debug] .i5-hide .en__field:nth-of-type(5),[data-engrid-debug] .i5-hide-label .en__field:nth-of-type(5)>label,[data-engrid-debug] .i6-hide .en__field:nth-of-type(6),[data-engrid-debug] .i6-hide-label .en__field:nth-of-type(6)>label,[data-engrid-debug] .i7-hide .en__field:nth-of-type(7),[data-engrid-debug] .i7-hide-label .en__field:nth-of-type(7)>label,[data-engrid-debug] .i8-hide .en__field:nth-of-type(8),[data-engrid-debug] .i8-hide-label .en__field:nth-of-type(8)>label,[data-engrid-debug] .i9-hide .en__field:nth-of-type(9),[data-engrid-debug] .i9-hide-label .en__field:nth-of-type(9)>label{
-  background-color:#ff00001a !important;
-}
 
-body:not(#en__pagebuilder):not([data-engrid-debug]) .hide,body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide .en__field:first-of-type,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide .en__field:nth-of-type(10),body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide .en__field:nth-of-type(11),body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide .en__field:nth-of-type(2),body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide .en__field:nth-of-type(3),body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide .en__field:nth-of-type(4),body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide .en__field:nth-of-type(5),body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide .en__field:nth-of-type(6),body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide .en__field:nth-of-type(7),body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide .en__field:nth-of-type(8),body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide .en__field:nth-of-type(9),body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-client-js-loading=finished]) .hide-until-client-js-loading-finished,body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-scripts-js-loading=finished]) .hide-until-engrid-js-loading-finished{
+.i1-column .en__field:first-of-type .en__field__element,.i10-column .en__field:nth-of-type(10) .en__field__element,.i11-column .en__field:nth-of-type(11) .en__field__element,.i2-column .en__field:nth-of-type(2) .en__field__element,.i3-column .en__field:nth-of-type(3) .en__field__element,.i4-column .en__field:nth-of-type(4) .en__field__element,.i5-column .en__field:nth-of-type(5) .en__field__element,.i6-column .en__field:nth-of-type(6) .en__field__element,.i7-column .en__field:nth-of-type(7) .en__field__element,.i8-column .en__field:nth-of-type(8) .en__field__element,.i9-column .en__field:nth-of-type(9) .en__field__element{
+  align-items:flex-start;
+  flex-direction:column;
+}
+#en__pagebuilder .hide,#en__pagebuilder .hide-until-client-js-loading-finished,#en__pagebuilder .hide-until-engrid-js-loading-finished,#en__pagebuilder .i1-hide .en__field:first-of-type,#en__pagebuilder .i1-hide-label .en__field:first-of-type>label,#en__pagebuilder .i10-hide .en__field:nth-of-type(10),#en__pagebuilder .i10-hide-label .en__field:nth-of-type(10)>label,#en__pagebuilder .i11-hide .en__field:nth-of-type(11),#en__pagebuilder .i11-hide-label .en__field:nth-of-type(11)>label,#en__pagebuilder .i2-hide .en__field:nth-of-type(2),#en__pagebuilder .i2-hide-label .en__field:nth-of-type(2)>label,#en__pagebuilder .i3-hide .en__field:nth-of-type(3),#en__pagebuilder .i3-hide-label .en__field:nth-of-type(3)>label,#en__pagebuilder .i4-hide .en__field:nth-of-type(4),#en__pagebuilder .i4-hide-label .en__field:nth-of-type(4)>label,#en__pagebuilder .i5-hide .en__field:nth-of-type(5),#en__pagebuilder .i5-hide-label .en__field:nth-of-type(5)>label,#en__pagebuilder .i6-hide .en__field:nth-of-type(6),#en__pagebuilder .i6-hide-label .en__field:nth-of-type(6)>label,#en__pagebuilder .i7-hide .en__field:nth-of-type(7),#en__pagebuilder .i7-hide-label .en__field:nth-of-type(7)>label,#en__pagebuilder .i8-hide .en__field:nth-of-type(8),#en__pagebuilder .i8-hide-label .en__field:nth-of-type(8)>label,#en__pagebuilder .i9-hide .en__field:nth-of-type(9),#en__pagebuilder .i9-hide-label .en__field:nth-of-type(9)>label,#en__pagebuilder [hidden-via-url-argument],[data-engrid-debug] .hide,[data-engrid-debug] .hide-until-client-js-loading-finished,[data-engrid-debug] .hide-until-engrid-js-loading-finished,[data-engrid-debug] .i1-hide .en__field:first-of-type,[data-engrid-debug] .i1-hide-label .en__field:first-of-type>label,[data-engrid-debug] .i10-hide .en__field:nth-of-type(10),[data-engrid-debug] .i10-hide-label .en__field:nth-of-type(10)>label,[data-engrid-debug] .i11-hide .en__field:nth-of-type(11),[data-engrid-debug] .i11-hide-label .en__field:nth-of-type(11)>label,[data-engrid-debug] .i2-hide .en__field:nth-of-type(2),[data-engrid-debug] .i2-hide-label .en__field:nth-of-type(2)>label,[data-engrid-debug] .i3-hide .en__field:nth-of-type(3),[data-engrid-debug] .i3-hide-label .en__field:nth-of-type(3)>label,[data-engrid-debug] .i4-hide .en__field:nth-of-type(4),[data-engrid-debug] .i4-hide-label .en__field:nth-of-type(4)>label,[data-engrid-debug] .i5-hide .en__field:nth-of-type(5),[data-engrid-debug] .i5-hide-label .en__field:nth-of-type(5)>label,[data-engrid-debug] .i6-hide .en__field:nth-of-type(6),[data-engrid-debug] .i6-hide-label .en__field:nth-of-type(6)>label,[data-engrid-debug] .i7-hide .en__field:nth-of-type(7),[data-engrid-debug] .i7-hide-label .en__field:nth-of-type(7)>label,[data-engrid-debug] .i8-hide .en__field:nth-of-type(8),[data-engrid-debug] .i8-hide-label .en__field:nth-of-type(8)>label,[data-engrid-debug] .i9-hide .en__field:nth-of-type(9),[data-engrid-debug] .i9-hide-label .en__field:nth-of-type(9)>label,[data-engrid-debug] [hidden-via-url-argument]{
+  background-color:rgba(255,0,0,.102) !important;
+}
+body:not(#en__pagebuilder):not([data-engrid-debug]) .hide,body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide .en__field:first-of-type,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide .en__field:nth-of-type(10),body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide .en__field:nth-of-type(11),body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide .en__field:nth-of-type(2),body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide .en__field:nth-of-type(3),body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide .en__field:nth-of-type(4),body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide .en__field:nth-of-type(5),body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide .en__field:nth-of-type(6),body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide .en__field:nth-of-type(7),body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide .en__field:nth-of-type(8),body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide .en__field:nth-of-type(9),body:not(#en__pagebuilder):not([data-engrid-debug]) [hidden-via-url-argument],body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-client-js-loading=finished]) .hide-until-client-js-loading-finished,body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-scripts-js-loading=finished]) .hide-until-engrid-js-loading-finished{
   display:none;
 }
 body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:first-of-type>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i10-hide-label .en__field:nth-of-type(10)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i11-hide-label .en__field:nth-of-type(11)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i2-hide-label .en__field:nth-of-type(2)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i3-hide-label .en__field:nth-of-type(3)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i4-hide-label .en__field:nth-of-type(4)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i5-hide-label .en__field:nth-of-type(5)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i6-hide-label .en__field:nth-of-type(6)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i7-hide-label .en__field:nth-of-type(7)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i8-hide-label .en__field:nth-of-type(8)>label,body:not(#en__pagebuilder):not([data-engrid-debug]) .i9-hide-label .en__field:nth-of-type(9)>label{
@@ -3561,6 +3578,7 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
   --donation-amount__button_count:4;
   --donation-amount__flex-grow:initial;
   --give-monthly-donation-amount-appended-label:"/mo";
+  --give-quarterly-donation-amount-appended-label:"/qt";
   --give-annual-donation-amount-appended-label:"/yr";
   --give-by-select__button_font-family:var(--button_font-family);
   --give-by-select__button_font-size:var(--button_font-size);
@@ -3618,8 +3636,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 .radio-to-buttons .en__field--radio input[type=radio]+label{
   background-color:var(--button_background-color);
   background-position-x:40px;
-  border:var(--button_border-width) solid var(--button_border-color);
+  border-color:var(--button_border-color);
   border-radius:var(--button_border-radius);
+  border-style:solid;
+  border-width:var(--button_border-width);
   color:var(--button_color);
   flex-flow:wrap;
   font-family:var(--button_font-family);
@@ -3658,8 +3678,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 .en__field--give-by-select.en__field--radio input[type=radio]+label{
   background-color:var(--give-by-select__button_background-color);
   background-position-x:40px;
-  border:var(--give-by-select__button_border-width) solid var(--give-by-select__button_border-color);
+  border-color:var(--give-by-select__button_border-color);
   border-radius:var(--give-by-select__button_border-radius);
+  border-style:solid;
+  border-width:var(--give-by-select__button_border-width);
   color:var(--give-by-select__button_color);
   flex-flow:wrap;
   font-family:var(--give-by-select__button_font-family);
@@ -3699,8 +3721,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--radio input[type=radio]+label{
   background-color:var(--donation-amount__button_background-color);
   background-position-x:40px;
-  border:var(--donation-amount__button_border-width) solid var(--donation-amount__button_border-color);
+  border-color:var(--donation-amount__button_border-color);
   border-radius:var(--donation-amount__button_border-radius);
+  border-style:solid;
+  border-width:var(--donation-amount__button_border-width);
   color:var(--donation-amount__button_color);
   flex-flow:wrap;
   font-family:var(--donation-amount__button_font-family);
@@ -3740,8 +3764,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio input[type=radio]+label{
   background-color:var(--recurring-frequency__button_background-color);
   background-position-x:40px;
-  border:var(--recurring-frequency__button_border-width) solid var(--recurring-frequency__button_border-color);
+  border-color:var(--recurring-frequency__button_border-color);
   border-radius:var(--recurring-frequency__button_border-radius);
+  border-style:solid;
+  border-width:var(--recurring-frequency__button_border-width);
   color:var(--recurring-frequency__button_color);
   flex-flow:wrap;
   font-family:var(--recurring-frequency__button_font-family);
@@ -3781,8 +3807,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 .radio-to-buttons_recurrpay .en__field--recurrpay.en__field--radio input[type=radio]+label{
   background-color:var(--recurring-payment__button_background-color);
   background-position-x:40px;
-  border:var(--recurring-payment__button_border-width) solid var(--recurring-payment__button_border-color);
+  border-color:var(--recurring-payment__button_border-color);
   border-radius:var(--recurring-payment__button_border-radius);
+  border-style:solid;
+  border-width:var(--recurring-payment__button_border-width);
   color:var(--recurring-payment__button_color);
   flex-flow:wrap;
   font-family:var(--recurring-payment__button_font-family);
@@ -3906,6 +3934,9 @@ body:not(#en__pagebuilder):not([data-engrid-debug]) .i1-hide-label .en__field:fi
 [data-engrid-transaction-recurring-frequency=annual] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
   content:var(--give-annual-donation-amount-appended-label);
 }
+[data-engrid-transaction-recurring-frequency=quarterly] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  content:var(--give-quarterly-donation-amount-appended-label);
+}
 body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-onetime-show,body:not([data-engrid-transaction-recurring=y]) .recurring-frequency-y-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=annual]) .recurring-frequency-annual-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=monthly]) .recurring-frequency-monthly-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=quarterly]) .recurring-frequency-quarterly-show,body:not([data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=semi_annual]) .recurring-frequency-semi-annual-show,body[data-engrid-transaction-recurring=n] .recurring-frequency-n-hide,body[data-engrid-transaction-recurring=n] .recurring-frequency-onetime-hide,body[data-engrid-transaction-recurring=y] .recurring-frequency-y-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=annual] .recurring-frequency-annual-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=monthly] .recurring-frequency-monthly-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=quarterly] .recurring-frequency-quarterly-hide,body[data-engrid-transaction-recurring=y][data-engrid-transaction-recurring-frequency=semi_annual] .recurring-frequency-semi-annual-hide{
   display:none;
 }
@@ -3970,8 +4001,10 @@ body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body
 }
 [data-engrid-theme] #dd-container .dtd-search-input,[data-engrid-theme] .dtd-plugin .dtd-search-input{
   background-color:var(--input_background-color) !important;
-  border:var(--input_border-width) solid var(--input_border-color) !important;
+  border-color:var(--input_border-color) !important;
   border-radius:var(--input_border-radius) !important;
+  border-style:solid !important;
+  border-width:var(--input_border-width) !important;
   box-sizing:border-box;
   color:var(--input_color) !important;
   display:block !important;
@@ -3989,8 +4022,8 @@ body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body
 }
 [data-engrid-theme] #dd-container .dtd-search-input:focus,[data-engrid-theme] #dd-container .dtd-search-input:hover,[data-engrid-theme] .dtd-plugin .dtd-search-input:focus,[data-engrid-theme] .dtd-plugin .dtd-search-input:hover{
   background-color:var(--input_background-color_hover) !important;
-  border-bottom-color:var(--input_border-color_hover) !important;
-  border-color:var(--input_border-color_hover) var(--input_border-color_hover) var(--input_border-bottom-color_hover) !important;
+  border-color:var(--input_border-color_hover) !important;
+  border-bottom-color:var(--input_border-bottom-color_hover) !important;
   color:var(--input_color_hover) !important;
 }
 [data-engrid-theme] #dd-container .dtd-search-input,[data-engrid-theme] .dtd-plugin .dtd-search-input{
@@ -3999,9 +4032,10 @@ body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body
 [data-engrid-theme] #dd-container .button,[data-engrid-theme] #dd-container a[class*=mg-][class*=-button],[data-engrid-theme] #dd-container button,[data-engrid-theme] .dtd-plugin .button,[data-engrid-theme] .dtd-plugin a[class*=mg-][class*=-button],[data-engrid-theme] .dtd-plugin button{
   -webkit-appearance:none;
   background-color:var(--submit__button_background-color);
-  border-color:var(--button_border-color);
-  border:var(--button_border-width) solid var(--submit__button_border-color);
+  border-color:var(--submit__button_border-color);
   border-radius:var(--button_border-radius);
+  border-style:solid;
+  border-width:var(--button_border-width);
   color:var(--submit__button_color);
   cursor:pointer;
   font-family:var(--button_font-family);
@@ -4028,8 +4062,10 @@ body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body
 }
 [data-engrid-theme] #dd-company-name-input .dtd-search-input,[data-engrid-theme] .dtd-streamlined-plugin .dtd-search-input{
   background-color:var(--input_background-color) !important;
-  border:var(--input_border-width) solid var(--input_border-color) !important;
+  border-color:var(--input_border-color) !important;
   border-radius:var(--input_border-radius) !important;
+  border-style:solid !important;
+  border-width:var(--input_border-width) !important;
   box-sizing:border-box;
   color:var(--input_color) !important;
   display:block !important;
@@ -4047,15 +4083,17 @@ body:not([data-engrid-transaction-recurring=n]) .recurring-frequency-n-show,body
 }
 [data-engrid-theme] #dd-company-name-input .dtd-search-input:focus,[data-engrid-theme] #dd-company-name-input .dtd-search-input:hover,[data-engrid-theme] .dtd-streamlined-plugin .dtd-search-input:focus,[data-engrid-theme] .dtd-streamlined-plugin .dtd-search-input:hover{
   background-color:var(--input_background-color_hover) !important;
-  border-bottom-color:var(--input_border-color_hover) !important;
-  border-color:var(--input_border-color_hover) var(--input_border-color_hover) var(--input_border-bottom-color_hover) !important;
+  border-color:var(--input_border-color_hover) !important;
+  border-bottom-color:var(--input_border-bottom-color_hover) !important;
   color:var(--input_color_hover) !important;
 }
 [data-engrid-theme] .dtd-company-selected .wrongcompany a{
   -webkit-appearance:none;
   background-color:var(--button_background-color);
-  border:var(--button_border-width) solid var(--button_border-color);
+  border-color:var(--button_border-color);
   border-radius:var(--button_border-radius);
+  border-style:solid;
+  border-width:var(--button_border-width);
   color:var(--button_color);
   cursor:pointer;
   display:block;
@@ -5298,12 +5336,14 @@ div.en__component.engrid-ticker{
 }
 
 #engrid-ticker{
+  --speed-modifier:1;
   height:5rem;
   margin-bottom:1rem;
   width:100%;
 }
 #engrid-ticker .ticker{
-  animation-duration:250s;
+  --calculated-speed:calc(1s*(var(--ticker-size)/50)*var(--speed-modifier));
+  animation-duration:var(--calculated-speed);
   animation-iteration-count:infinite;
   animation-name:tickerScroll;
   animation-timing-function:linear;
@@ -6412,10 +6452,7 @@ body:not(#en__pagebuilder)[data-engrid-no-body-bannerOverlay] .en__component--ad
   display:block;
 }
 [data-engrid-theme=flex2]#en__pagebuilder form{
-  bottom:auto;
-  left:0;
-  right:auto;
-  top:-1px;
+  inset:-1px auto auto 0;
 }
 [data-engrid-theme=flex2]#en__pagebuilder .en__container{
   margin-top:0;
@@ -6974,7 +7011,7 @@ body:not([data-engrid-debug]) #debug-bar{
   z-index:1000;
 }
 #en__pagebuilder .giveBySelect-ACH,#en__pagebuilder .giveBySelect-Card,#en__pagebuilder .giveBySelect-Paypal,#en__pagebuilder .giveBySelect-ach,#en__pagebuilder .giveBySelect-card,#en__pagebuilder .giveBySelect-paypal,#en__pagebuilder .inmem-N,#en__pagebuilder .inmem-Y,#en__pagebuilder .inmem-n,#en__pagebuilder .inmem-y,#en__pagebuilder [class*=engrid__supporter]{
-  background-color:#0000ff1a !important;
+  background-color:rgba(0,0,255,.102) !important;
 }
 #en__pagebuilder .giveBySelect-ACH.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .giveBySelect-Card.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .giveBySelect-Paypal.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .giveBySelect-ach.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .giveBySelect-card.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .giveBySelect-paypal.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .inmem-N.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .inmem-Y.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .inmem-n.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .inmem-y.pboAdvancedRow__preview .en__component--column,#en__pagebuilder [class*=engrid__supporter].pboAdvancedRow__preview .en__component--column{
   outline-color:#00f !important;
@@ -6984,7 +7021,7 @@ body:not([data-engrid-debug]) #debug-bar{
   outline:5px solid #f12222;
 }
 #en__pagebuilder .live-giving-amount,#en__pagebuilder .live-giving-frequency,#en__pagebuilder .live-giving-upsell-amount,#en__pagebuilder .live-giving-upsell-amount-raw{
-  background-color:#00ff001a !important;
+  background-color:rgba(0,255,0,.102) !important;
 }
 #en__pagebuilder .live-giving-amount.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .live-giving-frequency.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .live-giving-upsell-amount-raw.pboAdvancedRow__preview .en__component--column,#en__pagebuilder .live-giving-upsell-amount.pboAdvancedRow__preview .en__component--column{
   outline-color:#0f0 !important;
@@ -7153,7 +7190,7 @@ body:not([data-engrid-debug]) #debug-bar{
 }
 
 #en__pagebuilder [class*=showifamount],[data-engrid-debug] [class*=showifamount]{
-  background-color:#0000ff1a !important;
+  background-color:rgba(0,0,255,.102) !important;
 }
 #en__pagebuilder .edit-warning.en__component.en__component--active.en__component--activeTarget{
   box-shadow:0 0 0 2px #f12222;
@@ -7412,7 +7449,7 @@ body:not([data-engrid-debug]) #debug-bar{
   }
 }
 [data-engrid-theme=oceana][data-engrid-layout=centercenter2col] .body-banner,[data-engrid-theme=oceana][data-engrid-layout=centercenter2col] .body-title{
-  background:#ffffffde;
+  background:hsla(0,0%,100%,.871);
 }
 [data-engrid-theme=oceana][data-engrid-layout=centercenter2col] .content-footerSpacer{
   height:100px;
@@ -7675,7 +7712,7 @@ body:not([data-engrid-debug]) #debug-bar{
 }
 @media screen and (min-width:900px){
   [data-engrid-theme=oceana][data-engrid-layout=centercenter2col] .body-top{
-    background:#ffffffde;
+    background:hsla(0,0%,100%,.871);
     height:fit-content;
     padding-bottom:2.5rem;
   }
