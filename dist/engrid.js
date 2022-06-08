@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 1, 2022 @ 16:59:36 ET
- *  By: fernando
+ *  Date: Wednesday, June 8, 2022 @ 09:58:02 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.12.0
- *  ENGrid scripts: v0.12.7
+ *  ENGrid scripts: v0.12.10
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -13403,7 +13403,7 @@ class ShowHideRadioCheckboxes {
                     .forEach((el) => {
                     // Consider toggling "hide" class so these fields can be displayed when in a debug state
                     if (el instanceof HTMLElement) {
-                        const fields = el.querySelectorAll("input, select, textarea");
+                        const fields = el.querySelectorAll("input[type='text'], input[type='number'], input[type='email'], select, textarea");
                         if (fields.length > 0) {
                             fields.forEach((field) => {
                                 if (field instanceof HTMLInputElement ||
@@ -13461,7 +13461,7 @@ class ShowHideRadioCheckboxes {
         if (type == "hide" && !engrid_ENGrid.isVisible(item))
             return;
         this.logger.log(`toggleValue: ${type}`);
-        const fields = item.querySelectorAll("input, select, textarea");
+        const fields = item.querySelectorAll("input[type='text'], input[type='number'], input[type='email'], select, textarea");
         if (fields.length > 0) {
             fields.forEach((field) => {
                 var _a;
@@ -15622,7 +15622,7 @@ var tidycontact_awaiter = (undefined && undefined.__awaiter) || function (thisAr
 
 class TidyContact {
     constructor() {
-        var _a, _b, _c, _d;
+        var _a, _b;
         this.logger = new EngridLogger("TidyContact", "#FFFFFF", "#4d9068", "📧");
         this.endpoint = "https://api.tidycontact.io";
         this.wasCalled = false; // True if the API endpoint was called
@@ -15634,15 +15634,15 @@ class TidyContact {
         if (this.options === false)
             return;
         this.loadOptions();
-        if (!engrid_ENGrid.getField((_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.address_fields) === null || _b === void 0 ? void 0 : _b.country)) {
-            this.logger.log("Country field not found");
+        if (!this.hasAddressFields()) {
+            this.logger.log("No address fields found");
             return;
         }
         this.createFields();
         this.addEventListeners();
         if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") &&
             !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed() &&
-            engrid_ENGrid.getFieldValue((_d = (_c = this.options) === null || _c === void 0 ? void 0 : _c.address_fields) === null || _d === void 0 ? void 0 : _d.address1) !=
+            engrid_ENGrid.getFieldValue((_b = (_a = this.options) === null || _a === void 0 ? void 0 : _a.address_fields) === null || _b === void 0 ? void 0 : _b.address1) !=
                 "") {
             this.logger.log("Address Field is not empty");
             this.isDirty = true;
@@ -15801,7 +15801,7 @@ class TidyContact {
             }
             const errorData = {
                 status: this.httpStatus,
-                error: typeof error === "string" ? error : errorType,
+                error: typeof error === "string" ? error : errorType.toUpperCase(),
             };
             recordField.value = JSON.stringify(errorData);
         }
@@ -15809,21 +15809,21 @@ class TidyContact {
             dateField.value = this.todaysDate();
         }
         if (statusField) {
-            statusField.value = "API Error";
+            statusField.value = "ERROR-API";
         }
     }
     setFields(data) {
-        var _a, _b, _c, _d, _e, _f;
+        var _a, _b, _c, _d, _e;
         if (!this.options)
             return {};
         let response = {};
-        const countryValue = engrid_ENGrid.getFieldValue((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.country);
-        const postalCodeValue = engrid_ENGrid.getFieldValue((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.postalCode);
-        const zipDivider = (_c = this.options.us_zip_divider) !== null && _c !== void 0 ? _c : "+";
+        const country = this.getCountry();
+        const postalCodeValue = engrid_ENGrid.getFieldValue((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.postalCode);
+        const zipDivider = (_b = this.options.us_zip_divider) !== null && _b !== void 0 ? _b : "+";
         // Check if there's no address2 field
-        const address2Field = engrid_ENGrid.getField((_d = this.options.address_fields) === null || _d === void 0 ? void 0 : _d.address2);
+        const address2Field = engrid_ENGrid.getField((_c = this.options.address_fields) === null || _c === void 0 ? void 0 : _c.address2);
         if ("address2" in data && !address2Field) {
-            const address = engrid_ENGrid.getFieldValue((_e = this.options.address_fields) === null || _e === void 0 ? void 0 : _e.address1);
+            const address = engrid_ENGrid.getFieldValue((_d = this.options.address_fields) === null || _d === void 0 ? void 0 : _d.address1);
             if (address == data.address1 + " " + data.address2) {
                 delete data.address1;
                 delete data.address2;
@@ -15849,8 +15849,8 @@ class TidyContact {
             if (field) {
                 let value = data[key];
                 if (key === "postalCode" &&
-                    ["US", "USA", "United States"].includes(countryValue)) {
-                    value = (_f = value.replace("+", zipDivider)) !== null && _f !== void 0 ? _f : ""; // Replace the "+" with the zip divider
+                    ["US", "USA", "United States"].includes(country)) {
+                    value = (_e = value.replace("+", zipDivider)) !== null && _e !== void 0 ? _e : ""; // Replace the "+" with the zip divider
                 }
                 response[key] = { from: field.value, to: value };
                 this.logger.log(`Set ${field.name} to ${value} (${field.value})`);
@@ -15862,8 +15862,42 @@ class TidyContact {
         }
         return response;
     }
-    callAPI() {
+    hasAddressFields() {
         var _a, _b, _c, _d, _e, _f;
+        if (!this.options)
+            return false;
+        const address1 = engrid_ENGrid.getField((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.address1);
+        const address2 = engrid_ENGrid.getField((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.address2);
+        const city = engrid_ENGrid.getField((_c = this.options.address_fields) === null || _c === void 0 ? void 0 : _c.city);
+        const region = engrid_ENGrid.getField((_d = this.options.address_fields) === null || _d === void 0 ? void 0 : _d.region);
+        const postalCode = engrid_ENGrid.getField((_e = this.options.address_fields) === null || _e === void 0 ? void 0 : _e.postalCode);
+        const country = engrid_ENGrid.getField((_f = this.options.address_fields) === null || _f === void 0 ? void 0 : _f.country);
+        return !!(address1 || address2 || city || region || postalCode || country);
+    }
+    canUseAPI() {
+        var _a, _b, _c, _d;
+        if (!this.options)
+            return false;
+        const country = !!this.getCountry();
+        const address1 = !!engrid_ENGrid.getFieldValue((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.address1);
+        const city = !!engrid_ENGrid.getFieldValue((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.city);
+        const region = !!engrid_ENGrid.getFieldValue((_c = this.options.address_fields) === null || _c === void 0 ? void 0 : _c.region);
+        const postalCode = !!engrid_ENGrid.getFieldValue((_d = this.options.address_fields) === null || _d === void 0 ? void 0 : _d.postalCode);
+        if (country && address1) {
+            return (city && region) || postalCode;
+        }
+        return false;
+    }
+    getCountry() {
+        var _a, _b;
+        if (!this.options)
+            return "";
+        const countryFallback = (_a = this.options.country_fallback) !== null && _a !== void 0 ? _a : "";
+        const country = engrid_ENGrid.getFieldValue((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.country);
+        return country || countryFallback.toUpperCase();
+    }
+    callAPI() {
+        var _a, _b, _c, _d, _e;
         if (!this.options)
             return;
         if (!this.isDirty || this.wasCalled)
@@ -15877,17 +15911,29 @@ class TidyContact {
         const statusField = engrid_ENGrid.getField(this.options.status_field);
         const latitudeField = engrid_ENGrid.getField("supporter.geo.latitude");
         const longitudeField = engrid_ENGrid.getField("supporter.geo.longitude");
+        if (!this.canUseAPI()) {
+            this.logger.log("Not Enough Data to Call API");
+            if (dateField) {
+                dateField.value = this.todaysDate();
+            }
+            if (statusField) {
+                statusField.value = "PARTIALADDRESS";
+            }
+            return true;
+        }
         // Call the API
         const address1 = engrid_ENGrid.getFieldValue((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.address1);
         const address2 = engrid_ENGrid.getFieldValue((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.address2);
         const city = engrid_ENGrid.getFieldValue((_c = this.options.address_fields) === null || _c === void 0 ? void 0 : _c.city);
         const region = engrid_ENGrid.getFieldValue((_d = this.options.address_fields) === null || _d === void 0 ? void 0 : _d.region);
         const postalCode = engrid_ENGrid.getFieldValue((_e = this.options.address_fields) === null || _e === void 0 ? void 0 : _e.postalCode);
-        const country = engrid_ENGrid.getFieldValue((_f = this.options.address_fields) === null || _f === void 0 ? void 0 : _f.country);
+        const country = this.getCountry();
         if (!this.countryAllowed(country)) {
             this.logger.log("Country not allowed: " + country);
             if (recordField) {
-                recordField.value = "DISALLOWED";
+                let record = {};
+                record = Object.assign({ date: this.todaysDate(), status: "DISALLOWED" }, record);
+                recordField.value = JSON.stringify(record);
             }
             if (dateField) {
                 dateField.value = this.todaysDate();
@@ -15940,13 +15986,14 @@ class TidyContact {
                     record["longitude"] = data.longitude;
                 }
                 if (recordField) {
+                    record = Object.assign({ date: this.todaysDate(), status: "SUCCESS" }, record);
                     recordField.value = JSON.stringify(record);
                 }
                 if (dateField) {
                     dateField.value = this.todaysDate();
                 }
                 if (statusField) {
-                    statusField.value = "Success";
+                    statusField.value = "SUCCESS";
                 }
             }
             else {
@@ -15958,6 +16005,7 @@ class TidyContact {
                     record["checksum"] = checksum;
                 });
                 if (recordField) {
+                    record = Object.assign({ date: this.todaysDate(), status: "ERROR" }, record);
                     recordField.value = JSON.stringify(record);
                 }
                 if (dateField) {
@@ -15965,7 +16013,7 @@ class TidyContact {
                 }
                 if (statusField) {
                     statusField.value =
-                        "error" in data ? `Error: ` + data.error : "Invalid Address";
+                        "error" in data ? `ERROR: ` + data.error : "INVALIDADDRESS";
                 }
             }
         }))
@@ -15984,7 +16032,7 @@ class TidyContact {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.12.7";
+const AppVersion = "0.12.10";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
