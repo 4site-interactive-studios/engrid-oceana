@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 4, 2022 @ 22:55:54 ET
+ *  Date: Wednesday, July 6, 2022 @ 21:59:49 ET
  *  By: fernando
  *  ENGrid styles: v0.12.18
- *  ENGrid scripts: v0.12.17
+ *  ENGrid scripts: v0.12.19
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -13941,8 +13941,8 @@ class TranslateFields {
                 break;
             case "MX":
             case "MEX":
-                this.setStateValues("Province", [
-                    { label: "Select Province", value: "" },
+                this.setStateValues("Estado", [
+                    { label: "Seleccione Estado", value: "" },
                     { label: "Aguascalientes", value: "AGU" },
                     { label: "Baja California", value: "BCN" },
                     { label: "Baja California Sur", value: "BCS" },
@@ -16114,7 +16114,7 @@ class TidyContact {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.12.17";
+const AppVersion = "0.12.19";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
