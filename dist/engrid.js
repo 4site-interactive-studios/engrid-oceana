@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 25, 2022 @ 10:33:51 ET
+ *  Date: Tuesday, August 2, 2022 @ 11:46:44 ET
  *  By: fernando
- *  ENGrid styles: v0.13.0
- *  ENGrid scripts: v0.13.10
+ *  ENGrid styles: branch:legacy-custom-methods-refactor
+ *  ENGrid scripts: branch:legacy-custom-methods-refactor
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
