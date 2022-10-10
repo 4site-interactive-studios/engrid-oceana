@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, September 2, 2022 @ 10:25:42 ET
+ *  Date: Monday, October 10, 2022 @ 16:10:10 ET
  *  By: fernando
  *  ENGrid styles: v0.13.19
- *  ENGrid scripts: v0.13.19
+ *  ENGrid scripts: v0.13.25
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10873,10 +10873,10 @@ class engrid_ENGrid {
         scriptTag.src = url;
         scriptTag.onload = onload;
         if (head) {
-            document.getElementsByTagName("head")[0].appendChild(scriptTag);
+            document.head.appendChild(scriptTag);
             return;
         }
-        document.getElementsByTagName("body")[0].appendChild(scriptTag);
+        document.body.appendChild(scriptTag);
         return;
     }
     // Format a number
@@ -11360,6 +11360,7 @@ class App extends engrid_ENGrid {
                 return false;
             if (this._form.submitPromise)
                 return this._form.submitPromise;
+            this.logger.success("enOnSubmit Success");
             return true;
         };
         window.enOnError = () => {
@@ -11373,6 +11374,7 @@ class App extends engrid_ENGrid {
                 return false;
             if (this._form.validatePromise)
                 return this._form.validatePromise;
+            this.logger.success("Validation Passed");
             return true;
         };
         // Live Currency
@@ -11433,7 +11435,7 @@ class App extends engrid_ENGrid {
         new OtherAmount();
         new MinMaxAmount();
         new Ticker();
-        new AriaAttributes();
+        new A11y();
         new AddNameToMessage();
         new ExpandRegionName();
         // Page Background
@@ -11797,12 +11799,27 @@ class ApplePay {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/aria-attributes.js
-// This Component is supposed to be used as a helper for Arria Attributes
-class AriaAttributes {
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/a11y.js
+// a11y means accessibility
+// This Component is supposed to be used as a helper for Arria Attributes & Other Accessibility Features
+class A11y {
     constructor() {
         this.addRequired();
         this.addLabel();
+        this.addGroupRole();
+    }
+    addGroupRole() {
+        // Add role="group" to all EN Radio fields
+        const radioFields = document.querySelectorAll(".en__field--radio");
+        radioFields.forEach((field) => {
+            field.setAttribute("role", "group");
+            // Add random ID to the label
+            const label = field.querySelector("label");
+            if (label) {
+                label.setAttribute("id", `en__field__label--${Math.random().toString(36).slice(2, 7)}`);
+                field.setAttribute("aria-labelledby", label.id);
+            }
+        });
     }
     addRequired() {
         const mandatoryFields = document.querySelectorAll(".en__mandatory .en__field__input");
@@ -12845,14 +12862,10 @@ const isInViewport = (e) => {
 };
 // Checks to see if the page is so short, the footer is above the fold. If the footer is above the folde we'll use this class to ensure at a minimum the page fills the full viewport height.
 if (contentFooter && isInViewport(contentFooter)) {
-    document
-        .getElementsByTagName("BODY")[0]
-        .setAttribute("data-engrid-footer-above-fold", "");
+    document.body.setAttribute("data-engrid-footer-above-fold", "");
 }
 else {
-    document
-        .getElementsByTagName("BODY")[0]
-        .setAttribute("data-engrid-footer-below-fold", "");
+    document.body.setAttribute("data-engrid-footer-below-fold", "");
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/iframe.js
@@ -13332,7 +13345,7 @@ class UpsellLightbox {
                     </p>
                   </div>
                   <div class="upsellOtherAmountInput">
-                    <input href="#" id="secondOtherField" name="secondOtherField" size="12" type="number" inputmode="numeric" step="1" value="" autocomplete="off">
+                    <input href="#" id="secondOtherField" name="secondOtherField" type="text" value="" inputmode="decimal" aria-label="Enter your custom donation amount" autocomplete="off" data-lpignore="true" aria-required="true" size="12">
                     <small>Minimum ${this.getAmountTxt(this.options.minAmount)}</small>
                   </div>
                 </div>
@@ -14604,7 +14617,7 @@ class NeverBounce {
                 this.init();
             }, 1000);
         }
-        this.form.onValidate.subscribe(() => (this.form.validate = this.validate()));
+        this.form.onValidate.subscribe(this.validate.bind(this));
     }
     init() {
         if (this.nbLoaded || !this.shouldRun)
@@ -14627,9 +14640,7 @@ class NeverBounce {
             '<div id="nb-feedback" class="en__field__error nb-hidden">Enter a valid email.</div>';
         this.insertAfter(nbCustomMessageHTML, this.emailField);
         const NBClass = this;
-        document
-            .getElementsByTagName("body")[0]
-            .addEventListener("nb:registered", function (event) {
+        document.body.addEventListener("nb:registered", function (event) {
             const field = document.querySelector('[data-nb-id="' + event.detail.id + '"]');
             field.addEventListener("nb:loading", function (e) {
                 engrid_ENGrid.disableSubmit("Validating Your Email");
@@ -14771,19 +14782,20 @@ class NeverBounce {
     }
     validate() {
         var _a;
-        if (!this.emailField || !this.shouldRun || !this.nbLoaded) {
+        const nbResult = engrid_ENGrid.getFieldValue("nb-result");
+        if (!this.emailField || !this.shouldRun || !this.nbLoaded || !nbResult) {
             this.logger.log("validate(): Should Not Run. Returning true.");
-            return true;
+            return;
         }
         if (this.nbStatus) {
-            this.nbStatus.value = engrid_ENGrid.getFieldValue("nb-result");
+            this.nbStatus.value = nbResult;
         }
-        if (!["catchall", "unknown", "valid"].includes(engrid_ENGrid.getFieldValue("nb-result"))) {
+        if (!["catchall", "unknown", "valid"].includes(nbResult)) {
             this.setEmailStatus("required");
             (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
-            return false;
+            this.logger.log("NB-Result:", engrid_ENGrid.getFieldValue("nb-result"));
+            this.form.validate = false;
         }
-        return true;
     }
 }
 
@@ -14878,7 +14890,7 @@ class RememberMe {
         if (this.useRemote()) {
             this.createIframe(() => {
                 if (this.iframe && this.iframe.contentWindow) {
-                    this.iframe.contentWindow.postMessage({ key: this.cookieName, operation: "read" }, "*");
+                    this.iframe.contentWindow.postMessage(JSON.stringify({ key: this.cookieName, operation: "read" }), "*");
                     this._form.onSubmit.subscribe(() => {
                         if (this.rememberMeOptIn) {
                             this.readFields();
@@ -14887,11 +14899,15 @@ class RememberMe {
                     });
                 }
             }, (event) => {
-                if (event.data &&
-                    event.data.key &&
-                    event.data.value !== undefined &&
-                    event.data.key === this.cookieName) {
-                    this.updateFieldData(event.data.value);
+                let data;
+                if (event.data && typeof event.data === "string") {
+                    data = JSON.parse(event.data);
+                }
+                if (data &&
+                    data.key &&
+                    data.value !== undefined &&
+                    data.key === this.cookieName) {
+                    this.updateFieldData(data.value);
                     this.writeFields();
                     let hasFieldData = Object.keys(this.fieldData).length > 0;
                     if (!hasFieldData) {
@@ -15060,12 +15076,12 @@ class RememberMe {
     }
     saveCookieToRemote() {
         if (this.iframe && this.iframe.contentWindow) {
-            this.iframe.contentWindow.postMessage({
+            this.iframe.contentWindow.postMessage(JSON.stringify({
                 key: this.cookieName,
-                value: JSON.stringify(this.fieldData),
+                value: this.fieldData,
                 operation: "write",
                 expires: this.cookieExpirationDays,
-            }, "*");
+            }), "*");
         }
     }
     readCookie() {
@@ -15543,6 +15559,16 @@ class DataLayer {
         this.onLoad();
         this._form.onSubmit.subscribe(() => this.onSubmit());
     }
+    transformJSON(value) {
+        if (typeof value === "string") {
+            return value.toUpperCase().split(" ").join("-").replace(":-", "-");
+        }
+        else if (typeof value === "boolean") {
+            value = value ? "TRUE" : "FALSE";
+            return value;
+        }
+        return "";
+    }
     onLoad() {
         if (engrid_ENGrid.getGiftProcess()) {
             this.logger.log("EN_SUCCESSFUL_DONATION");
@@ -15555,6 +15581,27 @@ class DataLayer {
             this.dataLayer.push({
                 event: "EN_PAGE_VIEW",
             });
+        }
+        if (window.pageJson) {
+            const pageJson = window.pageJson;
+            for (const property in pageJson) {
+                if (Number.isInteger(pageJson[property])) {
+                    this.dataLayer.push({
+                        event: `EN_PAGEJSON_${property.toUpperCase()}-${pageJson[property]}`,
+                    });
+                    this.dataLayer.push({
+                        [`'EN_PAGEJSON_${property.toUpperCase()}'`]: pageJson[property],
+                    });
+                }
+                else {
+                    this.dataLayer.push({
+                        event: `EN_PAGEJSON_${property.toUpperCase()}-${this.transformJSON(pageJson[property])}`,
+                    });
+                    this.dataLayer.push({
+                        [`'EN_PAGEJSON_${property.toUpperCase()}'`]: this.transformJSON(pageJson[property]),
+                    });
+                }
+            }
         }
     }
     onSubmit() {
@@ -17132,7 +17179,7 @@ class LiveCurrency {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.19";
+const AppVersion = "0.13.25";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
