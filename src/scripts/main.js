@@ -137,4 +137,39 @@ export const customScript = function () {
     });
     setOptIn(countrySelect.value);
   }
+
+  // Digital Wallets Moving Parts
+
+  const digitalWalletWrapper = document.querySelector(
+    ".merge-with-give-by-select #en__digitalWallet"
+  );
+  const digitalWalletFirstChild = document.querySelector("#en__digitalWallet");
+  const giveBySelect = document.querySelector(".give-by-select");
+  if (digitalWalletWrapper && giveBySelect) {
+    giveBySelect.appendChild(digitalWalletWrapper);
+    digitalWalletFirstChild.insertAdjacentHTML(
+      "beforeend",
+      "<div class='digital-divider'><span class='divider-left'></span><p class='divider-center'>or enter manually</p><span class='divider-right'></span></div>"
+    );
+  }
+
+  let digitalWalletsExist;
+
+  setTimeout(function () {
+    digitalWalletsExist = document.querySelectorAll(
+      ".en__digitalWallet__container > *"
+    );
+    if (digitalWalletsExist.length > 0) {
+      giveBySelect.setAttribute("show-wallets", "");
+    }
+  }, 500);
+
+  setTimeout(function () {
+    digitalWalletsExist = document.querySelectorAll(
+      ".en__digitalWallet__container > *"
+    );
+    if (digitalWalletsExist.length > 0) {
+      giveBySelect.setAttribute("show-wallets", "");
+    }
+  }, 2500);
 };
