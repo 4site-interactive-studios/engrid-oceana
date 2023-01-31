@@ -162,6 +162,16 @@
   .en__contact__toggle {
     display: none;
   }
+
+  // GIVE BY SELECT VARIABLES
+  --give-by-select__button_background-color: #fff;
+  --give-by-select__button_border-color: #999;
+
+  --give-by-select__button_background-color_checked: #fff;
+  --give-by-select__button_border-color_checked: #3b84de;
+
+  --give-by-select__button_background-color_hover: #fff;
+  --give-by-select__button_border-color_hover: #999;
 }
 
 [data-engrid-subtheme="sailorsfortheseas"] {
@@ -798,5 +808,43 @@
   }
   .en__field__element--checkbox .en__field__item {
     width: 100%;
+  }
+
+  // GIVE BY SELECT STYLES
+  .give-by-select .en__field__element--radio {
+    align-items: stretch;
+  }
+
+  .en__field--give-by-select.en__field--radio input[type="radio"] + label {
+    height: 100%;
+    padding: 12px 22px;
+  }
+
+  // GIFT SUMMARY STYLES
+  .gift-summary-list {
+    background-color: #f9f9f9;
+    border-top: 1px solid #d5d5d5;
+    border-bottom: 1px solid #d5d5d5;
+    color: #344857;
+    font-size: 14px;
+  }
+
+  .gift-summary-list__item {
+    display: flex;
+    padding: 15px 20px;
+  }
+
+  .gift-summary-list__item:not(:first-of-type) {
+    border-top: 1px solid #d5d5d5;
+  }
+
+  .gift-summary-list__term {
+    flex-basis: 33.3%;
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  .gift-summary-list__description {
+    flex-basis: 66.6%;
   }
 }
