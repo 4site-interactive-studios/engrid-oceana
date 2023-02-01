@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 4, 2023 @ 12:36:49 ET
+ *  Date: Wednesday, February 1, 2023 @ 17:06:49 ET
  *  By: fernando
- *  ENGrid styles: v0.13.19
- *  ENGrid scripts: v0.13.31
+ *  ENGrid styles: v0.13.34
+ *  ENGrid scripts: v0.13.32
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10344,6 +10344,7 @@ const UpsellOptionsDefaults = {
     canClose: true,
     submitOnClose: false,
     disablePaymentMethods: [],
+    skipUpsell: false,
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/translate-options.js
@@ -13415,10 +13416,17 @@ class UpsellLightbox {
         // if it's a first page of a Donation page
         return (
         // !hideModal &&
-        "EngridUpsell" in window &&
+        !this.shouldSkip() &&
+            "EngridUpsell" in window &&
             !!window.pageJson &&
             window.pageJson.pageNumber == 1 &&
             ["donation", "premiumgift"].includes(window.pageJson.pageType));
+    }
+    shouldSkip() {
+        if ("EngridUpsell" in window && window.EngridUpsell.skipUpsell) {
+            return true;
+        }
+        return this.options.skipUpsell;
     }
     popupOtherField() {
         var _a, _b;
@@ -13478,6 +13486,7 @@ class UpsellLightbox {
         // there's no suggestion for this donation amount,
         // we should not open
         if (freq == "onetime" &&
+            !this.shouldSkip() &&
             !this.options.disablePaymentMethods.includes(paymenttype.toLowerCase()) &&
             !this.overlay.classList.contains("is-submitting") &&
             upsellAmount > 0) {
@@ -17235,7 +17244,7 @@ class Autosubmit {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.31";
+const AppVersion = "0.13.32";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
