@@ -171,5 +171,36 @@ export const customScript = function () {
     if (digitalWalletsExist.length > 0) {
       giveBySelect.setAttribute("show-wallets", "");
     }
+
+    if (
+      document
+        .getElementById("en__field_transaction_paymenttype")
+        .value.toLowerCase() !== "paypal"
+    ) {
+      document.getElementById("en__digitalWallet__paypalTouch").style.display =
+        "none";
+    }
   }, 2500);
+
+  document
+    .getElementById("en__digitalWallet__paypalTouch")
+    .classList.add("giveBySelect-Paypal");
+
+  document
+    .querySelectorAll('[name="transaction.giveBySelect"]')
+    .forEach((el) => {
+      el.addEventListener("change", () => {
+        let giveBySelectValue = document
+          .querySelector('input[name="transaction.giveBySelect"]:checked')
+          .value.toLowerCase();
+
+        let submitButtonContainer = document.querySelector(".en__submit");
+
+        if (giveBySelectValue === "paypal") {
+          submitButtonContainer.style.display = "none";
+        } else {
+          submitButtonContainer.style.display = "block";
+        }
+      });
+    });
 };

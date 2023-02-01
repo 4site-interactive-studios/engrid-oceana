@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 31, 2023 @ 10:25:17 ET
+ *  Date: Wednesday, February 1, 2023 @ 08:22:14 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -7585,7 +7585,6 @@ body:not([data-engrid-debug]) #debug-bar{
 }
 [data-engrid-theme=oceana] #en__digitalWallet{
   margin-bottom:0 !important;
-  order:-1;
   padding-top:15px !important;
 }
 [data-engrid-theme=oceana] .en__digitalWallet__button{
