@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, February 1, 2023 @ 08:22:14 ET
+ *  Date: Tuesday, February 28, 2023 @ 06:58:31 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -17454,21 +17454,41 @@ const customScript = function () {
     if (digitalWalletsExist.length > 0) {
       giveBySelect.setAttribute("show-wallets", "");
     }
+  }, 2500); //Digital wallets are hiddens via CSS on page load
+  //this will show them on page load if required
 
-    if (document.getElementById("en__field_transaction_paymenttype").value.toLowerCase() !== "paypal") {
-      document.getElementById("en__digitalWallet__paypalTouch").style.display = "none";
-    }
-  }, 2500);
-  document.getElementById("en__digitalWallet__paypalTouch").classList.add("giveBySelect-Paypal");
+  if (document.getElementById("en__field_transaction_paymenttype").value.toLowerCase() === "paypal") {
+    document.getElementById("en__digitalWallet").style.display = "flex";
+  }
+  /**
+   * Get the payment type value from the GiveBySelect. Workaround because
+   * EN requires payment type for both venmo and paypal to be "paypal".
+   * @returns "card", "venmo" or "paypal"
+   */
+
+
+  function getGiveBySelectValue() {
+    let giveBySelectInput = document.querySelector('input[name="transaction.giveBySelect"]:checked');
+    let giveBySelectInputValue = giveBySelectInput.value.toLowerCase();
+    if (giveBySelectInputValue !== "paypal") return "card";
+    return giveBySelectInput.parentElement.classList.contains("venmo") ? "venmo" : "paypal";
+  } //Toggles display of submit button and digital wallet buttons based on giveBySelect
+
+
   document.querySelectorAll('[name="transaction.giveBySelect"]').forEach(el => {
     el.addEventListener("change", () => {
-      let giveBySelectValue = document.querySelector('input[name="transaction.giveBySelect"]:checked').value.toLowerCase();
       let submitButtonContainer = document.querySelector(".en__submit");
+      let digitalWalletsContainer = document.getElementById("en__digitalWallet");
 
-      if (giveBySelectValue === "paypal") {
+      if (getGiveBySelectValue() === "venmo") {
         submitButtonContainer.style.display = "none";
+        digitalWalletsContainer.style.display = "flex";
+      } else if (getGiveBySelectValue() === "paypal") {
+        submitButtonContainer.style.display = "block";
+        digitalWalletsContainer.style.display = "flex";
       } else {
         submitButtonContainer.style.display = "block";
+        digitalWalletsContainer.style.display = "none";
       }
     });
   });
