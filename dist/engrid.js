@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, February 1, 2023 @ 17:06:49 ET
- *  By: fernando
+ *  Date: Tuesday, February 28, 2023 @ 13:34:36 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.13.34
- *  ENGrid scripts: v0.13.32
+ *  ENGrid scripts: v0.13.36
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12548,6 +12548,14 @@ const watchGiveBySelectField = () => {
             enFieldPaymentType.value = "ACH";
         }
         else if (enFieldGiveBySelectCurrentValue &&
+            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "check") {
+            if (enGrid) {
+                removeClassesByPrefix(enGrid, prefix);
+                enGrid.classList.add("has-give-by-check");
+            }
+            enFieldPaymentType.value = "check";
+        }
+        else if (enFieldGiveBySelectCurrentValue &&
             enFieldGiveBySelectCurrentValue.value.toLowerCase() == "paypal") {
             if (enGrid) {
                 removeClassesByPrefix(enGrid, prefix);
@@ -17244,7 +17252,7 @@ class Autosubmit {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.32";
+const AppVersion = "0.13.36";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
