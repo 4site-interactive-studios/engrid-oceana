@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 8, 2023 @ 13:22:36 ET
+ *  Date: Wednesday, March 8, 2023 @ 14:04:44 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -17486,11 +17486,16 @@ const customScript = function () {
       let digitalWalletsContainer = document.getElementById("en__digitalWallet");
       let paymentFrequency = getPaymentFrequency();
       let giveBySelectValue = getGiveBySelectValue();
+      let paypalTouchContainer = document.getElementById("en__digitalWallet__paypalTouch");
+      paypalTouchContainer.classList.remove('paypal', 'venmo');
 
       if (giveBySelectValue === "venmo") {
+        paypalTouchContainer.classList.add('venmo');
         submitButtonContainer.style.display = "none";
         digitalWalletsContainer.style.display = "flex";
       } else if (giveBySelectValue === "paypal") {
+        paypalTouchContainer.classList.add('paypal');
+
         if (paymentFrequency === "onetime") {
           submitButtonContainer.style.display = "none";
           digitalWalletsContainer.style.display = "flex";
