@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, February 28, 2023 @ 06:58:31 ET
+ *  Date: Wednesday, March 8, 2023 @ 13:22:36 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -17472,20 +17472,32 @@ const customScript = function () {
     let giveBySelectInputValue = giveBySelectInput.value.toLowerCase();
     if (giveBySelectInputValue !== "paypal") return "card";
     return giveBySelectInput.parentElement.classList.contains("venmo") ? "venmo" : "paypal";
+  }
+
+  function getPaymentFrequency() {
+    return document.querySelector('input[name="transaction.recurrfreq"]:checked').value.toLowerCase();
   } //Toggles display of submit button and digital wallet buttons based on giveBySelect
+  //and payment frequency
 
 
-  document.querySelectorAll('[name="transaction.giveBySelect"]').forEach(el => {
+  document.querySelectorAll('[name="transaction.giveBySelect"],[name="transaction.recurrfreq"]').forEach(el => {
     el.addEventListener("change", () => {
       let submitButtonContainer = document.querySelector(".en__submit");
       let digitalWalletsContainer = document.getElementById("en__digitalWallet");
+      let paymentFrequency = getPaymentFrequency();
+      let giveBySelectValue = getGiveBySelectValue();
 
-      if (getGiveBySelectValue() === "venmo") {
+      if (giveBySelectValue === "venmo") {
         submitButtonContainer.style.display = "none";
         digitalWalletsContainer.style.display = "flex";
-      } else if (getGiveBySelectValue() === "paypal") {
-        submitButtonContainer.style.display = "block";
-        digitalWalletsContainer.style.display = "flex";
+      } else if (giveBySelectValue === "paypal") {
+        if (paymentFrequency === "onetime") {
+          submitButtonContainer.style.display = "none";
+          digitalWalletsContainer.style.display = "flex";
+        } else {
+          submitButtonContainer.style.display = "block";
+          digitalWalletsContainer.style.display = "none";
+        }
       } else {
         submitButtonContainer.style.display = "block";
         digitalWalletsContainer.style.display = "none";
