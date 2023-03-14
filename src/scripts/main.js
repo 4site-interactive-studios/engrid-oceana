@@ -218,26 +218,11 @@ export const customScript = function () {
         let submitButtonContainer = document.querySelector(".en__submit");
         let digitalWalletsContainer =
           document.getElementById("en__digitalWallet");
-        let paymentFrequency = getPaymentFrequency();
         let giveBySelectValue = getGiveBySelectValue();
-        let paypalTouchContainer = document.getElementById(
-          "en__digitalWallet__paypalTouch"
-        );
-        paypalTouchContainer.classList.remove('paypal', 'venmo')
 
         if (giveBySelectValue === "venmo") {
-          paypalTouchContainer.classList.add('venmo');
           submitButtonContainer.style.display = "none";
           digitalWalletsContainer.style.display = "flex";
-        } else if (giveBySelectValue === "paypal") {
-          paypalTouchContainer.classList.add('paypal');
-          if (paymentFrequency === "onetime") {
-            submitButtonContainer.style.display = "none";
-            digitalWalletsContainer.style.display = "flex";
-          } else {
-            submitButtonContainer.style.display = "block";
-            digitalWalletsContainer.style.display = "none";
-          }
         } else {
           submitButtonContainer.style.display = "block";
           digitalWalletsContainer.style.display = "none";

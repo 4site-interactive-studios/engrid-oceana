@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 9, 2023 @ 07:15:07 ET
+ *  Date: Tuesday, March 14, 2023 @ 07:52:19 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -7892,20 +7892,6 @@ body:not([data-engrid-debug]) #debug-bar{
 
 #en__digitalWallet{
   display:none;
-}
-
-#en__digitalWallet #en__digitalWallet__paypalTouch{
-  overflow:hidden;
-}
-
-#en__digitalWallet #en__digitalWallet__paypalTouch.paypal{
-  height:45px;
-}
-
-#en__digitalWallet #en__digitalWallet__paypalTouch.venmo>#en__digitalWallet__paypalTouch__container{
-  height:45px;
-  position:relative;
-  top:-59px;
 }
 body{
   opacity:1;
