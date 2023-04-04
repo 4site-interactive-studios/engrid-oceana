@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 2, 2023 @ 08:18:29 ET
+ *  Date: Tuesday, April 4, 2023 @ 15:18:38 ET
  *  By: fernando
- *  ENGrid styles: v0.13.39
- *  ENGrid scripts: v0.13.39
+ *  ENGrid styles: v0.13.52
+ *  ENGrid scripts: v0.13.52
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10306,6 +10306,7 @@ const OptionsDefaults = {
     NeverBounceDateField: null,
     NeverBounceStatusField: null,
     NeverBounceDateFormat: "MM/DD/YYYY",
+    FreshAddress: false,
     ProgressBar: false,
     AutoYear: false,
     TranslateFields: true,
@@ -10313,6 +10314,16 @@ const OptionsDefaults = {
     RememberMe: false,
     TidyContact: false,
     RegionLongFormat: "",
+    CountryDisable: [],
+    PageLayouts: [
+        "leftleft1col",
+        "centerleft1col",
+        "centercenter1col",
+        "centercenter2col",
+        "centerright1col",
+        "rightright1col",
+        "none",
+    ],
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/upsell-options.js
@@ -10406,8 +10417,8 @@ class Loader {
         var _a, _b, _c, _d;
         const assets = this.getOption("assets");
         const isLoaded = engrid_ENGrid.getBodyData("loaded");
-        const shouldSkipCss = this.getOption("engridcss") === "false";
-        const shouldSkipJs = this.getOption("engridjs") === "false";
+        let shouldSkipCss = this.getOption("engridcss") === "false";
+        let shouldSkipJs = this.getOption("engridjs") === "false";
         if (isLoaded || !assets) {
             if (shouldSkipCss && this.cssElement) {
                 this.logger.log("engridcss=false | Removing original stylesheet:", this.cssElement);
@@ -10416,6 +10427,10 @@ class Loader {
             if (shouldSkipJs && this.jsElement) {
                 this.logger.log("engridjs=false | Removing original script:", this.jsElement);
                 this.jsElement.remove();
+            }
+            if (shouldSkipCss) {
+                this.logger.log("engridcss=false | adding top banner CSS");
+                this.addENgridCSSUnloadedCSS();
             }
             if (shouldSkipJs) {
                 this.logger.log("engridjs=false | Skipping JS load.");
@@ -10474,17 +10489,21 @@ class Loader {
             this.logger.log("engridcss=false | Removing original stylesheet:", this.cssElement);
             this.cssElement.remove();
         }
-        if (shouldSkipCss && engrid_css_url && engrid_css_url !== '') {
+        if (shouldSkipCss && engrid_css_url && engrid_css_url !== "") {
             this.logger.log("engridcss=false | Skipping injection of stylesheet:", engrid_css_url);
         }
-        if (!shouldSkipCss) {
+        if (shouldSkipCss) {
+            this.logger.log("engridcss=false | adding top banner CSS");
+            this.addENgridCSSUnloadedCSS();
+        }
+        else {
             this.setCssFile(engrid_css_url);
         }
         if (shouldSkipJs && this.jsElement) {
             this.logger.log("engridjs=false | Removing original script:", this.jsElement);
             this.jsElement.remove();
         }
-        if (shouldSkipJs && engrid_js_url && engrid_js_url !== '') {
+        if (shouldSkipJs && engrid_js_url && engrid_js_url !== "") {
             this.logger.log("engridjs=false | Skipping injection of script:", engrid_js_url);
         }
         if (!shouldSkipJs) {
@@ -10510,7 +10529,7 @@ class Loader {
         return null;
     }
     setCssFile(url) {
-        if (url === '') {
+        if (url === "") {
             return;
         }
         if (this.cssElement) {
@@ -10528,13 +10547,50 @@ class Loader {
         }
     }
     setJsFile(url) {
-        if (url === '') {
+        if (url === "") {
             return;
         }
         this.logger.log("Injecting script:", url);
         const script = document.createElement("script");
         script.setAttribute("src", url);
         document.head.appendChild(script);
+    }
+    addENgridCSSUnloadedCSS() {
+        document.body.insertAdjacentHTML("beforeend", `<style>
+        html,
+        body {
+            background-color: #ffffff;
+        }
+
+        body {
+            opacity: 1;
+            margin: 0;
+        }
+
+        body:before {
+            content: "ENGRID CSS UNLOADED";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: #ffff00;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        .en__component--advrow {
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .en__component--advrow * {
+            max-width: 100%;
+            height: auto;
+        }
+      </style>`);
     }
 }
 
@@ -10748,7 +10804,7 @@ class engrid_ENGrid {
         return new FormData(this.enForm).getAll(name).join(",");
     }
     // Set a value to any field. If it's a dropdown, radio or checkbox, it selects the proper option matching the value
-    static setFieldValue(name, value, parseENDependencies = true) {
+    static setFieldValue(name, value, parseENDependencies = true, dispatchEvents = false) {
         if (value === engrid_ENGrid.getFieldValue(name))
             return;
         document.getElementsByName(name).forEach((field) => {
@@ -10759,20 +10815,29 @@ class engrid_ENGrid {
                         for (const option of field.options) {
                             if (option.value == value) {
                                 option.selected = true;
+                                if (dispatchEvents) {
+                                    field.dispatchEvent(new Event("change", { bubbles: true }));
+                                }
                             }
                         }
                         break;
                     case "checkbox":
                     case "radio":
-                        // @TODO: Try to trigger the onChange event
                         if (field.value == value) {
                             field.checked = true;
+                            if (dispatchEvents) {
+                                field.dispatchEvent(new Event("change", { bubbles: true }));
+                            }
                         }
                         break;
                     case "textarea":
                     case "text":
                     default:
                         field.value = value;
+                        if (dispatchEvents) {
+                            field.dispatchEvent(new Event("change", { bubbles: true }));
+                            field.dispatchEvent(new Event("blur", { bubbles: true }));
+                        }
                 }
                 field.setAttribute("engrid-value-changed", "");
             }
@@ -10854,6 +10919,16 @@ class engrid_ENGrid {
             return window.pageJson.campaignPageId;
         return 0;
     }
+    // Return the client ID
+    static getClientID() {
+        if ("pageJson" in window)
+            return window.pageJson.clientId;
+        return 0;
+    }
+    //returns 'us or 'ca' based on the client ID
+    static getDataCenter() {
+        return engrid_ENGrid.getClientID() >= 10000 ? "us" : "ca";
+    }
     // Return the current page type
     static getPageType() {
         if ("pageJson" in window && "pageType" in window.pageJson) {
@@ -10883,6 +10958,9 @@ class engrid_ENGrid {
                     break;
                 case "unsubscribe":
                     return "UNSUBSCRIBE";
+                    break;
+                case "tweetpage":
+                    return "TWEETPAGE";
                     break;
                 default:
                     return "UNKNOWN";
@@ -11092,6 +11170,38 @@ class engrid_ENGrid {
             return currencyField.value || "USD";
         }
         return engrid_ENGrid.getOption("CurrencyCode") || "USD";
+    }
+    static addHtml(html, target = "body", position = "before") {
+        var _a, _b;
+        const targetElement = document.querySelector(target);
+        if (typeof html === "object") {
+            html = html.outerHTML;
+        }
+        if (targetElement) {
+            const htmlElement = document.createRange().createContextualFragment(html);
+            if (position === "before") {
+                (_a = targetElement.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(htmlElement, targetElement);
+            }
+            else {
+                (_b = targetElement.parentNode) === null || _b === void 0 ? void 0 : _b.insertBefore(htmlElement, targetElement.nextSibling);
+            }
+        }
+    }
+    static removeHtml(target) {
+        const targetElement = document.querySelector(target);
+        if (targetElement) {
+            targetElement.remove();
+        }
+    }
+    static slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .replace(/\s+/g, "-") // Replace spaces with -
+            .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+            .replace(/\-\-+/g, "-") // Replace multiple - with single -
+            .replace(/^-+/, "") // Trim - from start of text
+            .replace(/-+$/, ""); // Trim - from end of text
     }
 }
 
@@ -11446,6 +11556,8 @@ class App extends engrid_ENGrid {
         new Autosubmit();
         // Adjust display of event tickets.
         new EventTickets();
+        // Swap Amounts
+        new SwapAmounts();
         // On the end of the script, after all subscribers defined, let's load the current value
         this._amount.load();
         this._frequency.load();
@@ -11484,6 +11596,9 @@ class App extends engrid_ENGrid {
             new RememberMe(this.options.RememberMe);
         if (this.options.NeverBounceAPI)
             new NeverBounce(this.options.NeverBounceAPI, this.options.NeverBounceDateField, this.options.NeverBounceStatusField, this.options.NeverBounceDateFormat);
+        // FreshAddress
+        if (this.options.FreshAddress)
+            new FreshAddress();
         new ShowIfAmount();
         new OtherAmount();
         new MinMaxAmount();
@@ -11497,15 +11612,30 @@ class App extends engrid_ENGrid {
         new UrlToForm();
         // Required if Visible Fields
         new RequiredIfVisible();
+        //Debug hidden fields
+        if (this.options.Debug)
+            new DebugHiddenFields();
         // TidyContact
         if (this.options.TidyContact)
             new TidyContact();
         // Translate Fields
         if (this.options.TranslateFields)
             new TranslateFields();
+        // Country Disable
+        new CountryDisable();
+        // Premium Gift Features
+        new PremiumGift();
         // Data Layer Events
         new DataLayer();
         this.setDataAttributes();
+        //Debug panel
+        if (this.options.Debug ||
+            window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
+            new DebugPanel(this.options.PageLayouts);
+        }
+        if (engrid_ENGrid.getUrlParameter("development") === "branding") {
+            new BrandingHtml().show();
+        }
         engrid_ENGrid.setBodyData("data-engrid-scripts-js-loading", "finished");
         window.EngridVersion = AppVersion;
         this.logger.success(`VERSION: ${AppVersion}`);
@@ -11533,6 +11663,11 @@ class App extends engrid_ENGrid {
         }
     }
     onError() {
+        // Smooth Scroll to the first .en__field--validationFailed element
+        const firstError = document.querySelector(".en__field--validationFailed");
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth" });
+        }
         if (this.options.onError) {
             this.logger.danger("Client onError Triggered");
             this.options.onError();
@@ -13190,7 +13325,6 @@ class LiveVariables {
         this._fees.onFeeChange.subscribe(() => this.changeLiveAmount());
         this._fees.onFeeChange.subscribe(() => this.changeLiveUpsellAmount());
         this._fees.onFeeChange.subscribe(() => this.changeSubmitButton());
-        this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
         this._frequency.onFrequencyChange.subscribe(() => this.changeLiveFrequency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeRecurrency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeSubmitButton());
@@ -13296,28 +13430,6 @@ class LiveVariables {
             // Trigger the onChange event for the field
             const event = new Event("change", { bubbles: true });
             recurrpay.dispatchEvent(event);
-        }
-    }
-    swapAmounts() {
-        if ("EngridAmounts" in window &&
-            this._frequency.frequency in window.EngridAmounts) {
-            const loadEnAmounts = (amountArray) => {
-                let ret = [];
-                for (let amount in amountArray.amounts) {
-                    ret.push({
-                        selected: amountArray.amounts[amount] === amountArray.default,
-                        label: amount,
-                        value: amountArray.amounts[amount].toString(),
-                    });
-                }
-                return ret;
-            };
-            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
-                ignoreCurrentValue: !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed(),
-            });
-            this._amount.load();
-            if (engrid_ENGrid.getOption("Debug"))
-                console.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency]);
         }
     }
     // Watch for a clicks on monthly-upsell link
@@ -14668,8 +14780,10 @@ class NeverBounce {
         };
         engrid_ENGrid.loadJS("https://cdn.neverbounce.com/widget/dist/NeverBounce.js");
         if (this.emailField) {
-            if (this.emailField.value)
+            if (this.emailField.value) {
+                this.logger.log("E-mail Field Found");
                 this.shouldRun = false;
+            }
             this.emailField.addEventListener("change", (e) => {
                 var _a;
                 if (!this.nbLoaded) {
@@ -14685,14 +14799,24 @@ class NeverBounce {
                 }
             });
             window.setTimeout(() => {
+                if (this.emailField && this.emailField.value) {
+                    this.logger.log("E-mail Filled Programatically");
+                    this.shouldRun = false;
+                }
                 this.init();
             }, 1000);
         }
         this.form.onValidate.subscribe(this.validate.bind(this));
     }
     init() {
-        if (this.nbLoaded || !this.shouldRun)
+        if (!this.shouldRun) {
+            this.logger.log("Should Not Run");
             return;
+        }
+        if (this.nbLoaded) {
+            this.logger.log("Already Loaded");
+            return;
+        }
         this.logger.log("Init Function");
         if (this.dateField && document.getElementsByName(this.dateField).length)
             this.nbDate = document.querySelector("[name='" + this.dateField + "']");
@@ -14867,6 +14991,183 @@ class NeverBounce {
             this.logger.log("NB-Result:", engrid_ENGrid.getFieldValue("nb-result"));
             this.form.validate = false;
         }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/freshaddress.js
+// According to the FreshAddress documentation, you need to add the following code to your page:
+// jQuery library.
+// <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+// FreshAddress client-side integration library
+// <script src="//api.freshaddress.biz/js/lib/freshaddress-client-7.0.min.js?token=[TOKEN HERE]"></script>
+//
+// I know. jQuery. But it's not my fault. It's FreshAddress's fault.
+
+
+class FreshAddress {
+    constructor() {
+        this.form = EnForm.getInstance();
+        this.emailField = null;
+        this.emailWrapper = document.querySelector(".en__field--emailAddress");
+        this.faDate = null;
+        this.faStatus = null;
+        this.faMessage = null;
+        this.logger = new EngridLogger("FreshAddress", "#039bc4", "#dfdfdf", "📧");
+        this.shouldRun = true;
+        this.options = engrid_ENGrid.getOption("FreshAddress");
+        if (this.options === false || !window.FreshAddress)
+            return;
+        this.emailField = document.getElementById("en__field_supporter_emailAddress");
+        if (this.emailField) {
+            this.createFields();
+            this.addEventListeners();
+            if (this.emailField.value) {
+                this.logger.log("E-mail Field Found");
+                this.shouldRun = false;
+            }
+            window.setTimeout(() => {
+                if (this.emailField && this.emailField.value) {
+                    this.logger.log("E-mail Filled Programatically");
+                    this.shouldRun = false;
+                }
+            }, 1000);
+        }
+        else {
+            this.logger.log("E-mail Field Not Found");
+        }
+    }
+    createFields() {
+        if (!this.options)
+            return;
+        this.options.dateField = this.options.dateField || "fa_date";
+        this.faDate = engrid_ENGrid.getField(this.options.dateField);
+        if (!this.faDate) {
+            this.logger.log("Date Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.dateField, "");
+            this.faDate = engrid_ENGrid.getField(this.options.dateField);
+        }
+        this.options.statusField = this.options.statusField || "fa_status";
+        this.faStatus = engrid_ENGrid.getField(this.options.statusField);
+        if (!this.faStatus) {
+            this.logger.log("Status Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.statusField, "");
+            this.faStatus = engrid_ENGrid.getField(this.options.statusField);
+        }
+        this.options.messageField = this.options.messageField || "fa_message";
+        this.faMessage = engrid_ENGrid.getField(this.options.messageField);
+        if (!this.faMessage) {
+            this.logger.log("Message Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.messageField, "");
+            this.faMessage = engrid_ENGrid.getField(this.options.messageField);
+        }
+    }
+    writeToFields(status, message) {
+        if (!this.options)
+            return;
+        this.faDate.value = engrid_ENGrid.formatDate(new Date(), this.options.dateFieldFormat || "yyyy-MM-dd");
+        this.faStatus.value = status;
+        this.faMessage.value = message;
+        this.emailWrapper.dataset.freshaddressSafetosendstatus =
+            status.toLowerCase();
+    }
+    addEventListeners() {
+        var _a;
+        if (!this.options)
+            return;
+        // Add event listeners to fields
+        (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.addEventListener("change", () => {
+            var _a;
+            if (!this.shouldRun) {
+                this.logger.log("Skipping E-mail Validation");
+                return;
+            }
+            this.logger.log("Validating " + ((_a = this.emailField) === null || _a === void 0 ? void 0 : _a.value));
+            this.callAPI();
+        });
+        // Add event listener to submit
+        this.form.onValidate.subscribe(this.validate.bind(this));
+    }
+    callAPI() {
+        var _a;
+        if (!this.options || !window.FreshAddress)
+            return;
+        if (!this.shouldRun)
+            return;
+        const email = (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.value;
+        const options = { emps: false, rtc_timeout: 1200 };
+        engrid_ENGrid.disableSubmit("Validating Your Email");
+        const ret = window.FreshAddress.validateEmail(email, options).then((response) => {
+            this.logger.log("Validate API Response", JSON.parse(JSON.stringify(response)));
+            return this.validateResponse(response);
+        });
+    }
+    validateResponse(data) {
+        var _a;
+        /* ERROR HANDLING: Let through in case of a service error. Enable form submission. */
+        if (data.isServiceError()) {
+            this.logger.log("Service Error");
+            this.writeToFields("Service Error", data.getErrorResponse());
+            return true;
+        }
+        /* CHECK RESULT: */
+        if (data.isValid()) {
+            // Set response message. No action required.
+            this.writeToFields("Valid", data.getComment());
+            engrid_ENGrid.removeError(this.emailWrapper);
+            if (data.hasSuggest()) {
+                // Valid, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+            }
+        }
+        else if (data.isError()) {
+            // Error Condition 1 - the service should always respond with finding E/W/V
+            this.writeToFields("Invalid", data.getErrorResponse());
+            engrid_ENGrid.setError(this.emailWrapper, data.getErrorResponse());
+            (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+            if (data.hasSuggest()) {
+                // Error, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+                this.writeToFields("Error", data.getErrorResponse());
+            }
+        }
+        else if (data.isWarning()) {
+            this.writeToFields("Invalid", data.getErrorResponse());
+            engrid_ENGrid.setError(this.emailWrapper, data.getErrorResponse());
+            if (data.hasSuggest()) {
+                // Warning, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+                this.writeToFields("Warning", data.getErrorResponse());
+            }
+        }
+        else {
+            // Error Condition 2 - the service should always respond with finding E/W/V
+            this.writeToFields("API Error", "Unknown Error");
+        }
+        engrid_ENGrid.enableSubmit();
+    }
+    validate() {
+        var _a;
+        engrid_ENGrid.removeError(this.emailWrapper);
+        if (!this.options) {
+            this.form.validate = true;
+            return;
+        }
+        if (!this.shouldRun) {
+            this.form.validate = true;
+            return;
+        }
+        if (this.faStatus.value === "Invalid") {
+            this.form.validate = false;
+            window.setTimeout(() => {
+                engrid_ENGrid.setError(this.emailWrapper, this.faMessage.value);
+            }, 100);
+            (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+            return;
+        }
+        this.form.validate = true;
     }
 }
 
@@ -15474,37 +15775,37 @@ class EngridLogger {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.log.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get success() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.log.bind(window.console, "%c ✅ " + this.prefix + " %s", `color: green; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c ✅ " + this.prefix + " %s", `color: green; background-color: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get danger() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.log.bind(window.console, "%c ⛔️ " + this.prefix + " %s", `color: red; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c ⛔️ " + this.prefix + " %s", `color: red; background-color: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get warn() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.warn.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.warn.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get dir() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.dir.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.dir.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get error() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.error.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.error.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
 }
 
@@ -17325,11 +17626,765 @@ class EventTickets {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/swap-amounts.js
+// This script allows you to override the default donation amounts in Engaging Networks
+// with a custom list of amounts.
+/**
+ * Example:
+ * window.EngridAmounts = {
+ *   "onetime": {
+ *     amounts: {
+ *       "10": 10,
+ *       "30": 30,
+ *       "50": 50,
+ *       "100": 100,
+ *       "Other": "other",
+ *     },
+ *     default: 30,
+ *   },
+ *   "monthly": {
+ *     amounts: {
+ *       "5": 5,
+ *       "15": 15,
+ *       "25": 25,
+ *       "30": 30,
+ *       "Other": "other",
+ *     },
+ *     default: 15,
+ *   },
+ * };
+ */
+
+class SwapAmounts {
+    constructor() {
+        this.logger = new EngridLogger("SwapAmounts", "purple", "white", "💰");
+        this._amount = DonationAmount.getInstance();
+        this._frequency = DonationFrequency.getInstance();
+        this.defaultChange = false;
+        this.swapped = false;
+        if (!this.shouldRun())
+            return;
+        this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
+        this._amount.onAmountChange.subscribe(() => {
+            this.defaultChange = false;
+            if (!this.swapped)
+                return;
+            // Check if the amount is not default amount for the frequency
+            if (this._amount.amount !=
+                window.EngridAmounts[this._frequency.frequency].default) {
+                this.defaultChange = true;
+            }
+        });
+    }
+    swapAmounts() {
+        if (this._frequency.frequency in window.EngridAmounts) {
+            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
+                ignoreCurrentValue: this.ignoreCurrentValue(),
+            });
+            this._amount.load();
+            this.logger.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency]);
+            this.swapped = true;
+        }
+    }
+    loadEnAmounts(amountArray) {
+        let ret = [];
+        for (let amount in amountArray.amounts) {
+            ret.push({
+                selected: amountArray.amounts[amount] === amountArray.default,
+                label: amount,
+                value: amountArray.amounts[amount].toString(),
+            });
+        }
+        return ret;
+    }
+    shouldRun() {
+        return "EngridAmounts" in window;
+    }
+    ignoreCurrentValue() {
+        return !(window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed() ||
+            engrid_ENGrid.getUrlParameter("transaction.donationAmt") !== null ||
+            this.defaultChange);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-panel.js
+
+class DebugPanel {
+    constructor(pageLayouts) {
+        var _a, _b;
+        this.logger = new EngridLogger("Debug Panel", "#f0f0f0", "#ff0000", "💥");
+        this.brandingHtml = new BrandingHtml();
+        this.element = null;
+        this.currentTimestamp = this.getCurrentTimestamp();
+        this.quickFills = {
+            "pi-general": [
+                {
+                    name: "supporter.title",
+                    value: "Ms",
+                },
+                {
+                    name: "supporter.firstName",
+                    value: "4Site",
+                },
+                {
+                    name: "supporter.lastName",
+                    value: "Studio",
+                },
+                {
+                    name: "supporter.emailAddress",
+                    value: "en-test@4sitestudios.com",
+                },
+                {
+                    name: "supporter.phoneNumber",
+                    value: "555-555-5555",
+                },
+            ],
+            "pi-unique": [
+                {
+                    name: "supporter.title",
+                    value: "Ms",
+                },
+                {
+                    name: "supporter.firstName",
+                    value: `4Site ${this.currentTimestamp}`,
+                },
+                {
+                    name: "supporter.lastName",
+                    value: "Studio",
+                },
+                {
+                    name: "supporter.emailAddress",
+                    value: `en-test+${this.currentTimestamp}@4sitestudios.com`,
+                },
+                {
+                    name: "supporter.phoneNumber",
+                    value: "555-555-5555",
+                },
+            ],
+            "us-address": [
+                {
+                    name: "supporter.address1",
+                    value: "3431 14th St NW",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "Suite 1",
+                },
+                {
+                    name: "supporter.city",
+                    value: "Washington",
+                },
+                {
+                    name: "supporter.region",
+                    value: "DC",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "20010",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "us-address-senate-rep": [
+                {
+                    name: "supporter.address1",
+                    value: "20 W 34th Street",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "",
+                },
+                {
+                    name: "supporter.city",
+                    value: "New York",
+                },
+                {
+                    name: "supporter.region",
+                    value: "NY",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "10001",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "us-address-nonexistent": [
+                {
+                    name: "supporter.address1",
+                    value: "12345 Main Street",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "",
+                },
+                {
+                    name: "supporter.city",
+                    value: "New York",
+                },
+                {
+                    name: "supporter.region",
+                    value: "TX",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "90210",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "cc-paysafe-visa": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "4530910000012345",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "cc-paysafe-visa-invalid": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "411111",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "cc-paysafe-mastercard": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "5036150000001115",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+        };
+        this.logger.log("Adding debug panel and starting a debug session");
+        this.pageLayouts = pageLayouts;
+        this.loadDebugPanel();
+        this.element = document.querySelector(".debug-panel");
+        (_a = this.element) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+            var _a;
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.classList.add("debug-panel--open");
+        });
+        const debugPanelClose = document.querySelector(".debug-panel__close");
+        debugPanelClose === null || debugPanelClose === void 0 ? void 0 : debugPanelClose.addEventListener("click", (e) => {
+            var _a;
+            e.stopPropagation();
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.classList.remove("debug-panel--open");
+        });
+        if (engrid_ENGrid.getUrlParameter("assets") === "local") {
+            (_b = this.element) === null || _b === void 0 ? void 0 : _b.classList.add("debug-panel--local");
+        }
+        window.sessionStorage.setItem(DebugPanel.debugSessionStorageKey, "active");
+    }
+    loadDebugPanel() {
+        document.body.insertAdjacentHTML("beforeend", `<div class="debug-panel">
+          <div class="debug-panel__container">
+            <div class="debug-panel__closed-title">Debug</div>
+            <div class="debug-panel__title">
+              <h2>Debug Panel</h2>
+              <div class="debug-panel__close">X</div>
+            </div>
+            <div class="debug-panel__options">
+              <div class="debug-panel__option">
+                <label class="debug-panel__link-label link-left">
+                  <a class="debug-panel__edit-link">Edit page</a>
+                </label>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-form-quickfill">Form Quick-fill</label>
+                <select name="engrid-form-quickfill" id="engrid-form-quickfill">
+                  <option disabled selected>Choose an option</option>
+                  <option value="pi-general">Personal Info - General</option>
+                  <option value="pi-unique">Personal Info - Unique</option>
+                  <option value="us-address-senate-rep">US Address - w/ Senate Rep</option>
+                  <option value="us-address">US Address - w/o Senate Rep</option>
+                  <option value="us-address-nonexistent">US Address - Nonexistent</option>
+                  <option value="cc-paysafe-visa">CC - Paysafe - Visa</option>
+                  <option value="cc-paysafe-visa-invalid">CC - Paysafe - Visa (Invalid)</option>
+                  <option value="cc-paysafe-mastercard">CC - Paysafe - Mastercard</option>
+                </select>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-layout-switch">Switch layout</label>
+                <select name="engrid-layout" id="engrid-layout-switch">
+                </select>
+              </div>
+              <div class="debug-panel__option">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-embedded-layout" id="engrid-embedded-layout">
+                  <label for="engrid-embedded-layout">Embedded layout</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-debug-layout" id="engrid-debug-layout">
+                  <label for="engrid-debug-layout">Debug layout</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-branding" id="engrid-branding">
+                  <label for="engrid-branding">Branding HTML</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-theme">Theme</label>
+                <input type="text" id="engrid-theme">
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-theme">Sub-theme</label>
+                <input type="text" id="engrid-subtheme">
+              </div>
+              <div class="debug-panel__option">
+                <button class="btn debug-panel__btn debug-panel__btn--submit" type="button">Submit form</button>
+              </div>
+              <div class="debug-panel__option">
+                <label class="debug-panel__link-label">
+                  <a class="debug-panel__force-submit-link">Force submit form</a>
+                </label>
+              </div>
+             <div class="debug-panel__option">
+                <label class="debug-panel__link-label">
+                  <a class="debug-panel__end-debug-link">End debug</a>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>`);
+        this.setupLayoutSwitcher();
+        this.setupThemeSwitcher();
+        this.setupSubThemeSwitcher();
+        this.setupFormQuickfill();
+        this.createDebugSessionEndHandler();
+        this.setupEmbeddedLayoutSwitcher();
+        this.setupDebugLayoutSwitcher();
+        this.setupBrandingHtmlHandler();
+        this.setupEditBtnHandler();
+        this.setupForceSubmitLinkHandler();
+        this.setupSubmitBtnHandler();
+    }
+    switchENGridLayout(layout) {
+        engrid_ENGrid.setBodyData("layout", layout);
+    }
+    setupLayoutSwitcher() {
+        var _a, _b;
+        const engridLayoutSwitch = document.getElementById("engrid-layout-switch");
+        if (engridLayoutSwitch) {
+            (_a = this.pageLayouts) === null || _a === void 0 ? void 0 : _a.forEach((layout) => {
+                engridLayoutSwitch.insertAdjacentHTML("beforeend", `<option value="${layout}">${layout}</option>`);
+            });
+            engridLayoutSwitch.value = (_b = engrid_ENGrid.getBodyData("layout")) !== null && _b !== void 0 ? _b : "";
+            engridLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                this.switchENGridLayout(target.value);
+            });
+        }
+    }
+    setupThemeSwitcher() {
+        var _a;
+        const engridThemeInput = document.getElementById("engrid-theme");
+        if (engridThemeInput) {
+            engridThemeInput.value = (_a = engrid_ENGrid.getBodyData("theme")) !== null && _a !== void 0 ? _a : "";
+            ["keyup", "blur"].forEach((ev) => {
+                engridThemeInput.addEventListener(ev, (e) => {
+                    const target = e.target;
+                    this.switchENGridTheme(target.value);
+                });
+            });
+        }
+    }
+    switchENGridTheme(theme) {
+        engrid_ENGrid.setBodyData("theme", theme);
+    }
+    setupSubThemeSwitcher() {
+        var _a;
+        const engridSubthemeInput = document.getElementById("engrid-subtheme");
+        if (engridSubthemeInput) {
+            engridSubthemeInput.value = (_a = engrid_ENGrid.getBodyData("subtheme")) !== null && _a !== void 0 ? _a : "";
+            ["keyup", "blur"].forEach((ev) => {
+                engridSubthemeInput.addEventListener(ev, (e) => {
+                    const target = e.target;
+                    this.switchENGridSubtheme(target.value);
+                });
+            });
+        }
+    }
+    switchENGridSubtheme(subtheme) {
+        engrid_ENGrid.setBodyData("subtheme", subtheme);
+    }
+    setupFormQuickfill() {
+        const engridQuickfill = document.getElementById("engrid-form-quickfill");
+        engridQuickfill === null || engridQuickfill === void 0 ? void 0 : engridQuickfill.addEventListener("change", (e) => {
+            const target = e.target;
+            this.quickFills[target.value].forEach((qf) => {
+                this.setFieldValue(qf);
+            });
+        });
+    }
+    setFieldValue(qf) {
+        if (qf.name === "transaction.ccexpire") {
+            const ccExpireEls = document.getElementsByName("transaction.ccexpire");
+            if (ccExpireEls.length > 0) {
+                const expirationDate = qf.value.split("/");
+                ccExpireEls[0].value = expirationDate[0];
+                ccExpireEls[1].value = expirationDate[1];
+                ccExpireEls[0].dispatchEvent(new Event("change", { bubbles: true }));
+                ccExpireEls[1].dispatchEvent(new Event("change", { bubbles: true }));
+            }
+            else {
+                ccExpireEls[0].value = qf.value;
+                ccExpireEls[0].dispatchEvent(new Event("change", { bubbles: true }));
+            }
+            return;
+        }
+        engrid_ENGrid.setFieldValue(qf.name, qf.value, true, true);
+    }
+    getCurrentTimestamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        return `${year}${month}${day}-${hours}${minutes}`;
+    }
+    createDebugSessionEndHandler() {
+        const debugSessionEndBtn = document.querySelector(".debug-panel__end-debug-link");
+        debugSessionEndBtn === null || debugSessionEndBtn === void 0 ? void 0 : debugSessionEndBtn.addEventListener("click", () => {
+            var _a;
+            this.logger.log("Removing panel and ending debug session");
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.remove();
+            window.sessionStorage.removeItem(DebugPanel.debugSessionStorageKey);
+        });
+    }
+    setupEmbeddedLayoutSwitcher() {
+        const embeddedLayoutSwitch = document.getElementById("engrid-embedded-layout");
+        if (embeddedLayoutSwitch) {
+            embeddedLayoutSwitch.checked = !!engrid_ENGrid.getBodyData("embedded");
+            embeddedLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                engrid_ENGrid.setBodyData("embedded", target.checked);
+            });
+        }
+    }
+    setupDebugLayoutSwitcher() {
+        const debugLayoutSwitch = document.getElementById("engrid-debug-layout");
+        if (debugLayoutSwitch) {
+            debugLayoutSwitch.checked = engrid_ENGrid.getBodyData("debug") === "layout";
+            debugLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                if (target.checked) {
+                    engrid_ENGrid.setBodyData("debug", "layout");
+                }
+                else {
+                    engrid_ENGrid.setBodyData("debug", "");
+                }
+            });
+        }
+    }
+    setupBrandingHtmlHandler() {
+        const brandingInput = document.getElementById("engrid-branding");
+        brandingInput.checked =
+            engrid_ENGrid.getUrlParameter("development") === "branding";
+        brandingInput.addEventListener("change", (e) => {
+            if (brandingInput.checked) {
+                this.brandingHtml.show();
+            }
+            else {
+                this.brandingHtml.hide();
+            }
+        });
+    }
+    setupEditBtnHandler() {
+        const editBtn = document.querySelector(".debug-panel__edit-link");
+        editBtn === null || editBtn === void 0 ? void 0 : editBtn.addEventListener("click", () => {
+            window.open(`https://${engrid_ENGrid.getDataCenter()}.engagingnetworks.app/index.html#pages/${engrid_ENGrid.getPageID()}/edit`, "_blank");
+        });
+    }
+    setupForceSubmitLinkHandler() {
+        const submitBtn = document.querySelector(".debug-panel__force-submit-link");
+        submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener("click", () => {
+            const enForm = document.querySelector("form.en__component");
+            enForm === null || enForm === void 0 ? void 0 : enForm.submit();
+        });
+    }
+    setupSubmitBtnHandler() {
+        const submitBtn = document.querySelector(".debug-panel__btn--submit");
+        submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener("click", () => {
+            const enForm = document.querySelector(".en__submit button");
+            enForm === null || enForm === void 0 ? void 0 : enForm.click();
+        });
+    }
+}
+DebugPanel.debugSessionStorageKey = "engrid_debug_panel";
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-hidden-fields.js
+// Switches hidden fields to be type text when debug mode is enabled.
+
+class DebugHiddenFields {
+    constructor() {
+        this.logger = new EngridLogger("Debug hidden fields", "#f0f0f0", "#ff0000", "🫣");
+        // Query all hidden input elements within the specified selectors
+        const fields = document.querySelectorAll(".en__component--row [type='hidden'], .engrid-added-input[type='hidden']");
+        // Check if there are any hidden fields
+        if (fields.length > 0) {
+            // Log the names of the hidden fields being changed to type 'text'
+            this.logger.log(`Switching the following type 'hidden' fields to type 'text':  ${[
+                ...fields,
+            ]
+                .map((f) => f.name)
+                .join(", ")}`);
+            // Iterate through each hidden input element
+            fields.forEach((el) => {
+                // Change the input type to 'text' and add the required classes
+                el.type = "text";
+                el.classList.add("en__field__input", "en__field__input--text");
+                // Create a new label element and set its text and classes
+                const label = document.createElement("label");
+                label.textContent = "Hidden field: " + el.name;
+                label.classList.add("en__field__label");
+                // Create a new 'div' element for the input field and add the required classes
+                const fieldElement = document.createElement("div");
+                fieldElement.classList.add("en__field__element", "en__field__element--text");
+                // Create a new 'div' container for the label and input field, and add the required classes and attribute
+                const fieldContainer = document.createElement("div");
+                fieldContainer.classList.add("en__field", "en__field--text", "hide");
+                fieldContainer.setAttribute("unhidden", "");
+                fieldContainer.appendChild(label);
+                fieldContainer.appendChild(fieldElement);
+                // Insert the new field container before the original input element and move the input element into the field element div
+                if (el.parentNode) {
+                    el.parentNode.insertBefore(fieldContainer, el);
+                    fieldElement.appendChild(el);
+                }
+            });
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/branding-html.js
+var branding_html_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ * Inserts all of the branding HTML from https://github.com/4site-interactive-studios/engrid-scripts/tree/main/reference-materials/html/brand-guide-markup
+ * into the body-main section of the page.
+ */
+class BrandingHtml {
+    constructor() {
+        this.assetBaseUrl = "https://cdn.jsdelivr.net/gh/4site-interactive-studios/engrid-scripts@main/reference-materials/html/brand-guide-markup/";
+        this.brandingHtmlFiles = [
+            "click-to-call.html",
+            "donation-page.html",
+            "ecards.html",
+            "ecommerce.html",
+            "email-to-target.html",
+            "en-common-fields-with-errors.html",
+            "en-common-fields-with-fancy-errors.html",
+            "en-common-fields.html",
+            "event.html",
+            "html5-tags.html",
+            "membership.html",
+            "petition.html",
+            "premium-donation.html",
+            "styles.html",
+            "survey.html",
+            "tweet-to-target.html",
+        ];
+        this.bodyMain = document.querySelector(".body-main");
+        this.htmlFetched = false;
+    }
+    fetchHtml() {
+        return branding_html_awaiter(this, void 0, void 0, function* () {
+            const htmlRequests = this.brandingHtmlFiles.map((file) => branding_html_awaiter(this, void 0, void 0, function* () {
+                const res = yield fetch(this.assetBaseUrl + file);
+                return res.text();
+            }));
+            const brandingHtmls = yield Promise.all(htmlRequests);
+            return brandingHtmls;
+        });
+    }
+    appendHtml() {
+        this.fetchHtml().then((html) => html.forEach((h) => {
+            var _a;
+            const brandingSection = document.createElement("div");
+            brandingSection.classList.add("brand-guide-section");
+            brandingSection.innerHTML = h;
+            (_a = this.bodyMain) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement("beforeend", brandingSection);
+        }));
+        this.htmlFetched = true;
+    }
+    show() {
+        if (!this.htmlFetched) {
+            this.appendHtml();
+            return;
+        }
+        const guides = document.querySelectorAll(".brand-guide-section");
+        guides === null || guides === void 0 ? void 0 : guides.forEach((g) => (g.style.display = "block"));
+    }
+    hide() {
+        const guides = document.querySelectorAll(".brand-guide-section");
+        guides === null || guides === void 0 ? void 0 : guides.forEach((g) => (g.style.display = "none"));
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/country-disable.js
+// This class allows you to disable some countries from the country dropdown list.
+
+class CountryDisable {
+    constructor() {
+        this.logger = new EngridLogger("CountryDisable", "#f0f0f0", "#333333", "🌎");
+        const country = engrid_ENGrid.getField("supporter.country");
+        const CountryDisable = engrid_ENGrid.getOption("CountryDisable");
+        // Remove the countries from the dropdown list
+        if (country && CountryDisable.length > 0) {
+            const countriesLower = CountryDisable.map((country) => country.toLowerCase());
+            country.querySelectorAll("option").forEach((option) => {
+                if (countriesLower.includes(option.value.toLowerCase()) ||
+                    countriesLower.includes(option.text.toLowerCase())) {
+                    this.logger.log(`Removing ${option.text}`);
+                    option.remove();
+                }
+            });
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/premium-gift.js
+// Component to handle premium gift features
+// 1 - Add a class to body to indicate which premium gift is selected (data-engrid-premium-gift-name="item-name-slugged")
+// 2 - Add a class to body to indicate if the "maximize my impact" is selected (data-engrid-premium-gift-maximize="true|false")
+// 3 - Check the premium gift when click on the title or description
+// 4 - Create new {$PREMIUMTITLE} merge tag that's replaced with the premium gift name
+
+class PremiumGift {
+    constructor() {
+        this.logger = new EngridLogger("PremiumGift", "#232323", "#f7b500", "🎁");
+        this.enElements = new Array();
+        if (!this.shoudRun())
+            return;
+        this.searchElements();
+        this.addEventListeners();
+        this.checkPremiumGift();
+    }
+    shoudRun() {
+        return ("pageJson" in window &&
+            "pageType" in window.pageJson &&
+            window.pageJson.pageType === "premiumgift");
+    }
+    addEventListeners() {
+        ["click", "change"].forEach((event) => {
+            document.addEventListener(event, (e) => {
+                const element = e.target;
+                const premiumGift = element.closest(".en__pg__body");
+                if (premiumGift) {
+                    const premiumGiftInput = premiumGift.querySelector('[name="en__pg"]');
+                    if ("type" in element === false) {
+                        const premiumGiftValue = premiumGiftInput.value;
+                        window.setTimeout(() => {
+                            const newPremiumGift = document.querySelector('[name="en__pg"][value="' + premiumGiftValue + '"]');
+                            if (newPremiumGift) {
+                                newPremiumGift.checked = true;
+                                newPremiumGift.dispatchEvent(new Event("change"));
+                            }
+                        }, 100);
+                    }
+                    window.setTimeout(() => {
+                        this.checkPremiumGift();
+                    }, 110);
+                }
+            });
+        });
+    }
+    checkPremiumGift() {
+        var _a;
+        const premiumGift = document.querySelector('[name="en__pg"]:checked');
+        if (premiumGift) {
+            const premiumGiftValue = premiumGift.value;
+            this.logger.log("Premium Gift Value: " + premiumGiftValue);
+            if (premiumGiftValue !== "0") {
+                const premiumGiftName = (_a = premiumGift
+                    .closest(".en__pg__body")) === null || _a === void 0 ? void 0 : _a.querySelector(".en__pg__name");
+                engrid_ENGrid.setBodyData("premium-gift-maximize", "false");
+                engrid_ENGrid.setBodyData("premium-gift-name", engrid_ENGrid.slugify(premiumGiftName.innerText));
+                this.setPremiumTitle(premiumGiftName.innerText);
+            }
+            else {
+                engrid_ENGrid.setBodyData("premium-gift-maximize", "true");
+                engrid_ENGrid.setBodyData("premium-gift-name", false);
+                this.setPremiumTitle("");
+            }
+        }
+    }
+    searchElements() {
+        const enElements = document.querySelectorAll(`
+      .en__component--copyblock,
+      .en__component--codeblock,
+      .en__field
+      `);
+        if (enElements.length > 0) {
+            enElements.forEach((item) => {
+                if (item instanceof HTMLElement &&
+                    item.innerHTML.includes("{$PREMIUMTITLE}")) {
+                    item.innerHTML = item.innerHTML.replace("{$PREMIUMTITLE}", `<span class="engrid_premium_title"></span>`);
+                    this.enElements.push(item);
+                }
+            });
+        }
+    }
+    setPremiumTitle(title) {
+        this.enElements.forEach((item) => {
+            const premiumTitle = item.querySelector(".engrid_premium_title");
+            if (premiumTitle) {
+                premiumTitle.innerHTML = title;
+            }
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.39";
+const AppVersion = "0.13.52";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
+
+
+
+
+
 
 
 
