@@ -159,7 +159,7 @@ export const customScript = function () {
     digitalWalletsExist = document.querySelectorAll(
       ".en__digitalWallet__container > *"
     );
-    if (digitalWalletsExist.length > 0) {
+    if (digitalWalletsExist.length > 0 && giveBySelect) {
       giveBySelect.setAttribute("show-wallets", "");
     }
   }, 500);
@@ -168,7 +168,7 @@ export const customScript = function () {
     digitalWalletsExist = document.querySelectorAll(
       ".en__digitalWallet__container > *"
     );
-    if (digitalWalletsExist.length > 0) {
+    if (digitalWalletsExist.length > 0 && giveBySelect) {
       giveBySelect.setAttribute("show-wallets", "");
     }
   }, 2500);
