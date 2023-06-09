@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 25, 2023 @ 19:33:24 ET
+ *  Date: Thursday, June 8, 2023 @ 22:23:22 ET
  *  By: fernando
- *  ENGrid styles: v0.13.65
- *  ENGrid scripts: v0.13.65
+ *  ENGrid styles: v0.13.74
+ *  ENGrid scripts: v0.13.74
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10315,6 +10315,7 @@ const OptionsDefaults = {
     TidyContact: false,
     RegionLongFormat: "",
     CountryDisable: [],
+    Plaid: false,
     MobileCTA: false,
     PageLayouts: [
         "leftleft1col",
@@ -10849,15 +10850,33 @@ class engrid_ENGrid {
     }
     // Create a hidden input field
     static createHiddenInput(name, value = "") {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.classList.add("en__field__input");
-        input.classList.add("en__field__input--text");
-        input.classList.add("engrid-added-input");
-        input.value = value;
-        engrid_ENGrid.enForm.appendChild(input);
-        return input;
+        var _a;
+        const formBlock = document.createElement("div");
+        formBlock.classList.add("en__component", "en__component--formblock", "hide");
+        const textField = document.createElement("div");
+        textField.classList.add("en__field", "en__field--text");
+        const textElement = document.createElement("div");
+        textElement.classList.add("en__field__element", "en__field__element--text");
+        const inputField = document.createElement("input");
+        inputField.classList.add("en__field__input", "en__field__input--text", "engrid-added-input");
+        inputField.setAttribute("name", name);
+        inputField.setAttribute("type", "hidden");
+        inputField.setAttribute("value", value);
+        textElement.appendChild(inputField);
+        textField.appendChild(textElement);
+        formBlock.appendChild(textField);
+        const submitElement = document.querySelector(".en__submit");
+        if (submitElement) {
+            const lastFormComponent = submitElement.closest(".en__component");
+            if (lastFormComponent) {
+                // Insert the new field after the submit button
+                (_a = lastFormComponent.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(formBlock, lastFormComponent.nextSibling);
+            }
+        }
+        else {
+            engrid_ENGrid.enForm.appendChild(formBlock);
+        }
+        return inputField;
     }
     // Trigger EN Dependencies
     static enParseDependencies() {
@@ -11069,7 +11088,7 @@ class engrid_ENGrid {
     }
     static disableSubmit(label = "") {
         const submit = document.querySelector(".en__submit button");
-        submit.dataset.originalText = submit.innerText;
+        submit.dataset.originalText = submit.innerHTML;
         let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
             label +
             "</span></span>";
@@ -11146,6 +11165,9 @@ class engrid_ENGrid {
         }
     }
     static isVisible(element) {
+        if (!element) {
+            return false;
+        }
         return !!(element.offsetWidth ||
             element.offsetHeight ||
             element.getClientRects().length);
@@ -11204,6 +11226,35 @@ class engrid_ENGrid {
             .replace(/^-+/, "") // Trim - from start of text
             .replace(/-+$/, ""); // Trim - from end of text
     }
+    // This function is used to run a callback function when an error is displayed on the page
+    static watchForError(callback) {
+        const errorElement = document.querySelector(".en__errorList");
+        const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+        // Avoid duplicate callbacks
+        let callbackType = callback.toString();
+        if (callbackType.indexOf("function") === 0) {
+            callbackType = callbackType.replace("function ", "");
+        }
+        if (callbackType.indexOf("(") > 0) {
+            callbackType = callbackType.substring(0, callbackType.indexOf("("));
+        }
+        // Remove invalid characters
+        callbackType = callbackType.replace(/[^a-zA-Z0-9]/g, "");
+        // Limit to 20 characters and add prefix
+        callbackType = callbackType.substring(0, 20);
+        callbackType = "engrid" + capitalize(callbackType);
+        if (errorElement && !errorElement.dataset[callbackType]) {
+            errorElement.dataset[callbackType] = "true";
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+                        callback();
+                    }
+                });
+            });
+            observer.observe(errorElement, { childList: true });
+        }
+    }
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/events/donation-frequency.js
@@ -11261,8 +11312,12 @@ class DonationFrequency {
     }
     // Set amount var with currently selected amount
     load() {
-        this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
-        this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay");
+        const freqField = engrid_ENGrid.getField("transaction.recurrfreq");
+        if (freqField)
+            this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
+        const recurrField = engrid_ENGrid.getField("transaction.recurrpay");
+        if (recurrField)
+            this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay");
         // ENGrid.enParseDependencies();
     }
     // Force a new recurrency
@@ -11436,14 +11491,6 @@ class App extends engrid_ENGrid {
                 this.run();
             });
         }
-        // Window Load
-        let onLoad = typeof window.onload === "function" ? window.onload : null;
-        window.onload = (e) => {
-            this.onLoad();
-            if (onLoad) {
-                onLoad.bind(window, e);
-            }
-        };
         // Window Resize
         window.onresize = () => {
             this.onResize();
@@ -11454,7 +11501,7 @@ class App extends engrid_ENGrid {
             this.logger.danger("Engaging Networks JS Framework NOT FOUND");
             setTimeout(() => {
                 this.run();
-            }, 10);
+            }, 100);
             return;
         }
         // If there's an option object on the page, override the defaults
@@ -11516,11 +11563,15 @@ class App extends engrid_ENGrid {
             this._form.submit = true;
             this._form.submitPromise = false;
             this._form.dispatchSubmit();
+            engrid_ENGrid.watchForError(engrid_ENGrid.enableSubmit);
             if (!this._form.submit)
                 return false;
             if (this._form.submitPromise)
                 return this._form.submitPromise;
             this.logger.success("enOnSubmit Success");
+            // If all validation passes, we'll watch for Digital Wallets Errors, which
+            // will not reload the page (thanks EN), so we will enable the submit button if
+            // an error is programmatically thrown by the Digital Wallets
             return true;
         };
         window.enOnError = () => {
@@ -11636,6 +11687,11 @@ class App extends engrid_ENGrid {
         new MobileCTA();
         // Live Frequency
         new LiveFrequency();
+        // Universal Opt In
+        new UniversalOptIn();
+        // Plaid
+        if (this.options.Plaid)
+            new Plaid();
         this.setDataAttributes();
         //Debug panel
         if (this.options.Debug ||
@@ -11648,6 +11704,19 @@ class App extends engrid_ENGrid {
         engrid_ENGrid.setBodyData("data-engrid-scripts-js-loading", "finished");
         window.EngridVersion = AppVersion;
         this.logger.success(`VERSION: ${AppVersion}`);
+        // Window Load
+        let onLoad = typeof window.onload === "function" ? window.onload : null;
+        if (document.readyState !== "loading") {
+            this.onLoad();
+        }
+        else {
+            window.onload = (e) => {
+                this.onLoad();
+                if (onLoad) {
+                    onLoad.bind(window, e);
+                }
+            };
+        }
     }
     onLoad() {
         if (this.options.onLoad) {
@@ -11793,6 +11862,10 @@ class App extends engrid_ENGrid {
         // Add demo data attribute
         if (App.demo)
             App.setBodyData("demo", "");
+    }
+    static log(message) {
+        const logger = new EngridLogger("Client", "brown", "aliceblue", "🍪");
+        logger.log(message);
     }
 }
 
@@ -12122,7 +12195,7 @@ class AutoYear {
 
 class Autocomplete {
     constructor() {
-        this.debug = engrid_ENGrid.debug;
+        this.logger = new EngridLogger("Autocomplete", "#330033", "#f0f0f0", "📇");
         this.autoCompleteField('[name="supporter.firstName"]', "given-name");
         this.autoCompleteField('[name="supporter.lastName"]', "family-name");
         this.autoCompleteField('[name="transaction.ccnumber"]', "cc-number");
@@ -12152,8 +12225,8 @@ class Autocomplete {
             field.autocomplete = autoCompleteValue;
             return true;
         }
-        if (this.debug && autoCompleteValue !== "none")
-            console.log("AutoComplete: Field Not Found", querySelector);
+        if (autoCompleteValue !== "none")
+            this.logger.log("Field Not Found", querySelector);
         return false;
     }
 }
@@ -12725,9 +12798,20 @@ const watchInmemField = () => {
 };
 // @TODO Refactor (low priority)
 const watchGiveBySelectField = () => {
+    const setPaymentType = (paymentType) => {
+        const enFieldPaymentType = document.querySelector("#en__field_transaction_paymenttype");
+        if (enFieldPaymentType) {
+            // Set Payment Type Option Value Case Insensitive
+            const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => option.value.toLowerCase() === paymentType.toLowerCase());
+            if (paymentTypeOption) {
+                paymentTypeOption.selected = true;
+                const event = new Event("change");
+                enFieldPaymentType.dispatchEvent(event);
+            }
+        }
+    };
     const enFieldGiveBySelect = document.querySelector(".en__field--give-by-select");
     const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
-    const enFieldPaymentType = document.querySelector("#en__field_transaction_paymenttype");
     let enFieldGiveBySelectCurrentValue = document.querySelector('input[name="transaction.giveBySelect"]:checked');
     const prefix = "has-give-by-";
     /* prettier-ignore */
@@ -12749,7 +12833,7 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-ach");
             }
-            enFieldPaymentType.value = "ach";
+            setPaymentType("ach");
             // Give By Check
         }
         else if (enFieldGiveBySelectCurrentValue && enFieldGiveBySelectCurrentValue.value.toLowerCase() == "check") {
@@ -12757,7 +12841,7 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-check");
             }
-            enFieldPaymentType.value = "check";
+            setPaymentType("check");
             // Give By PayPal
         }
         else if (enFieldGiveBySelectCurrentValue && enFieldGiveBySelectCurrentValue.value.toLowerCase() == "paypal") {
@@ -12765,7 +12849,7 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-paypal");
             }
-            enFieldPaymentType.value = "paypal";
+            setPaymentType("paypal");
             // Give By Paypal One Touch or Venmo
         }
         else if (enFieldGiveBySelectCurrentValue && enFieldGiveBySelectCurrentValue.value.toLowerCase() == "paypaltouch") {
@@ -12773,7 +12857,7 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-paypaltouch");
             }
-            enFieldPaymentType.value = "paypaltouch";
+            setPaymentType("paypaltouch");
             // Give By Apple Pay via Vantiv
         }
         else if (enFieldGiveBySelectCurrentValue && enFieldGiveBySelectCurrentValue.value.toLowerCase() == "applepay") {
@@ -12781,7 +12865,7 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-applepay");
             }
-            enFieldPaymentType.value = "applepay";
+            setPaymentType("applepay");
             // Give By Apple Pay or Google Pay via Stripe
         }
         else if (enFieldGiveBySelectCurrentValue && enFieldGiveBySelectCurrentValue.value.toLowerCase() == "stripedigitalwallet") {
@@ -12789,11 +12873,9 @@ const watchGiveBySelectField = () => {
                 removeClassesByPrefix(enGrid, prefix);
                 enGrid.classList.add("has-give-by-stripedigitalwallet");
             }
-            enFieldPaymentType.value = "stripedigitalwallet";
+            setPaymentType("stripedigitalwallet");
         }
         ;
-        const event = new Event("change");
-        enFieldPaymentType.dispatchEvent(event);
     };
     /* prettier-ignore */
     // Check Giving Frequency on page load
@@ -13336,7 +13418,10 @@ class LiveVariables {
         this._frequency.onFrequencyChange.subscribe(() => this.changeLiveFrequency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeRecurrency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeSubmitButton());
-        this._form.onSubmit.subscribe(() => engrid_ENGrid.disableSubmit("Processing..."));
+        this._form.onSubmit.subscribe(() => {
+            if (engrid_ENGrid.getPageType() !== "SUPPORTERHUB")
+                engrid_ENGrid.disableSubmit("Processing...");
+        });
         this._form.onError.subscribe(() => engrid_ENGrid.enableSubmit());
         // Watch the monthly-upsell links
         document.addEventListener("click", (e) => {
@@ -13359,7 +13444,9 @@ class LiveVariables {
         const thousands_separator = (_c = this.options.ThousandsSeparator) !== null && _c !== void 0 ? _c : "";
         const dec_places = amount % 1 == 0 ? 0 : (_d = this.options.DecimalPlaces) !== null && _d !== void 0 ? _d : 2;
         const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
-        return amount > 0 ? symbol + amountTxt : "";
+        return amount > 0
+            ? (`<span class="live-variable-currency">${symbol}</span><span class="live-variable-amount">${amountTxt}</span>`)
+            : "";
     }
     getUpsellAmountTxt(amount = 0) {
         var _a, _b, _c, _d;
@@ -13385,7 +13472,7 @@ class LiveVariables {
         let label = this.submitLabel;
         if (amount) {
             label = label.replace("$AMOUNT", amount);
-            label = label.replace("$FREQUENCY", frequency);
+            label = label.replace("$FREQUENCY", `<span class="live-variable-frequency">${frequency}</span>`);
         }
         else {
             label = label.replace("$AMOUNT", "");
@@ -14174,6 +14261,17 @@ class TranslateFields {
                     { label: "West Virginia", value: "WV" },
                     { label: "Wisconsin", value: "WI" },
                     { label: "Wyoming", value: "WY" },
+                    { label: "American Samoa", value: "AS" },
+                    { label: "Federated States of Micronesia", value: "FM" },
+                    { label: "Guam", value: "GU" },
+                    { label: "Marshall Islands", value: "MH" },
+                    { label: "Northern Mariana Islands", value: "MP" },
+                    { label: "Puerto Rico", value: "PR" },
+                    { label: "Palau", value: "PW" },
+                    { label: "Virgin Islands", value: "VI" },
+                    { label: "Armed Forces America", value: "AA" },
+                    { label: "Armed Forces Europe", value: "AE" },
+                    { label: "Armed Forces Pacific", value: "AP" },
                 ]);
                 break;
             case "United States":
@@ -14230,6 +14328,23 @@ class TranslateFields {
                     { label: "West Virginia", value: "West Virginia" },
                     { label: "Wisconsin", value: "Wisconsin" },
                     { label: "Wyoming", value: "Wyoming" },
+                    { label: "American Samoa", value: "American Samoa" },
+                    {
+                        label: "Federated States of Micronesia",
+                        value: "Federated States of Micronesia",
+                    },
+                    { label: "Guam", value: "Guam" },
+                    { label: "Marshall Islands", value: "Marshall Islands" },
+                    {
+                        label: "Northern Mariana Islands",
+                        value: "Northern Mariana Islands",
+                    },
+                    { label: "Puerto Rico", value: "Puerto Rico" },
+                    { label: "Palau", value: "Palau" },
+                    { label: "Virgin Islands", value: "Virgin Islands" },
+                    { label: "Armed Forces America", value: "Armed Forces America" },
+                    { label: "Armed Forces Europe", value: "Armed Forces Europe" },
+                    { label: "Armed Forces Pacific", value: "Armed Forces Pacific" },
                 ]);
                 break;
             case "CA":
@@ -15029,6 +15144,7 @@ class FreshAddress {
         if (this.emailField) {
             this.createFields();
             this.addEventListeners();
+            window.FreshAddressStatus = "idle";
             if (this.emailField.value) {
                 this.logger.log("E-mail Field Found");
                 this.shouldRun = false;
@@ -15104,9 +15220,9 @@ class FreshAddress {
             return;
         if (!this.shouldRun)
             return;
+        window.FreshAddressStatus = "validating";
         const email = (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.value;
         const options = { emps: false, rtc_timeout: 1200 };
-        engrid_ENGrid.disableSubmit("Validating Your Email");
         const ret = window.FreshAddress.validateEmail(email, options).then((response) => {
             this.logger.log("Validate API Response", JSON.parse(JSON.stringify(response)));
             return this.validateResponse(response);
@@ -15157,6 +15273,7 @@ class FreshAddress {
             // Error Condition 2 - the service should always respond with finding E/W/V
             this.writeToFields("API Error", "Unknown Error");
         }
+        window.FreshAddressStatus = "idle";
         engrid_ENGrid.enableSubmit();
     }
     validate() {
@@ -15170,15 +15287,37 @@ class FreshAddress {
             this.form.validate = true;
             return;
         }
-        if (this.faStatus.value === "Invalid") {
+        if (window.FreshAddressStatus === "validating") {
+            this.logger.log("Waiting for API Response");
+            // Self resolving Promise that waits 1000ms
+            const wait = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    var _a;
+                    const status = this.faStatus.value;
+                    if (status === "" || status === "Invalid") {
+                        this.logger.log("Promise Rejected");
+                        (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+                        reject(false);
+                        return;
+                    }
+                    this.logger.log("Promise Resolved");
+                    resolve(true);
+                }, 700);
+            });
+            this.form.validatePromise = wait;
+            return;
+        }
+        else if (this.faStatus.value === "Invalid") {
             this.form.validate = false;
             window.setTimeout(() => {
                 engrid_ENGrid.setError(this.emailWrapper, this.faMessage.value);
             }, 100);
             (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
-            return;
+            engrid_ENGrid.enableSubmit();
+            return false;
         }
         this.form.validate = true;
+        return true;
     }
 }
 
@@ -15393,21 +15532,23 @@ class RememberMe {
 			`;
             const rememberMeOptInFieldChecked = this.rememberMeOptIn ? "checked" : "";
             const rememberMeOptInField = document.createElement("div");
-            rememberMeOptInField.classList.add("en__field", "en__field--checkbox");
+            rememberMeOptInField.classList.add("en__field", "en__field--checkbox", "en__field--question", "rememberme-wrapper");
             rememberMeOptInField.setAttribute("id", "remember-me-opt-in");
             rememberMeOptInField.setAttribute("style", "overflow-x: hidden;");
             rememberMeOptInField.innerHTML = `
-				<div class="en__field__item rememberme-wrapper">
-					<input id="remember-me-checkbox" type="checkbox" class="en__field__input en__field__input--checkbox" ${rememberMeOptInFieldChecked} />
-					<label for="remember-me-checkbox" class="en__field__label en__field__label--item" style="white-space: nowrap;">
-						<div class="rememberme-content" style="display: inline-flex; align-items: center;">
-							${rememberMeLabel}
-							<a id="rememberme-learn-more-toggle" style="display: inline-block; display: inline-flex; align-items: center; cursor: pointer; margin-left: 10px;">
-								<svg style="height: 14px; width: auto; z-index: 1;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7H9V5H11V7ZM11 9H9V15H11V9ZM10 2C5.59 2 2 5.59 2 10C2 14.41 5.59 18 10 18C14.41 18 18 14.41 18 10C18 5.59 14.41 2 10 2ZM10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0Z" fill="currentColor"/></svg>
-							</a>
-						</div>
-					</label>
-				</div>
+        <div class="en__field__element en__field__element--checkbox">
+          <div class="en__field__item">
+            <input id="remember-me-checkbox" type="checkbox" class="en__field__input en__field__input--checkbox" ${rememberMeOptInFieldChecked} />
+            <label for="remember-me-checkbox" class="en__field__label en__field__label--item" style="white-space: nowrap;">
+              <div class="rememberme-content" style="display: inline-flex; align-items: center;">
+                ${rememberMeLabel}
+                <a id="rememberme-learn-more-toggle" style="display: inline-block; display: inline-flex; align-items: center; cursor: pointer; margin-left: 10px; margin-top: var(--rememberme-learn-more-toggle_margin-top)">
+                  <svg style="height: 14px; width: auto; z-index: 1;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7H9V5H11V7ZM11 9H9V15H11V9ZM10 2C5.59 2 2 5.59 2 10C2 14.41 5.59 18 10 18C14.41 18 18 14.41 18 10C18 5.59 14.41 2 10 2ZM10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0Z" fill="currentColor"/></svg>
+                </a>
+              </div>
+            </label>
+          </div>
+        </div>
 			`;
             const targetField = this.getElementByFirstSelector(this.fieldOptInSelectorTarget);
             if (targetField && targetField.parentNode) {
@@ -15688,6 +15829,7 @@ class ShowIfAmount {
 class OtherAmount {
     constructor() {
         this.logger = new EngridLogger("OtherAmount", "green", "black", "💰");
+        this._amount = DonationAmount.getInstance();
         "focusin input".split(" ").forEach((e) => {
             var _a;
             // We're attaching this event to the body because sometimes the other amount input is not in the DOM yet and comes via AJAX.
@@ -15717,6 +15859,20 @@ class OtherAmount {
                         cleanAmount % 1 != 0
                             ? cleanAmount.toFixed(2)
                             : cleanAmount.toString();
+                }
+            });
+            // On blur, if the amount is 0, select the previous amount
+            otherAmountField.addEventListener("blur", (e) => {
+                const target = e.target;
+                const amount = target.value;
+                const cleanAmount = engrid_ENGrid.cleanAmount(amount);
+                if (cleanAmount === 0) {
+                    this.logger.log("Other Amount Field Blurred with 0 amount");
+                    // Get Live Amount
+                    const liveAmount = this._amount.amount;
+                    if (liveAmount > 0) {
+                        this._amount.setAmount(liveAmount, false);
+                    }
                 }
             });
         }
@@ -16434,11 +16590,15 @@ class RequiredIfVisible {
                     const fieldLabel = field.querySelector(".en__field__label");
                     if (fieldLabel) {
                         this.logger.log(`${fieldLabel.innerText} is required`);
-                        engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+                        window.setTimeout(() => {
+                            engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+                        }, 100);
                     }
                     else {
                         this.logger.log(`${fieldElement.getAttribute("name")} is required`);
-                        engrid_ENGrid.setError(field, `This field is required`);
+                        window.setTimeout(() => {
+                            engrid_ENGrid.setError(field, `This field is required`);
+                        }, 100);
                     }
                     fieldElement.focus();
                     this._form.validate = false;
@@ -18121,7 +18281,7 @@ class DebugPanel {
           <div class="debug-panel__container">
             <div class="debug-panel__closed-title">Debug</div>
             <div class="debug-panel__title">
-              <h2>Debug Panel</h2>
+              <h2>Debug</h2>
               <div class="debug-panel__close">X</div>
             </div>
             <div class="debug-panel__options">
@@ -18131,7 +18291,7 @@ class DebugPanel {
                 </label>
               </div>
               <div class="debug-panel__option">
-                <label for="engrid-form-quickfill">Form Quick-fill</label>
+                <label for="engrid-form-quickfill">Quick-fill</label>
                 <select name="engrid-form-quickfill" id="engrid-form-quickfill">
                   <option disabled selected>Choose an option</option>
                   <option value="quick-fill-pi-unique-us-address-senate-rep-cc-stripe-visa">Quick-fill - Unique w/ Senate Address - Stripe Visa</option>
@@ -18147,11 +18307,11 @@ class DebugPanel {
                 </select>
               </div>
               <div class="debug-panel__option">
-                <label for="engrid-layout-switch">Switch layout</label>
+                <label for="engrid-layout-switch">Layout</label>
                 <select name="engrid-layout" id="engrid-layout-switch">
                 </select>
               </div>
-              <div class="debug-panel__option">
+              <div class="debug-panel__option debug-panel__option--local">
                 <div class="debug-panel__checkbox">
                   <input type="checkbox" name="engrid-embedded-layout" id="engrid-embedded-layout">
                   <label for="engrid-embedded-layout">Embedded layout</label>            
@@ -18173,7 +18333,7 @@ class DebugPanel {
                 <label for="engrid-theme">Theme</label>
                 <input type="text" id="engrid-theme">
               </div>
-              <div class="debug-panel__option">
+              <div class="debug-panel__option debug-panel__option--local">
                 <label for="engrid-theme">Sub-theme</label>
                 <input type="text" id="engrid-subtheme">
               </div>
@@ -18367,7 +18527,7 @@ class DebugHiddenFields {
     constructor() {
         this.logger = new EngridLogger("Debug hidden fields", "#f0f0f0", "#ff0000", "🫣");
         // Query all hidden input elements within the specified selectors
-        const fields = document.querySelectorAll(".en__component--row [type='hidden'], .engrid-added-input[type='hidden']");
+        const fields = document.querySelectorAll(".en__component--row [type='hidden'][class*='en_'], .engrid-added-input[type='hidden']");
         // Check if there are any hidden fields
         if (fields.length > 0) {
             // Log the names of the hidden fields being changed to type 'text'
@@ -18883,11 +19043,157 @@ class LiveFrequency {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/universal-opt-in.js
+/**
+ * This class will add event listeners to every yes/no radio button or checkbox
+ * inside a universal opt-in element (any form block with the CSS class universal-opt-in). When the user clicks on a radio/checkbox
+ * button, we will search for every other radio/checkbox button inside the same
+ * universal opt-in element and mirror the user's selection.
+ * If instead of universal-opt-in you use universal-opt-in_null, the class will
+ * not mirror the user's selection when a radio "No" option is selected. Instead,
+ * it will unset all other radio buttons.
+ */
+
+class UniversalOptIn {
+    constructor() {
+        this.logger = new EngridLogger("UniversalOptIn", "#f0f0f0", "#d2691e", "🪞");
+        this._elements = document.querySelectorAll(".universal-opt-in, .universal-opt-in_null");
+        if (!this.shouldRun())
+            return;
+        this.addEventListeners();
+    }
+    shouldRun() {
+        if (this._elements.length === 0) {
+            this.logger.log("No universal opt-in elements found. Skipping.");
+            return false;
+        }
+        this.logger.log(`Found ${this._elements.length} universal opt-in elements.`);
+        return true;
+    }
+    addEventListeners() {
+        this._elements.forEach((element) => {
+            const yesNoElements = element.querySelectorAll(".en__field__input--radio, .en__field__input--checkbox");
+            if (yesNoElements.length > 0) {
+                yesNoElements.forEach((yesNoElement) => {
+                    yesNoElement.addEventListener("click", () => {
+                        if (yesNoElement instanceof HTMLInputElement &&
+                            yesNoElement.getAttribute("type") === "checkbox") {
+                            const yesNoValue = yesNoElement.checked;
+                            if (yesNoValue) {
+                                this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is checked");
+                                yesNoElements.forEach((yesNoElement2) => {
+                                    if (yesNoElement === yesNoElement2)
+                                        return;
+                                    if (yesNoElement2 instanceof HTMLInputElement &&
+                                        yesNoElement2.getAttribute("type") === "checkbox")
+                                        yesNoElement2.checked = true;
+                                });
+                            }
+                            else {
+                                this.logger.log("Yes/No " +
+                                    yesNoElement.getAttribute("type") +
+                                    " is unchecked");
+                                yesNoElements.forEach((yesNoElement2) => {
+                                    if (yesNoElement === yesNoElement2)
+                                        return;
+                                    if (yesNoElement2 instanceof HTMLInputElement &&
+                                        yesNoElement2.getAttribute("type") === "checkbox")
+                                        yesNoElement2.checked = false;
+                                });
+                            }
+                            return;
+                        }
+                        const yesNoValue = yesNoElement.getAttribute("value");
+                        if (yesNoValue === "Y") {
+                            this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is checked");
+                            yesNoElements.forEach((yesNoElement2) => {
+                                const fieldName = yesNoElement2.getAttribute("name");
+                                const clickedFieldName = yesNoElement.getAttribute("name");
+                                if (!fieldName || fieldName === clickedFieldName)
+                                    return;
+                                engrid_ENGrid.setFieldValue(fieldName, "Y");
+                            });
+                        }
+                        else {
+                            this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is unchecked");
+                            yesNoElements.forEach((yesNoElement2) => {
+                                const fieldName = yesNoElement2.getAttribute("name");
+                                const clickedFieldName = yesNoElement.getAttribute("name");
+                                if (!fieldName || fieldName === clickedFieldName)
+                                    return;
+                                if (element.classList.contains("universal-opt-in")) {
+                                    engrid_ENGrid.setFieldValue(fieldName, "N");
+                                }
+                                else {
+                                    yesNoElement2.checked = false;
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/plaid.js
+// Component with a helper to auto-click on the Plaid link
+// when that payment method is selected
+
+class Plaid {
+    constructor() {
+        this.logger = new EngridLogger("Plaid", "peru", "yellow", "🔗");
+        this._form = EnForm.getInstance();
+        this.logger.log("Enabled");
+        this._form.onSubmit.subscribe(() => this.submit());
+    }
+    submit() {
+        const plaidLink = document.querySelector("#plaid-link-button");
+        if (plaidLink && plaidLink.textContent === "Link Account") {
+            // Click the Plaid Link button
+            this.logger.log("Clicking Link");
+            plaidLink.click();
+            this._form.submit = false;
+            // Create a observer to watch the Link ID #plaid-link-button for a new Text Node
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                // If the Text Node is "Link Account" then the Link has failed
+                                if (node.nodeValue === "Account Linked") {
+                                    this.logger.log("Plaid Linked");
+                                    this._form.submit = true;
+                                    this._form.submitForm();
+                                }
+                                else {
+                                    this._form.submit = true;
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+            // Start observing the Link ID #plaid-link-button
+            observer.observe(plaidLink, {
+                childList: true,
+                subtree: true,
+            });
+            window.setTimeout(() => {
+                this.logger.log("Enabling Submit");
+                engrid_ENGrid.enableSubmit();
+            }, 1000);
+        }
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.65";
+const AppVersion = "0.13.74";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
