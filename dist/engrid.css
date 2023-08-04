@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, July 31, 2023 @ 17:22:46 ET
+ *  Date: Friday, August 4, 2023 @ 14:52:49 ET
  *  By: fernando
  *  ENGrid styles: v0.14.13
  *  ENGrid scripts: v0.14.14
@@ -8178,7 +8178,7 @@ body[data-engrid-debug]:before{
   background:#57595b;
   border-radius:50%;
   color:#fff;
-  content:"$";
+  content:attr(data-currency-symbol);
   display:block;
   font-family:inherit;
   font-size:1rem;
