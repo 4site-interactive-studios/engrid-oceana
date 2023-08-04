@@ -551,7 +551,7 @@
     padding-left: 3.4ch;
   }
   .en__field--donationAmt .en__field__item--other:before {
-    content: attr(data-currency-symbol, "$");
+    content: attr(data-currency-symbol);
     display: block;
     font-family: inherit;
     font-size: 1rem;
@@ -687,7 +687,7 @@
     padding-left: 3.4ch;
   }
   .en__field--donationAmt .en__field__item--other:before {
-    content: attr(data-currency-symbol, "$");
+    content: attr(data-currency-symbol);
     display: block;
     font-family: inherit;
     font-size: 1rem;
