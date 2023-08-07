@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, August 7, 2023 @ 07:31:25 ET
+ *  Date: Monday, August 7, 2023 @ 08:20:57 ET
  *  By: michael
- *  ENGrid styles: v0.13.34
- *  ENGrid scripts: v0.13.32
+ *  ENGrid styles: v0.14.13
+ *  ENGrid scripts: v0.14.14
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10306,6 +10306,7 @@ const OptionsDefaults = {
     NeverBounceDateField: null,
     NeverBounceStatusField: null,
     NeverBounceDateFormat: "MM/DD/YYYY",
+    FreshAddress: false,
     ProgressBar: false,
     AutoYear: false,
     TranslateFields: true,
@@ -10313,6 +10314,18 @@ const OptionsDefaults = {
     RememberMe: false,
     TidyContact: false,
     RegionLongFormat: "",
+    CountryDisable: [],
+    Plaid: false,
+    MobileCTA: false,
+    PageLayouts: [
+        "leftleft1col",
+        "centerleft1col",
+        "centercenter1col",
+        "centercenter2col",
+        "centerright1col",
+        "rightright1col",
+        "none",
+    ],
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/upsell-options.js
@@ -10343,6 +10356,8 @@ const UpsellOptionsDefaults = {
     minAmount: 0,
     canClose: true,
     submitOnClose: false,
+    oneTime: true,
+    annual: false,
     disablePaymentMethods: [],
     skipUpsell: false,
 };
@@ -10391,6 +10406,21 @@ const TranslateOptionsDefaults = {
     NLD: nlTranslation,
 };
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/exit-intent-options.js
+const ExitIntentOptionsDefaults = {
+    enabled: false,
+    title: "We are sad that you are leaving",
+    text: "Would you mind telling us why you are leaving this page?",
+    buttonText: "Send us your comments",
+    buttonLink: "https://www.4sitestudios.com/",
+    cookieName: "engrid-exit-intent-lightbox",
+    cookieDuration: 30,
+    triggers: {
+        visibilityState: true,
+        mousePosition: true,
+    }
+};
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/loader.js
 // Ref: https://app.getguru.com/card/iMgx968T/ENgrid-Loader
 
@@ -10403,10 +10433,29 @@ class Loader {
     // Returns true if ENgrid should reload (that means the current ENgrid is not the right one)
     // Returns false if ENgrid should not reload (that means the current ENgrid is the right one)
     reload() {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d;
+        const assets = this.getOption("assets");
         const isLoaded = engrid_ENGrid.getBodyData("loaded");
-        let assets = this.getOption("assets");
+        let shouldSkipCss = this.getOption("engridcss") === "false";
+        let shouldSkipJs = this.getOption("engridjs") === "false";
         if (isLoaded || !assets) {
+            if (shouldSkipCss && this.cssElement) {
+                this.logger.log("engridcss=false | Removing original stylesheet:", this.cssElement);
+                this.cssElement.remove();
+            }
+            if (shouldSkipJs && this.jsElement) {
+                this.logger.log("engridjs=false | Removing original script:", this.jsElement);
+                this.jsElement.remove();
+            }
+            if (shouldSkipCss) {
+                this.logger.log("engridcss=false | adding top banner CSS");
+                this.addENgridCSSUnloadedCSS();
+            }
+            if (shouldSkipJs) {
+                this.logger.log("engridjs=false | Skipping JS load.");
+                this.logger.success("LOADED");
+                return true;
+            }
             this.logger.success("LOADED");
             return false;
         }
@@ -10455,15 +10504,39 @@ class Loader {
                         assets +
                         "/dist/engrid.css";
         }
-        this.setCssFile(engrid_css_url);
-        this.setJsFile(engrid_js_url);
-        (_e = this.jsElement) === null || _e === void 0 ? void 0 : _e.remove();
+        if (shouldSkipCss && this.cssElement) {
+            this.logger.log("engridcss=false | Removing original stylesheet:", this.cssElement);
+            this.cssElement.remove();
+        }
+        if (shouldSkipCss && engrid_css_url && engrid_css_url !== "") {
+            this.logger.log("engridcss=false | Skipping injection of stylesheet:", engrid_css_url);
+        }
+        if (shouldSkipCss) {
+            this.logger.log("engridcss=false | adding top banner CSS");
+            this.addENgridCSSUnloadedCSS();
+        }
+        else {
+            this.setCssFile(engrid_css_url);
+        }
+        if (shouldSkipJs && this.jsElement) {
+            this.logger.log("engridjs=false | Removing original script:", this.jsElement);
+            this.jsElement.remove();
+        }
+        if (shouldSkipJs && engrid_js_url && engrid_js_url !== "") {
+            this.logger.log("engridjs=false | Skipping injection of script:", engrid_js_url);
+        }
+        if (!shouldSkipJs) {
+            this.setJsFile(engrid_js_url);
+        }
+        // If custom assets aren't defined, we don't need to reload.
+        if (!assets) {
+            return false;
+        }
         return true;
     }
     getOption(key) {
         const urlParam = engrid_ENGrid.getUrlParameter(key);
-        // Only "assets" can be set in URL
-        if (urlParam && key === "assets") {
+        if (urlParam && ["assets", "engridcss", "engridjs"].includes(key)) {
             return urlParam;
         }
         else if (window.EngridLoader && window.EngridLoader.hasOwnProperty(key)) {
@@ -10475,10 +10548,15 @@ class Loader {
         return null;
     }
     setCssFile(url) {
+        if (url === "") {
+            return;
+        }
         if (this.cssElement) {
+            this.logger.log("Replacing stylesheet:", url);
             this.cssElement.setAttribute("href", url);
         }
         else {
+            this.logger.log("Injecting stylesheet:", url);
             const link = document.createElement("link");
             link.setAttribute("rel", "stylesheet");
             link.setAttribute("type", "text/css");
@@ -10488,9 +10566,50 @@ class Loader {
         }
     }
     setJsFile(url) {
+        if (url === "") {
+            return;
+        }
+        this.logger.log("Injecting script:", url);
         const script = document.createElement("script");
         script.setAttribute("src", url);
         document.head.appendChild(script);
+    }
+    addENgridCSSUnloadedCSS() {
+        document.body.insertAdjacentHTML("beforeend", `<style>
+        html,
+        body {
+            background-color: #ffffff;
+        }
+
+        body {
+            opacity: 1;
+            margin: 0;
+        }
+
+        body:before {
+            content: "ENGRID CSS UNLOADED";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            background-color: #ffff00;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: sans-serif;
+            font-weight: 600;
+        }
+
+        .en__component--advrow {
+            flex-direction: column;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .en__component--advrow * {
+            max-width: 100%;
+            height: auto;
+        }
+      </style>`);
     }
 }
 
@@ -10704,7 +10823,7 @@ class engrid_ENGrid {
         return new FormData(this.enForm).getAll(name).join(",");
     }
     // Set a value to any field. If it's a dropdown, radio or checkbox, it selects the proper option matching the value
-    static setFieldValue(name, value, parseENDependencies = true) {
+    static setFieldValue(name, value, parseENDependencies = true, dispatchEvents = false) {
         if (value === engrid_ENGrid.getFieldValue(name))
             return;
         document.getElementsByName(name).forEach((field) => {
@@ -10715,20 +10834,29 @@ class engrid_ENGrid {
                         for (const option of field.options) {
                             if (option.value == value) {
                                 option.selected = true;
+                                if (dispatchEvents) {
+                                    field.dispatchEvent(new Event("change", { bubbles: true }));
+                                }
                             }
                         }
                         break;
                     case "checkbox":
                     case "radio":
-                        // @TODO: Try to trigger the onChange event
                         if (field.value == value) {
                             field.checked = true;
+                            if (dispatchEvents) {
+                                field.dispatchEvent(new Event("change", { bubbles: true }));
+                            }
                         }
                         break;
                     case "textarea":
                     case "text":
                     default:
                         field.value = value;
+                        if (dispatchEvents) {
+                            field.dispatchEvent(new Event("change", { bubbles: true }));
+                            field.dispatchEvent(new Event("blur", { bubbles: true }));
+                        }
                 }
                 field.setAttribute("engrid-value-changed", "");
             }
@@ -10739,15 +10867,33 @@ class engrid_ENGrid {
     }
     // Create a hidden input field
     static createHiddenInput(name, value = "") {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.classList.add("en__field__input");
-        input.classList.add("en__field__input--text");
-        input.classList.add("engrid-added-input");
-        input.value = value;
-        engrid_ENGrid.enForm.appendChild(input);
-        return input;
+        var _a;
+        const formBlock = document.createElement("div");
+        formBlock.classList.add("en__component", "en__component--formblock", "hide");
+        const textField = document.createElement("div");
+        textField.classList.add("en__field", "en__field--text");
+        const textElement = document.createElement("div");
+        textElement.classList.add("en__field__element", "en__field__element--text");
+        const inputField = document.createElement("input");
+        inputField.classList.add("en__field__input", "en__field__input--text", "engrid-added-input");
+        inputField.setAttribute("name", name);
+        inputField.setAttribute("type", "hidden");
+        inputField.setAttribute("value", value);
+        textElement.appendChild(inputField);
+        textField.appendChild(textElement);
+        formBlock.appendChild(textField);
+        const submitElement = document.querySelector(".en__submit");
+        if (submitElement) {
+            const lastFormComponent = submitElement.closest(".en__component");
+            if (lastFormComponent) {
+                // Insert the new field after the submit button
+                (_a = lastFormComponent.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(formBlock, lastFormComponent.nextSibling);
+            }
+        }
+        else {
+            engrid_ENGrid.enForm.appendChild(formBlock);
+        }
+        return inputField;
     }
     // Trigger EN Dependencies
     static enParseDependencies() {
@@ -10810,6 +10956,16 @@ class engrid_ENGrid {
             return window.pageJson.campaignPageId;
         return 0;
     }
+    // Return the client ID
+    static getClientID() {
+        if ("pageJson" in window)
+            return window.pageJson.clientId;
+        return 0;
+    }
+    //returns 'us or 'ca' based on the client ID
+    static getDataCenter() {
+        return engrid_ENGrid.getClientID() >= 10000 ? "us" : "ca";
+    }
     // Return the current page type
     static getPageType() {
         if ("pageJson" in window && "pageType" in window.pageJson) {
@@ -10839,6 +10995,9 @@ class engrid_ENGrid {
                     break;
                 case "unsubscribe":
                     return "UNSUBSCRIBE";
+                    break;
+                case "tweetpage":
+                    return "TWEETPAGE";
                     break;
                 default:
                     return "UNKNOWN";
@@ -10946,7 +11105,7 @@ class engrid_ENGrid {
     }
     static disableSubmit(label = "") {
         const submit = document.querySelector(".en__submit button");
-        submit.dataset.originalText = submit.innerText;
+        submit.dataset.originalText = submit.innerHTML;
         let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
             label +
             "</span></span>";
@@ -10961,7 +11120,7 @@ class engrid_ENGrid {
         const submit = document.querySelector(".en__submit button");
         if (submit.dataset.originalText) {
             submit.disabled = false;
-            submit.innerText = submit.dataset.originalText;
+            submit.innerHTML = submit.dataset.originalText;
             delete submit.dataset.originalText;
             return true;
         }
@@ -11023,6 +11182,9 @@ class engrid_ENGrid {
         }
     }
     static isVisible(element) {
+        if (!element) {
+            return false;
+        }
         return !!(element.offsetWidth ||
             element.offsetHeight ||
             element.getClientRects().length);
@@ -11048,6 +11210,86 @@ class engrid_ENGrid {
             return currencyField.value || "USD";
         }
         return engrid_ENGrid.getOption("CurrencyCode") || "USD";
+    }
+    static addHtml(html, target = "body", position = "before") {
+        var _a, _b;
+        const targetElement = document.querySelector(target);
+        if (typeof html === "object") {
+            html = html.outerHTML;
+        }
+        if (targetElement) {
+            const htmlElement = document.createRange().createContextualFragment(html);
+            if (position === "before") {
+                (_a = targetElement.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(htmlElement, targetElement);
+            }
+            else {
+                (_b = targetElement.parentNode) === null || _b === void 0 ? void 0 : _b.insertBefore(htmlElement, targetElement.nextSibling);
+            }
+        }
+    }
+    static removeHtml(target) {
+        const targetElement = document.querySelector(target);
+        if (targetElement) {
+            targetElement.remove();
+        }
+    }
+    static slugify(text) {
+        return text
+            .toString()
+            .toLowerCase()
+            .replace(/\s+/g, "-") // Replace spaces with -
+            .replace(/[^\w\-]+/g, "") // Remove all non-word chars
+            .replace(/\-\-+/g, "-") // Replace multiple - with single -
+            .replace(/^-+/, "") // Trim - from start of text
+            .replace(/-+$/, ""); // Trim - from end of text
+    }
+    // This function is used to run a callback function when an error is displayed on the page
+    static watchForError(callback) {
+        const errorElement = document.querySelector(".en__errorList");
+        const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+        // Avoid duplicate callbacks
+        let callbackType = callback.toString();
+        if (callbackType.indexOf("function") === 0) {
+            callbackType = callbackType.replace("function ", "");
+        }
+        if (callbackType.indexOf("(") > 0) {
+            callbackType = callbackType.substring(0, callbackType.indexOf("("));
+        }
+        // Remove invalid characters
+        callbackType = callbackType.replace(/[^a-zA-Z0-9]/g, "");
+        // Limit to 20 characters and add prefix
+        callbackType = callbackType.substring(0, 20);
+        callbackType = "engrid" + capitalize(callbackType);
+        if (errorElement && !errorElement.dataset[callbackType]) {
+            errorElement.dataset[callbackType] = "true";
+            const observer = new MutationObserver(function (mutations) {
+                mutations.forEach(function (mutation) {
+                    if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+                        callback();
+                    }
+                });
+            });
+            observer.observe(errorElement, { childList: true });
+        }
+    }
+    // Get the Payment Type
+    static getPaymentType() {
+        return engrid_ENGrid.getFieldValue("transaction.paymenttype");
+    }
+    // Set the Payment Type
+    static setPaymentType(paymentType) {
+        const enFieldPaymentType = engrid_ENGrid.getField("transaction.paymenttype");
+        if (enFieldPaymentType) {
+            const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => option.value.toLowerCase() === paymentType.toLowerCase());
+            if (paymentTypeOption) {
+                paymentTypeOption.selected = true;
+                const event = new Event("change");
+                enFieldPaymentType.dispatchEvent(event);
+            }
+            else {
+                enFieldPaymentType.value = paymentType;
+            }
+        }
     }
 }
 
@@ -11106,8 +11348,12 @@ class DonationFrequency {
     }
     // Set amount var with currently selected amount
     load() {
-        this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
-        this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay");
+        const freqField = engrid_ENGrid.getField("transaction.recurrfreq");
+        if (freqField)
+            this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
+        const recurrField = engrid_ENGrid.getField("transaction.recurrpay");
+        if (recurrField)
+            this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay");
         // ENGrid.enParseDependencies();
     }
     // Force a new recurrency
@@ -11269,7 +11515,8 @@ class App extends engrid_ENGrid {
             return;
         // Turn Debug ON if you use local assets
         if (engrid_ENGrid.getBodyData("assets") === "local" &&
-            engrid_ENGrid.getUrlParameter("debug") !== "false") {
+            engrid_ENGrid.getUrlParameter("debug") !== "false" &&
+            engrid_ENGrid.getUrlParameter("debug") !== "log") {
             window.EngridOptions.Debug = true;
         }
         // Document Load
@@ -11281,14 +11528,6 @@ class App extends engrid_ENGrid {
                 this.run();
             });
         }
-        // Window Load
-        let onLoad = typeof window.onload === "function" ? window.onload : null;
-        window.onload = (e) => {
-            this.onLoad();
-            if (onLoad) {
-                onLoad.bind(window, e);
-            }
-        };
         // Window Resize
         window.onresize = () => {
             this.onResize();
@@ -11299,7 +11538,7 @@ class App extends engrid_ENGrid {
             this.logger.danger("Engaging Networks JS Framework NOT FOUND");
             setTimeout(() => {
                 this.run();
-            }, 10);
+            }, 100);
             return;
         }
         // If there's an option object on the page, override the defaults
@@ -11312,14 +11551,12 @@ class App extends engrid_ENGrid {
             // Enable debug if available is the first thing
             App.setBodyData("debug", "");
         // TODO: Abstract everything to the App class so we can remove custom-methods
-        inputPlaceholder();
-        preventAutocomplete();
         watchInmemField();
-        watchGiveBySelectField();
         simpleUnsubscribe();
         contactDetailLabels();
         easyEdit();
-        enInput.init();
+        new InputPlaceholders();
+        new InputHasValueAndFocus();
         new ShowHideRadioCheckboxes("transaction.giveBySelect", "giveBySelect-");
         new ShowHideRadioCheckboxes("transaction.inmem", "inmem-");
         new ShowHideRadioCheckboxes("transaction.recurrpay", "recurrpay-");
@@ -11361,11 +11598,15 @@ class App extends engrid_ENGrid {
             this._form.submit = true;
             this._form.submitPromise = false;
             this._form.dispatchSubmit();
+            engrid_ENGrid.watchForError(engrid_ENGrid.enableSubmit);
             if (!this._form.submit)
                 return false;
             if (this._form.submitPromise)
                 return this._form.submitPromise;
             this.logger.success("enOnSubmit Success");
+            // If all validation passes, we'll watch for Digital Wallets Errors, which
+            // will not reload the page (thanks EN), so we will enable the submit button if
+            // an error is programmatically thrown by the Digital Wallets
             return true;
         };
         window.enOnError = () => {
@@ -11400,11 +11641,15 @@ class App extends engrid_ENGrid {
         new DataHide();
         // Autosubmit script
         new Autosubmit();
+        // Adjust display of event tickets.
+        new EventTickets();
+        // Swap Amounts
+        new SwapAmounts();
         // On the end of the script, after all subscribers defined, let's load the current value
         this._amount.load();
         this._frequency.load();
-        // Simple Country Select
-        new SimpleCountrySelect();
+        // Auto Country Select
+        new AutoCountrySelect();
         // Add Image Attribution
         if (this.options.MediaAttribution)
             new MediaAttribution();
@@ -11417,8 +11662,8 @@ class App extends engrid_ENGrid {
         // Auto Year Class
         if (this.options.AutoYear)
             new AutoYear();
-        // Credit Card Numbers Only
-        new CreditCardNumbers();
+        // Credit Card Utility
+        new CreditCard();
         // Autocomplete Class
         new Autocomplete();
         // Ecard Class
@@ -11438,6 +11683,9 @@ class App extends engrid_ENGrid {
             new RememberMe(this.options.RememberMe);
         if (this.options.NeverBounceAPI)
             new NeverBounce(this.options.NeverBounceAPI, this.options.NeverBounceDateField, this.options.NeverBounceStatusField, this.options.NeverBounceDateFormat);
+        // FreshAddress
+        if (this.options.FreshAddress)
+            new FreshAddress();
         new ShowIfAmount();
         new OtherAmount();
         new MinMaxAmount();
@@ -11451,18 +11699,64 @@ class App extends engrid_ENGrid {
         new UrlToForm();
         // Required if Visible Fields
         new RequiredIfVisible();
+        //Debug hidden fields
+        if (this.options.Debug)
+            new DebugHiddenFields();
         // TidyContact
         if (this.options.TidyContact)
             new TidyContact();
         // Translate Fields
         if (this.options.TranslateFields)
             new TranslateFields();
+        // Country Disable
+        new CountryDisable();
+        // Premium Gift Features
+        new PremiumGift();
+        // Digital Wallets Features
+        if (engrid_ENGrid.getPageType() === "DONATION") {
+            new DigitalWallets();
+        }
         // Data Layer Events
         new DataLayer();
+        // Mobile CTA
+        new MobileCTA();
+        // Live Frequency
+        new LiveFrequency();
+        // Universal Opt In
+        new UniversalOptIn();
+        // Plaid
+        if (this.options.Plaid)
+            new Plaid();
+        // Give By Select
+        new GiveBySelect();
         this.setDataAttributes();
+        //Exit Intent Lightbox
+        new ExitIntentLightbox();
+        new UrlParamsToBodyAttrs();
+        //Debug panel
+        if (this.options.Debug ||
+            window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
+            new DebugPanel(this.options.PageLayouts);
+        }
+        if (engrid_ENGrid.getUrlParameter("development") === "branding") {
+            new BrandingHtml().show();
+        }
         engrid_ENGrid.setBodyData("data-engrid-scripts-js-loading", "finished");
         window.EngridVersion = AppVersion;
         this.logger.success(`VERSION: ${AppVersion}`);
+        // Window Load
+        let onLoad = typeof window.onload === "function" ? window.onload : null;
+        if (document.readyState !== "loading") {
+            this.onLoad();
+        }
+        else {
+            window.onload = (e) => {
+                this.onLoad();
+                if (onLoad) {
+                    onLoad.bind(window, e);
+                }
+            };
+        }
     }
     onLoad() {
         if (this.options.onLoad) {
@@ -11603,6 +11897,10 @@ class App extends engrid_ENGrid {
         // Add demo data attribute
         if (App.demo)
             App.setBodyData("demo", "");
+    }
+    static log(message) {
+        const logger = new EngridLogger("Client", "brown", "aliceblue", "🍪");
+        logger.log(message);
     }
 }
 
@@ -11876,21 +12174,180 @@ class CapitalizeFields {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/credit-card-numbers.js
-// This class removes any non-numeric characters from the credit card field
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/credit-card.js
+// This class provides the credit card handler
+// and common credit card manipulation, like removing any non-numeric
+//  characters from the credit card field
 
-class CreditCardNumbers {
+class CreditCard {
     constructor() {
+        this.logger = new EngridLogger("CreditCard", "#ccc84a", "#333", "💳");
         this._form = EnForm.getInstance();
-        this.ccField = document.getElementById("en__field_transaction_ccnumber");
-        if (this.ccField) {
-            this._form.onSubmit.subscribe(() => this.onlyNumbersCC());
+        this.ccField = engrid_ENGrid.getField("transaction.ccnumber");
+        this.field_expiration_month = null;
+        this.field_expiration_year = null;
+        this.paymentTypeField = engrid_ENGrid.getField("transaction.paymenttype");
+        this.handleExpUpdate = (e) => {
+            if (!this.field_expiration_month || !this.field_expiration_year)
+                return;
+            const current_date = new Date();
+            const current_month = current_date.getMonth() + 1;
+            const current_year = current_date.getFullYear() - 2000;
+            // handle if year is changed to current year (disable all months less than current month)
+            // handle if month is changed to less than current month (disable current year)
+            if (e == "month") {
+                let selected_month = parseInt(this.field_expiration_month.value);
+                let disable = selected_month < current_month;
+                this.logger.log(`month disable ${disable}`);
+                this.logger.log(`selected_month ${selected_month}`);
+                for (let i = 0; i < this.field_expiration_year.options.length; i++) {
+                    // disable or enable current year
+                    if (parseInt(this.field_expiration_year.options[i].value) <= current_year) {
+                        if (disable) {
+                            this.field_expiration_year.options[i].setAttribute("disabled", "disabled");
+                        }
+                        else {
+                            this.field_expiration_year.options[i].disabled = false;
+                        }
+                    }
+                }
+            }
+            else if (e == "year") {
+                let selected_year = parseInt(this.field_expiration_year.value);
+                let disable = selected_year == current_year;
+                this.logger.log(`year disable ${disable}`);
+                this.logger.log(`selected_year ${selected_year}`);
+                for (let i = 0; i < this.field_expiration_month.options.length; i++) {
+                    // disable or enable all months less than current month
+                    if (parseInt(this.field_expiration_month.options[i].value) < current_month) {
+                        if (disable) {
+                            this.field_expiration_month.options[i].setAttribute("disabled", "disabled");
+                        }
+                        else {
+                            this.field_expiration_month.options[i].disabled = false;
+                        }
+                    }
+                }
+            }
+        };
+        if (!this.ccField)
+            return;
+        const expireFiels = document.getElementsByName("transaction.ccexpire");
+        if (expireFiels) {
+            this.field_expiration_month = expireFiels[0];
+            this.field_expiration_year = expireFiels[1];
+        }
+        this._form.onSubmit.subscribe(() => this.onlyNumbersCC());
+        this.addEventListeners();
+        this.handleCCUpdate();
+    }
+    addEventListeners() {
+        // Add event listeners to the credit card field
+        ["keyup", "paste", "blur"].forEach((event) => {
+            this.ccField.addEventListener(event, () => this.handleCCUpdate());
+        });
+        // Add event listeners to the expiration fields
+        if (this.field_expiration_month && this.field_expiration_year) {
+            ["change"].forEach((event) => {
+                var _a, _b;
+                (_a = this.field_expiration_month) === null || _a === void 0 ? void 0 : _a.addEventListener(event, () => {
+                    this.handleExpUpdate("month");
+                });
+                (_b = this.field_expiration_year) === null || _b === void 0 ? void 0 : _b.addEventListener(event, () => {
+                    this.handleExpUpdate("year");
+                });
+            });
+        }
+        // Add event listeners to the Give By Select Radio Buttons, if they exist
+        const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
+        if (transactionGiveBySelect) {
+            transactionGiveBySelect.forEach((giveBySelect) => {
+                giveBySelect.addEventListener("change", () => {
+                    if (giveBySelect.value.toLowerCase() === "card") {
+                        this.logger.log("Handle credit card auto-update");
+                        window.setTimeout(() => {
+                            this.handleCCUpdate();
+                        }, 100);
+                    }
+                });
+            });
         }
     }
     onlyNumbersCC() {
         const onlyNumbers = this.ccField.value.replace(/\D/g, "");
         this.ccField.value = onlyNumbers;
         return true;
+    }
+    handleCCUpdate() {
+        const card_type = this.getCardType(this.ccField.value);
+        const card_values = {
+            amex: ["amex", "american express", "americanexpress", "amx", "ax"],
+            visa: ["visa", "vi"],
+            mastercard: ["mastercard", "master card", "mc"],
+            discover: ["discover", "di"],
+        };
+        const selected_card_value = card_type
+            ? Array.from(this.paymentTypeField.options).filter((d) => card_values[card_type].includes(d.value.toLowerCase()))[0].value
+            : "";
+        if (this.paymentTypeField.value != selected_card_value) {
+            this.logger.log(`card type ${card_type}`);
+            this.paymentTypeField.value = selected_card_value;
+            const paymentTypeChangeEvent = new Event("change", { bubbles: true });
+            this.paymentTypeField.dispatchEvent(paymentTypeChangeEvent);
+        }
+    }
+    getCardType(cc_partial) {
+        let key_character = cc_partial.charAt(0);
+        const prefix = "live-card-type-";
+        const field_credit_card_classes = this.ccField.className
+            .split(" ")
+            .filter((c) => !c.startsWith(prefix));
+        switch (key_character) {
+            case "0":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            case "1":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            case "2":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            case "3":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-amex");
+                return "amex";
+            case "4":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-visa");
+                return "visa";
+            case "5":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-mastercard");
+                return "mastercard";
+            case "6":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-discover");
+                return "discover";
+            case "7":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            case "8":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            case "9":
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-invalid");
+                return false;
+            default:
+                this.ccField.className = field_credit_card_classes.join(" ").trim();
+                this.ccField.classList.add("live-card-type-na");
+                return false;
+        }
     }
 }
 
@@ -11932,7 +12389,7 @@ class AutoYear {
 
 class Autocomplete {
     constructor() {
-        this.debug = engrid_ENGrid.debug;
+        this.logger = new EngridLogger("Autocomplete", "#330033", "#f0f0f0", "📇");
         this.autoCompleteField('[name="supporter.firstName"]', "given-name");
         this.autoCompleteField('[name="supporter.lastName"]', "family-name");
         this.autoCompleteField('[name="transaction.ccnumber"]', "cc-number");
@@ -11947,8 +12404,14 @@ class Autocomplete {
         this.autoCompleteField('[name="supporter.city"]', "address-level2");
         this.autoCompleteField('[name="supporter.region"]', "address-level1");
         this.autoCompleteField('[name="supporter.postcode"]', "postal-code");
-        // Ignore Autocomplete on the Recipient Email Field
+        // Ignore Autocomplete on the Recipient Email Field & Address ("none" is intentional because "off" doesn't work)
+        this.autoCompleteField('[name="transaction.honname"]', "none");
         this.autoCompleteField('[name="transaction.infemail"]', "none");
+        this.autoCompleteField('[name="transaction.infname"]', "none");
+        this.autoCompleteField('[name="transaction.infadd1"]', "none");
+        this.autoCompleteField('[name="transaction.infadd2"]', "none");
+        this.autoCompleteField('[name="transaction.infcity"]', "none");
+        this.autoCompleteField('[name="transaction.infpostcd"]', "none");
     }
     autoCompleteField(querySelector, autoCompleteValue) {
         let field = document.querySelector(querySelector);
@@ -11956,8 +12419,8 @@ class Autocomplete {
             field.autocomplete = autoCompleteValue;
             return true;
         }
-        if (this.debug)
-            console.log("AutoComplete: Field Not Found", querySelector);
+        if (autoCompleteValue !== "none")
+            this.logger.log("Field Not Found", querySelector);
         return false;
     }
 }
@@ -12064,435 +12527,11 @@ class ClickToExpand {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/custom-methods.js
 const body = document.body;
 const enGrid = document.getElementById("engrid");
-const enInput = (() => {
-    /************************************
-     * Globablly Scoped Constants and Variables
-     ***********************************/
-    // @TODO Needs to be expanded to bind other EN elements (checkbox, radio) and compound elements (split-text, split-select, select with other input, etc...)
-    // @TODO A "Not" condition is needed for #en__field_transaction_email because someone could name their email opt in "Email" and it will get the .en_field--email class generated for it
-    // get DOM elements
-    const init = () => {
-        const formInput = document.querySelectorAll(".en__field--text, .en__field--email:not(.en__field--checkbox), .en__field--telephone, .en__field--number, .en__field--textarea, .en__field--select, .en__field--checkbox");
-        Array.from(formInput).forEach((e) => {
-            // @TODO Currently checkboxes always return as having a value, since they do but they're just not checked. Need to update and account for that, should also do Radio's while we're at it
-            let element = e.querySelector("input, textarea, select");
-            if (element && element.value) {
-                e.classList.add("has-value");
-            }
-            bindEvents(e);
-        });
-    };
-    return {
-        init: init,
-    };
-})();
-const bindEvents = (e) => {
-    /* @TODO */
-    /************************************
-     * INPUT, TEXTAREA, AND SELECT ACTIVITY CLASSES (FOCUS AND BLUR)
-     * NOTE: STILL NEEDS WORK TO FUNCTION ON "SPLIT" CUSTOM EN FIELDS
-     * REF: https://developer.mozilla.org/en-US/docs/Web/API/Element/blur_event
-     ***********************************/
-    // Occurs when an input field gets focus
-    const handleFocus = (e) => {
-        const target = e.target;
-        if (target && target.parentNode && target.parentNode.parentNode) {
-            const targetWrapper = target.parentNode.parentNode;
-            targetWrapper.classList.add("has-focus");
-        }
-    };
-    // Occurs when a user leaves an input field
-    const handleBlur = (e) => {
-        const target = e.target;
-        if (target && target.parentNode && target.parentNode.parentNode) {
-            const targetWrapper = target.parentNode.parentNode;
-            targetWrapper.classList.remove("has-focus");
-            if (target.value) {
-                targetWrapper.classList.add("has-value");
-            }
-            else {
-                targetWrapper.classList.remove("has-value");
-            }
-        }
-    };
-    // Occurs when a user changes the selected option of a <select> element
-    const handleChange = (e) => {
-        const target = e.target;
-        if (target && target.parentNode && target.parentNode.parentNode) {
-            const targetWrapper = target.parentNode.parentNode;
-            targetWrapper.classList.add("has-value");
-        }
-    };
-    // Occurs when a text or textarea element gets user input
-    const handleInput = (e) => {
-        const target = e.target;
-        if (target && target.parentNode && target.parentNode.parentNode) {
-            const targetWrapper = target.parentNode.parentNode;
-            targetWrapper.classList.add("has-value");
-        }
-    };
-    // Occurs when the web browser autofills a form fields
-    // REF: engrid-autofill.scss
-    // REF: https://medium.com/@brunn/detecting-autofilled-fields-in-javascript-aed598d25da7
-    const onAutoFillStart = (e) => {
-        e.parentNode.parentNode.classList.add("is-autofilled", "has-value");
-    };
-    const onAutoFillCancel = (e) => e.parentNode.parentNode.classList.remove("is-autofilled", "has-value");
-    const onAnimationStart = (e) => {
-        const target = e.target;
-        const animation = e.animationName;
-        switch (animation) {
-            case "onAutoFillStart":
-                return onAutoFillStart(target);
-            case "onAutoFillCancel":
-                return onAutoFillCancel(target);
-        }
-    };
-    const enField = e.querySelector("input, textarea, select");
-    if (enField) {
-        enField.addEventListener("focus", handleFocus);
-        enField.addEventListener("blur", handleBlur);
-        enField.addEventListener("change", handleChange);
-        enField.addEventListener("input", handleInput);
-        enField.addEventListener("animationstart", onAnimationStart);
-    }
-};
 const removeClassesByPrefix = (el, prefix) => {
     for (var i = el.classList.length - 1; i >= 0; i--) {
         if (el.classList[i].startsWith(prefix)) {
             el.classList.remove(el.classList[i]);
         }
-    }
-};
-const debugBar = () => {
-    if (window.location.href.indexOf("debug") != -1 ||
-        location.hostname === "localhost" ||
-        location.hostname === "127.0.0.1") {
-        body.classList.add("debug");
-        if (enGrid) {
-            enGrid.insertAdjacentHTML("beforebegin", '<span id="debug-bar">' +
-                '<span id="info-wrapper">' +
-                "<span>DEBUG BAR</span>" +
-                "</span>" +
-                '<span id="buttons-wrapper">' +
-                '<span id="debug-close">X</span>' +
-                "</span>" +
-                "</span>");
-        }
-        if (window.location.search.indexOf("mode=DEMO") > -1) {
-            const infoWrapper = document.getElementById("info-wrapper");
-            const buttonsWrapper = document.getElementById("buttons-wrapper");
-            if (infoWrapper) {
-                // console.log(window.performance);
-                const now = new Date().getTime();
-                const initialPageLoad = (now - performance.timing.navigationStart) / 1000;
-                const domInteractive = initialPageLoad + (now - performance.timing.domInteractive) / 1000;
-                infoWrapper.insertAdjacentHTML("beforeend", "<span>Initial Load: " +
-                    initialPageLoad +
-                    "s</span>" +
-                    "<span>DOM Interactive: " +
-                    domInteractive +
-                    "s</span>");
-                if (buttonsWrapper) {
-                    buttonsWrapper.insertAdjacentHTML("afterbegin", '<button id="layout-toggle" type="button">Layout Toggle</button>' +
-                        '<button id="page-edit" type="button">Edit in PageBuilder (BETA)</button>');
-                }
-            }
-        }
-        if (window.location.href.indexOf("debug") != -1 ||
-            location.hostname === "localhost" ||
-            location.hostname === "127.0.0.1") {
-            const buttonsWrapper = document.getElementById("buttons-wrapper");
-            if (buttonsWrapper) {
-                buttonsWrapper.insertAdjacentHTML("afterbegin", '<button id="layout-toggle" type="button">Layout Toggle</button>' +
-                    '<button id="fancy-errors-toggle" type="button">Toggle Fancy Errors</button>');
-            }
-        }
-        if (document.getElementById("fancy-errors-toggle")) {
-            const debugTemplateButton = document.getElementById("fancy-errors-toggle");
-            if (debugTemplateButton) {
-                debugTemplateButton.addEventListener("click", function () {
-                    fancyErrorsToggle();
-                }, false);
-            }
-        }
-        if (document.getElementById("layout-toggle")) {
-            const debugTemplateButton = document.getElementById("layout-toggle");
-            if (debugTemplateButton) {
-                debugTemplateButton.addEventListener("click", function () {
-                    layoutToggle();
-                }, false);
-            }
-        }
-        if (document.getElementById("page-edit")) {
-            const debugTemplateButton = document.getElementById("page-edit");
-            if (debugTemplateButton) {
-                debugTemplateButton.addEventListener("click", function () {
-                    pageEdit();
-                }, false);
-            }
-        }
-        if (document.getElementById("debug-close")) {
-            const debugTemplateButton = document.getElementById("debug-close");
-            if (debugTemplateButton) {
-                debugTemplateButton.addEventListener("click", function () {
-                    debugClose();
-                }, false);
-            }
-        }
-        const fancyErrorsToggle = () => {
-            if (enGrid) {
-                enGrid.classList.toggle("fancy-errors");
-            }
-        };
-        const pageEdit = () => {
-            window.location.href = window.location.href + "?edit";
-        };
-        const layoutToggle = () => {
-            if (enGrid) {
-                if (enGrid.classList.contains("layout-centercenter1col")) {
-                    removeClassesByPrefix(enGrid, "layout-");
-                    enGrid.classList.add("layout-centerright1col");
-                }
-                else if (enGrid.classList.contains("layout-centerright1col")) {
-                    removeClassesByPrefix(enGrid, "layout-");
-                    enGrid.classList.add("layout-centerleft1col");
-                }
-                else if (enGrid.classList.contains("layout-centerleft1col")) {
-                    removeClassesByPrefix(enGrid, "layout-");
-                    enGrid.classList.add("layout-embedded");
-                }
-                else if (enGrid.classList.contains("layout-embedded")) {
-                    removeClassesByPrefix(enGrid, "layout-");
-                    enGrid.classList.add("layout-centercenter1col");
-                }
-                else {
-                    console.log("While trying to switch layouts, something unexpected happen.");
-                }
-            }
-        };
-        const debugClose = () => {
-            body.classList.remove("debug");
-            const debugBar = document.getElementById("debug-bar");
-            if (debugBar) {
-                debugBar.style.display = "none";
-            }
-        };
-    }
-};
-const inputPlaceholder = () => {
-    // Personal Information
-    let enFieldFirstName = document.querySelector("input#en__field_supporter_firstName");
-    let enFieldLastName = document.querySelector("input#en__field_supporter_lastName");
-    let enFieldEmailAddress = document.querySelector("input#en__field_supporter_emailAddress");
-    let enFieldPhoneNumber = document.querySelector("input#en__field_supporter_phoneNumber");
-    let enFieldPhoneNumberRequired = document.querySelector(".en__mandatory > * > input#en__field_supporter_phoneNumber");
-    let enFieldPhoneNumber2 = document.querySelector("input#en__field_supporter_phoneNumber2");
-    let enFieldPhoneNumber2Required = document.querySelector(".en__mandatory > * > input#en__field_supporter_phoneNumber2");
-    // Address
-    let enFieldCountry = document.querySelector("input#en__field_supporter_country");
-    let enFieldAddress1 = document.querySelector("input#en__field_supporter_address1");
-    let enFieldAddress2 = document.querySelector("input#en__field_supporter_address2");
-    let enFieldCity = document.querySelector("input#en__field_supporter_city");
-    let enFieldRegion = document.querySelector("input#en__field_supporter_region");
-    let enFieldPostcode = document.querySelector("input#en__field_supporter_postcode");
-    // Donation
-    let enFieldDonationAmt = document.querySelector(".en__field--donationAmt.en__field--withOther .en__field__input--other");
-    let enFieldCcnumber = document.querySelector("input#en__field_transaction_ccnumber");
-    let enFieldCcexpire = document.querySelector("input#en__field_transaction_ccexpire");
-    let enFieldCcvv = document.querySelector("input#en__field_transaction_ccvv");
-    let enFieldBankAccountNumber = document.querySelector("input#en__field_supporter_bankAccountNumber");
-    let enFieldBankRoutingNumber = document.querySelector("input#en__field_supporter_bankRoutingNumber");
-    // In Honor
-    let enFieldHonname = document.querySelector("input#en__field_transaction_honname");
-    let enFieldInfname = document.querySelector("input#en__field_transaction_infname");
-    let enFieldInfemail = document.querySelector("input#en__field_transaction_infemail");
-    let enFieldInfcountry = document.querySelector("input#en__field_transaction_infcountry");
-    let enFieldInfadd1 = document.querySelector("input#en__field_transaction_infadd1");
-    let enFieldInfadd2 = document.querySelector("input#en__field_transaction_infadd2");
-    let enFieldInfcity = document.querySelector("input#en__field_transaction_infcity");
-    let enFieldInfpostcd = document.querySelector("input#en__field_transaction_infpostcd");
-    // Miscillaneous
-    let enFieldGftrsn = document.querySelector("input#en__field_transaction_gftrsn");
-    // Shipping Infromation
-    let enFieldShippingFirstName = document.querySelector("input#en__field_transaction_shipfname");
-    let enFieldShippingLastName = document.querySelector("input#en__field_transaction_shiplname");
-    let enFieldShippingEmailAddress = document.querySelector("input#en__field_transaction_shipemail");
-    let enFieldShippingCountry = document.querySelector("input#en__field_transaction_shipcountry");
-    let enFieldShippingAddress1 = document.querySelector("input#en__field_transaction_shipadd1");
-    let enFieldShippingAddress2 = document.querySelector("input#en__field_transaction_shipadd2");
-    let enFieldShippingCity = document.querySelector("input#en__field_transaction_shipcity");
-    let enFieldShippingRegion = document.querySelector("input#en__field_transaction_shipregion");
-    let enFieldShippingPostcode = document.querySelector("input#en__field_transaction_shippostcode");
-    // Billing Infromation
-    let enFieldBillingCountry = document.querySelector("input#en__field_supporter_billingCountry");
-    let enFieldBillingAddress1 = document.querySelector("input#en__field_supporter_billingAddress1");
-    let enFieldBillingAddress2 = document.querySelector("input#en__field_supporter_billingAddress2");
-    let enFieldBillingCity = document.querySelector("input#en__field_supporter_billingCity");
-    let enFieldBillingRegion = document.querySelector("input#en__field_supporter_billingRegion");
-    let enFieldBillingPostcode = document.querySelector("input#en__field_supporter_billingPostcode");
-    // CHANGE FIELD INPUT TYPES
-    if (enFieldDonationAmt) {
-        enFieldDonationAmt.setAttribute("inputmode", "decimal");
-    }
-    // ADD THE MISSING LABEL FOR IMPROVED ACCESSABILITY
-    if (enFieldDonationAmt) {
-        enFieldDonationAmt.setAttribute("aria-label", "Enter your custom donation amount");
-    }
-    // ADD FIELD PLACEHOLDERS
-    const enAddInputPlaceholder = document.querySelector("[data-engrid-add-input-placeholders]");
-    // Personal Information
-    if (enAddInputPlaceholder && enFieldFirstName) {
-        enFieldFirstName.placeholder = "First Name";
-    }
-    if (enAddInputPlaceholder && enFieldLastName) {
-        enFieldLastName.placeholder = "Last Name";
-    }
-    if (enAddInputPlaceholder && enFieldEmailAddress) {
-        enFieldEmailAddress.placeholder = "Email Address";
-    }
-    if (enAddInputPlaceholder &&
-        enFieldPhoneNumber &&
-        enFieldPhoneNumberRequired) {
-        enFieldPhoneNumber.placeholder = "Phone Number";
-    }
-    else if (enAddInputPlaceholder &&
-        enFieldPhoneNumber &&
-        !enFieldPhoneNumberRequired) {
-        enFieldPhoneNumber.placeholder = "Phone Number (Optional)";
-    }
-    if (enAddInputPlaceholder &&
-        enFieldPhoneNumber2 &&
-        enFieldPhoneNumber2Required) {
-        enFieldPhoneNumber2.placeholder = "000-000-0000";
-    }
-    else if (enAddInputPlaceholder &&
-        enFieldPhoneNumber2 &&
-        !enFieldPhoneNumber2Required) {
-        enFieldPhoneNumber2.placeholder = "000-000-0000 (Optional)";
-    }
-    // Address
-    if (enAddInputPlaceholder && enFieldCountry) {
-        enFieldCountry.placeholder = "Country";
-    }
-    if (enAddInputPlaceholder && enFieldAddress1) {
-        enFieldAddress1.placeholder = "Street Address";
-    }
-    if (enAddInputPlaceholder && enFieldAddress2) {
-        enFieldAddress2.placeholder = "Apt., ste., bldg.";
-    }
-    if (enAddInputPlaceholder && enFieldCity) {
-        enFieldCity.placeholder = "City";
-    }
-    if (enAddInputPlaceholder && enFieldRegion) {
-        enFieldRegion.placeholder = "Region";
-    }
-    if (enAddInputPlaceholder && enFieldPostcode) {
-        enFieldPostcode.placeholder = "Postal Code";
-    }
-    // Donation
-    if (enAddInputPlaceholder && enFieldDonationAmt) {
-        enFieldDonationAmt.placeholder = "Other";
-    }
-    if (enAddInputPlaceholder && enFieldCcnumber) {
-        enFieldCcnumber.placeholder = "•••• •••• •••• ••••";
-    }
-    if (enAddInputPlaceholder && enFieldCcexpire) {
-        enFieldCcexpire.placeholder = "MM / YY";
-    }
-    if (enAddInputPlaceholder && enFieldCcvv) {
-        enFieldCcvv.placeholder = "CVV";
-    }
-    if (enAddInputPlaceholder && enFieldBankAccountNumber) {
-        enFieldBankAccountNumber.placeholder = "Bank Account Number";
-    }
-    if (enAddInputPlaceholder && enFieldBankRoutingNumber) {
-        enFieldBankRoutingNumber.placeholder = "Bank Routing Number";
-    }
-    // In Honor
-    if (enAddInputPlaceholder && enFieldHonname) {
-        enFieldHonname.placeholder = "Honoree Name";
-    }
-    if (enAddInputPlaceholder && enFieldInfname) {
-        enFieldInfname.placeholder = "Recipient Name";
-    }
-    if (enAddInputPlaceholder && enFieldInfemail) {
-        enFieldInfemail.placeholder = "Recipient Email Address";
-    }
-    if (enAddInputPlaceholder && enFieldInfcountry) {
-        enFieldInfcountry.placeholder = "Country";
-    }
-    if (enAddInputPlaceholder && enFieldInfadd1) {
-        enFieldInfadd1.placeholder = "Recipient Street Address";
-    }
-    if (enAddInputPlaceholder && enFieldInfadd2) {
-        enFieldInfadd2.placeholder = "Recipient Apt., ste., bldg.";
-    }
-    if (enAddInputPlaceholder && enFieldInfcity) {
-        enFieldInfcity.placeholder = "Recipient City";
-    }
-    if (enAddInputPlaceholder && enFieldInfpostcd) {
-        enFieldInfpostcd.placeholder = "Recipient Postal Code";
-    }
-    // Miscillaneous
-    if (enAddInputPlaceholder && enFieldGftrsn) {
-        enFieldGftrsn.placeholder = "Reason for your gift";
-    }
-    // Shipping Infromation
-    if (enAddInputPlaceholder && enFieldShippingFirstName) {
-        enFieldShippingFirstName.placeholder = "Shipping First Name";
-    }
-    if (enAddInputPlaceholder && enFieldShippingLastName) {
-        enFieldShippingLastName.placeholder = "Shipping Last Name";
-    }
-    if (enAddInputPlaceholder && enFieldShippingEmailAddress) {
-        enFieldShippingEmailAddress.placeholder = "Shipping Email Address";
-    }
-    if (enAddInputPlaceholder && enFieldShippingCountry) {
-        enFieldShippingCountry.placeholder = "Shipping Country";
-    }
-    if (enAddInputPlaceholder && enFieldShippingAddress1) {
-        enFieldShippingAddress1.placeholder = "Shipping Street Address";
-    }
-    if (enAddInputPlaceholder && enFieldShippingAddress2) {
-        enFieldShippingAddress2.placeholder = "Shipping Apt., ste., bldg.";
-    }
-    if (enAddInputPlaceholder && enFieldShippingCity) {
-        enFieldShippingCity.placeholder = "Shipping City";
-    }
-    if (enAddInputPlaceholder && enFieldShippingRegion) {
-        enFieldShippingRegion.placeholder = "Shipping Region";
-    }
-    if (enAddInputPlaceholder && enFieldShippingPostcode) {
-        enFieldShippingPostcode.placeholder = "Shipping Postal Code";
-    }
-    // Billing Information
-    if (enAddInputPlaceholder && enFieldBillingCountry) {
-        enFieldBillingCountry.placeholder = "Billing Country";
-    }
-    if (enAddInputPlaceholder && enFieldBillingAddress1) {
-        enFieldBillingAddress1.placeholder = "Billing Street Address";
-    }
-    if (enAddInputPlaceholder && enFieldBillingAddress2) {
-        enFieldBillingAddress2.placeholder = "Billing Apt., ste., bldg.";
-    }
-    if (enAddInputPlaceholder && enFieldBillingCity) {
-        enFieldBillingCity.placeholder = "Billing City";
-    }
-    if (enAddInputPlaceholder && enFieldBillingRegion) {
-        enFieldBillingRegion.placeholder = "Billing Region";
-    }
-    if (enAddInputPlaceholder && enFieldBillingPostcode) {
-        enFieldBillingPostcode.placeholder = "Billing Postal Code";
-    }
-};
-const preventAutocomplete = () => {
-    let enFieldDonationAmt = document.querySelector(".en__field--donationAmt.en__field--withOther .en__field__input--other");
-    if (enFieldDonationAmt) {
-        enFieldDonationAmt.setAttribute("autocomplete", "off");
-    }
-    if (enFieldDonationAmt) {
-        enFieldDonationAmt.setAttribute("data-lpignore", "true");
     }
 };
 const watchInmemField = () => {
@@ -12520,247 +12559,6 @@ const watchInmemField = () => {
         enFieldTransactionInmem.addEventListener("change", handleEnFieldTransactionInmemChange);
     }
 };
-// @TODO Refactor (low priority)
-const watchGiveBySelectField = () => {
-    const enFieldGiveBySelect = document.querySelector(".en__field--give-by-select");
-    const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
-    const enFieldPaymentType = document.querySelector("#en__field_transaction_paymenttype");
-    let enFieldGiveBySelectCurrentValue = document.querySelector('input[name="transaction.giveBySelect"]:checked');
-    const prefix = "has-give-by-";
-    const handleEnFieldGiveBySelect = (e) => {
-        enFieldGiveBySelectCurrentValue = document.querySelector('input[name="transaction.giveBySelect"]:checked');
-        console.log("enFieldGiveBySelectCurrentValue:", enFieldGiveBySelectCurrentValue);
-        if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "card") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-card");
-            }
-            // enFieldPaymentType.value = "card";
-            handleCCUpdate();
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "ach") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-ach");
-            }
-            enFieldPaymentType.value = "ACH";
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "paypal") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-paypal");
-            }
-            enFieldPaymentType.value = "paypal";
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "applepay") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-applepay");
-            }
-            enFieldPaymentType.value = "applepay";
-        }
-        const event = new Event("change");
-        enFieldPaymentType.dispatchEvent(event);
-    };
-    // Check Giving Frequency on page load
-    if (enFieldGiveBySelect) {
-        enFieldGiveBySelectCurrentValue = document.querySelector('input[name="transaction.giveBySelect"]:checked');
-        if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "card") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-card");
-            }
-            // enFieldPaymentType.value = "card";
-            handleCCUpdate();
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "ach") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-check");
-            }
-            enFieldPaymentType.value = "ACH";
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "paypal") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-paypal");
-            }
-            enFieldPaymentType.value = "paypal";
-        }
-        else if (enFieldGiveBySelectCurrentValue &&
-            enFieldGiveBySelectCurrentValue.value.toLowerCase() == "applepay") {
-            if (enGrid) {
-                removeClassesByPrefix(enGrid, prefix);
-                enGrid.classList.add("has-give-by-applepay");
-            }
-            enFieldPaymentType.value = "applepay";
-        }
-    }
-    // Watch each Giving Frequency radio input for a change
-    if (transactionGiveBySelect) {
-        Array.from(transactionGiveBySelect).forEach((e) => {
-            let element = e;
-            element.addEventListener("change", handleEnFieldGiveBySelect);
-        });
-    }
-};
-/*
- * Input fields as reference variables
- */
-const field_credit_card = document.getElementById("en__field_transaction_ccnumber");
-const field_payment_type = document.getElementById("en__field_transaction_paymenttype");
-let field_expiration_parts = document.querySelectorAll(".en__field--ccexpire .en__field__input--splitselect");
-const field_country = document.getElementById("en__field_supporter_country");
-let field_expiration_month = field_expiration_parts[0];
-let field_expiration_year = field_expiration_parts[1];
-/*
- * Helpers
- */
-// current_month and current_year used by handleExpUpdate()
-let d = new Date();
-var current_month = d.getMonth() + 1; // month options in expiration dropdown are indexed from 1
-var current_year = d.getFullYear() - 2000;
-// getCardType used by handleCCUpdate()
-const getCardType = (cc_partial) => {
-    let key_character = cc_partial.charAt(0);
-    const prefix = "live-card-type-";
-    const field_credit_card_classes = field_credit_card.className
-        .split(" ")
-        .filter((c) => !c.startsWith(prefix));
-    switch (key_character) {
-        case "0":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        case "1":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        case "2":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        case "3":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-amex");
-            return "amex";
-        case "4":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-visa");
-            return "visa";
-        case "5":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-mastercard");
-            return "mastercard";
-        case "6":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-discover");
-            return "discover";
-        case "7":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        case "8":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        case "9":
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-invalid");
-            return false;
-        default:
-            field_credit_card.className = field_credit_card_classes.join(" ").trim();
-            field_credit_card.classList.add("live-card-type-na");
-            return false;
-    }
-};
-/*
- * Handlers
- */
-const handleCCUpdate = () => {
-    const card_type = getCardType(field_credit_card.value);
-    const card_values = {
-        amex: ["amex", "american express", "americanexpress", "amx", "ax"],
-        visa: ["visa", "vi"],
-        mastercard: ["mastercard", "master card", "mc"],
-        discover: ["discover", "di"],
-    };
-    const selected_card_value = card_type
-        ? Array.from(field_payment_type.options).filter((d) => card_values[card_type].includes(d.value.toLowerCase()))[0].value
-        : "";
-    if (field_payment_type.value != selected_card_value) {
-        field_payment_type.value = selected_card_value;
-        const paymentTypeChangeEvent = new Event("change", { bubbles: true });
-        field_payment_type.dispatchEvent(paymentTypeChangeEvent);
-    }
-};
-const handleExpUpdate = (e) => {
-    // handle if year is changed to current year (disable all months less than current month)
-    // handle if month is changed to less than current month (disable current year)
-    if (e == "month") {
-        let selected_month = parseInt(field_expiration_month.value);
-        let disable = selected_month < current_month;
-        console.log("month disable", disable, typeof disable, selected_month, current_month);
-        for (let i = 0; i < field_expiration_year.options.length; i++) {
-            // disable or enable current year
-            if (parseInt(field_expiration_year.options[i].value) <= current_year) {
-                if (disable) {
-                    //@TODO Couldn't get working in TypeScript
-                    field_expiration_year.options[i].setAttribute("disabled", "disabled");
-                }
-                else {
-                    field_expiration_year.options[i].disabled = false;
-                }
-            }
-        }
-    }
-    else if (e == "year") {
-        let selected_year = parseInt(field_expiration_year.value);
-        let disable = selected_year == current_year;
-        console.log("year disable", disable, typeof disable, selected_year, current_year);
-        for (let i = 0; i < field_expiration_month.options.length; i++) {
-            // disable or enable all months less than current month
-            if (parseInt(field_expiration_month.options[i].value) < current_month) {
-                if (disable) {
-                    //@TODO Couldn't get working in TypeScript
-                    field_expiration_month.options[i].setAttribute("disabled", "disabled");
-                }
-                else {
-                    field_expiration_month.options[i].disabled = false;
-                }
-            }
-        }
-    }
-};
-/*
- * Event Listeners
- */
-if (field_credit_card) {
-    field_credit_card.addEventListener("keyup", function () {
-        handleCCUpdate();
-    });
-    field_credit_card.addEventListener("paste", function () {
-        handleCCUpdate();
-    });
-    field_credit_card.addEventListener("blur", function () {
-        handleCCUpdate();
-    });
-}
-if (field_expiration_month && field_expiration_year) {
-    field_expiration_month.addEventListener("change", function () {
-        handleExpUpdate("month");
-    });
-    field_expiration_year.addEventListener("change", function () {
-        handleExpUpdate("year");
-    });
-}
 // EN Polyfill to support "label" clicking on Advocacy Recipient "labels"
 const contactDetailLabels = () => {
     const contact = document.querySelectorAll(".en__contactDetails__rows");
@@ -12887,9 +12685,6 @@ class iFrame {
             engrid_ENGrid.setBodyData("embedded", "");
             // Fire the resize event
             this.logger.log("iFrame Event - Begin Resizing");
-            this.sendIframeHeight();
-            // Listen for the resize event
-            window.addEventListener("resize", this.sendIframeHeight.bind(this));
             window.addEventListener("load", (event) => {
                 // Scroll to top of iFrame
                 this.logger.log("iFrame Event - window.onload");
@@ -12905,6 +12700,13 @@ class iFrame {
                     }, 100);
                 });
             });
+            window.setTimeout(() => {
+                this.sendIframeHeight();
+            }, 300);
+            window.addEventListener("resize", this.debounceWithImmediate(() => {
+                this.logger.log("iFrame Event - window resized");
+                this.sendIframeHeight();
+            }));
             // Listen for the form submit event
             this._form.onSubmit.subscribe((e) => {
                 this.logger.log("iFrame Event - onSubmit");
@@ -12922,15 +12724,35 @@ class iFrame {
             if (skipLink) {
                 skipLink.remove();
             }
+            this._form.onError.subscribe(() => {
+                // Get the first .en__field--validationFailed element
+                const firstError = document.querySelector(".en__field--validationFailed");
+                // Send scrollTo message
+                // Parent pages listens for this message and scrolls to the correct position
+                const scrollTo = firstError
+                    ? firstError.getBoundingClientRect().top
+                    : 0;
+                this.logger.log(`iFrame Event 'scrollTo' - Position of top of first error ${scrollTo} px`); // check the message is being sent correctly
+                window.parent.postMessage({ scrollTo }, "*");
+            });
         }
         else {
-            // Parent Page Logic
+            // When not in iframe, default behaviour, smooth scroll to first error
+            this._form.onError.subscribe(() => {
+                // Smooth Scroll to the first .en__field--validationFailed element
+                const firstError = document.querySelector(".en__field--validationFailed");
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: "smooth" });
+                }
+            });
+            // Parent Page Logic (when an ENgrid form is embedded in an ENgrid page)
             window.addEventListener("message", (event) => {
                 const iframe = this.getIFrameByEvent(event);
                 if (iframe) {
                     if (event.data.hasOwnProperty("frameHeight")) {
                         iframe.style.height = event.data.frameHeight + "px";
                     }
+                    // Old scroll event logic "scroll", scrolls to correct iframe?
                     else if (event.data.hasOwnProperty("scroll") &&
                         event.data.scroll > 0) {
                         const elDistanceToTop = window.pageYOffset + iframe.getBoundingClientRect().top;
@@ -12941,6 +12763,18 @@ class iFrame {
                             behavior: "smooth",
                         });
                         this.logger.log("iFrame Event - Scrolling Window to " + scrollTo);
+                    }
+                    // New scroll event logic "scrollTo", scrolls to the first error
+                    else if (event.data.hasOwnProperty("scrollTo")) {
+                        const scrollToPosition = event.data.scrollTo +
+                            window.scrollY +
+                            iframe.getBoundingClientRect().top;
+                        window.scrollTo({
+                            top: scrollToPosition,
+                            left: 0,
+                            behavior: "smooth",
+                        });
+                        this.logger.log("iFrame Event - Scrolling Window to " + scrollToPosition);
                     }
                 }
             });
@@ -13046,6 +12880,145 @@ class iFrame {
             banner.remove();
         });
     }
+    debounceWithImmediate(func, timeout = 1000) {
+        let timer;
+        let firstEvent = true;
+        return (...args) => {
+            clearTimeout(timer);
+            if (firstEvent) {
+                func.apply(this, args);
+                firstEvent = false;
+            }
+            timer = setTimeout(() => {
+                func.apply(this, args);
+                firstEvent = true;
+            }, timeout);
+        };
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/input-has-value-and-focus.js
+// Component that adds has-value and has-focus classes to form inputs
+
+class InputHasValueAndFocus {
+    constructor() {
+        this.logger = new EngridLogger("InputHasValueAndFocus", "yellow", "#333", "🌈");
+        this.formInputs = document.querySelectorAll(".en__field--text, .en__field--email:not(.en__field--checkbox), .en__field--telephone, .en__field--number, .en__field--textarea, .en__field--select, .en__field--checkbox");
+        if (this.shouldRun()) {
+            this.run();
+        }
+    }
+    shouldRun() {
+        return this.formInputs.length > 0;
+    }
+    run() {
+        this.formInputs.forEach((el) => {
+            const input = el.querySelector("input, textarea, select");
+            if (input && input.value) {
+                el.classList.add("has-value");
+            }
+            this.bindEvents(el);
+        });
+    }
+    bindEvents(el) {
+        const input = el.querySelector("input, textarea, select");
+        if (!input) {
+            return;
+        }
+        input.addEventListener("focus", () => {
+            this.log("Focus added", input);
+            el.classList.add("has-focus");
+        });
+        input.addEventListener("blur", () => {
+            this.log("Focus removed", input);
+            el.classList.remove("has-focus");
+        });
+        input.addEventListener("input", () => {
+            if (input.value) {
+                this.log("Value added", input);
+                el.classList.add("has-value");
+            }
+            else {
+                this.log("Value removed", input);
+                el.classList.remove("has-value");
+            }
+        });
+    }
+    log(message, input) {
+        this.logger.log(`${message} on ${input.name}: ${input.value}`);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/input-placeholders.js
+// Component that adds input placeholders
+
+class InputPlaceholders {
+    constructor() {
+        if (this.shouldRun()) {
+            this.run();
+        }
+    }
+    shouldRun() {
+        return engrid_ENGrid.hasBodyData("add-input-placeholders");
+    }
+    run() {
+        // Personal Information
+        this.addPlaceholder("input#en__field_supporter_firstName", "First Name");
+        this.addPlaceholder("input#en__field_supporter_lastName", "Last Name");
+        this.addPlaceholder("input#en__field_supporter_emailAddress", "Email Address");
+        this.addPlaceholder("input#en__field_supporter_phoneNumber", "Phone Number (Optional)");
+        this.addPlaceholder(".en__mandatory input#en__field_supporter_phoneNumber", "Phone Number");
+        this.addPlaceholder("input#en__field_supporter_phoneNumber2", "000-000-0000 (Optional)");
+        this.addPlaceholder(".en__mandatory input#en__field_supporter_phoneNumber2", "000-000-0000");
+        // Address
+        this.addPlaceholder("input#en__field_supporter_country", "Country");
+        this.addPlaceholder("input#en__field_supporter_address1", "Street Address");
+        this.addPlaceholder("input#en__field_supporter_address2", "Apt., ste., bldg.");
+        this.addPlaceholder("input#en__field_supporter_city", "City");
+        this.addPlaceholder("input#en__field_supporter_region", "Region");
+        this.addPlaceholder("input#en__field_supporter_postcode", "Zip Code");
+        // Donation
+        this.addPlaceholder(".en__field--donationAmt.en__field--withOther .en__field__input--other", "Other");
+        this.addPlaceholder("input#en__field_transaction_ccnumber", "•••• •••• •••• ••••");
+        this.addPlaceholder("input#en__field_transaction_ccexpire", "MM / YY");
+        this.addPlaceholder("input#en__field_transaction_ccvv", "CVV");
+        this.addPlaceholder("input#en__field_supporter_bankAccountNumber", "Bank Account Number");
+        this.addPlaceholder("input#en__field_supporter_bankRoutingNumber", "Bank Routing Number");
+        // In Honor
+        this.addPlaceholder("input#en__field_transaction_honname", "Honoree Name");
+        this.addPlaceholder("input#en__field_transaction_infname", "Recipient Name");
+        this.addPlaceholder("input#en__field_transaction_infemail", "Recipient Email Address");
+        this.addPlaceholder("input#en__field_transaction_infcountry", "Country");
+        this.addPlaceholder("input#en__field_transaction_infadd1", "Recipient Street Address");
+        this.addPlaceholder("input#en__field_transaction_infadd2", "Recipient Apt., ste., bldg.");
+        this.addPlaceholder("input#en__field_transaction_infcity", "Recipient City");
+        this.addPlaceholder("input#en__field_transaction_infpostcd", "Recipient Postal Code");
+        // Miscillaneous
+        this.addPlaceholder("input#en__field_transaction_gftrsn", "Reason for your gift");
+        // Shipping Information
+        this.addPlaceholder("input#en__field_transaction_shipfname", "Shipping First Name");
+        this.addPlaceholder("input#en__field_transaction_shiplname", "Shipping Last Name");
+        this.addPlaceholder("input#en__field_transaction_shipemail", "Shipping Email Address");
+        this.addPlaceholder("input#en__field_transaction_shipcountry", "Shipping Country");
+        this.addPlaceholder("input#en__field_transaction_shipadd1", "Shipping Street Address");
+        this.addPlaceholder("input#en__field_transaction_shipadd2", "Shipping Apt., ste., bldg.");
+        this.addPlaceholder("input#en__field_transaction_shipcity", "Shipping City");
+        this.addPlaceholder("input#en__field_transaction_shipregion", "Shipping Region");
+        this.addPlaceholder("input#en__field_transaction_shippostcode", "Shipping Postal Code");
+        // Billing Infromation
+        this.addPlaceholder("input#en__field_supporter_billingCountry", "Billing Country");
+        this.addPlaceholder("input#en__field_supporter_billingAddress1", "Billing Street Address");
+        this.addPlaceholder("input#en__field_supporter_billingAddress2", "Billing Apt., ste., bldg.");
+        this.addPlaceholder("input#en__field_supporter_billingCity", "Billing City");
+        this.addPlaceholder("input#en__field_supporter_billingRegion", "Billing Region");
+        this.addPlaceholder("input#en__field_supporter_billingPostcode", "Billing Postal Code");
+    }
+    addPlaceholder(selector, placeholder) {
+        const fieldEl = document.querySelector(selector);
+        if (fieldEl) {
+            fieldEl.placeholder = placeholder;
+        }
+    }
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/media-attribution.js
@@ -13136,12 +13109,14 @@ class LiveVariables {
         this._fees.onFeeChange.subscribe(() => this.changeLiveAmount());
         this._fees.onFeeChange.subscribe(() => this.changeLiveUpsellAmount());
         this._fees.onFeeChange.subscribe(() => this.changeSubmitButton());
-        this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
         this._frequency.onFrequencyChange.subscribe(() => this.changeLiveFrequency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeRecurrency());
         this._frequency.onFrequencyChange.subscribe(() => this.changeSubmitButton());
-        this._form.onSubmit.subscribe(() => this.loadingSubmitButton());
-        this._form.onError.subscribe(() => this.changeSubmitButton());
+        this._form.onSubmit.subscribe(() => {
+            if (engrid_ENGrid.getPageType() !== "SUPPORTERHUB")
+                engrid_ENGrid.disableSubmit("Processing...");
+        });
+        this._form.onError.subscribe(() => engrid_ENGrid.enableSubmit());
         // Watch the monthly-upsell links
         document.addEventListener("click", (e) => {
             const element = e.target;
@@ -13163,7 +13138,9 @@ class LiveVariables {
         const thousands_separator = (_c = this.options.ThousandsSeparator) !== null && _c !== void 0 ? _c : "";
         const dec_places = amount % 1 == 0 ? 0 : (_d = this.options.DecimalPlaces) !== null && _d !== void 0 ? _d : 2;
         const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
-        return amount > 0 ? symbol + amountTxt : "";
+        return amount > 0
+            ? (`<span class="live-variable-currency">${symbol}</span><span class="live-variable-amount">${amountTxt}</span>`)
+            : "";
     }
     getUpsellAmountTxt(amount = 0) {
         var _a, _b, _c, _d;
@@ -13189,7 +13166,7 @@ class LiveVariables {
         let label = this.submitLabel;
         if (amount) {
             label = label.replace("$AMOUNT", amount);
-            label = label.replace("$FREQUENCY", frequency);
+            label = label.replace("$FREQUENCY", `<span class="live-variable-frequency">${frequency}</span>`);
         }
         else {
             label = label.replace("$AMOUNT", "");
@@ -13198,20 +13175,6 @@ class LiveVariables {
         if (submit && label) {
             submit.innerHTML = label;
         }
-    }
-    loadingSubmitButton() {
-        const submit = document.querySelector(".en__submit button");
-        // Don't add the Loading element if the button is from an Ajax form (like the supporter hub)
-        if (submit.closest(".en__hubOverlay") !== null) {
-            return true;
-        }
-        let submitButtonOriginalHTML = submit.innerHTML;
-        let submitButtonProcessingHTML = "<span class='loader-wrapper'><span class='loader loader-quart'></span><span class='submit-button-text-wrapper'>" +
-            submitButtonOriginalHTML +
-            "</span></span>";
-        submitButtonOriginalHTML = submit.innerHTML;
-        submit.innerHTML = submitButtonProcessingHTML;
-        return true;
     }
     changeLiveAmount() {
         const value = this._amount.amount + this._fees.fee;
@@ -13242,28 +13205,6 @@ class LiveVariables {
             // Trigger the onChange event for the field
             const event = new Event("change", { bubbles: true });
             recurrpay.dispatchEvent(event);
-        }
-    }
-    swapAmounts() {
-        if ("EngridAmounts" in window &&
-            this._frequency.frequency in window.EngridAmounts) {
-            const loadEnAmounts = (amountArray) => {
-                let ret = [];
-                for (let amount in amountArray.amounts) {
-                    ret.push({
-                        selected: amountArray.amounts[amount] === amountArray.default,
-                        label: amount,
-                        value: amountArray.amounts[amount].toString(),
-                    });
-                }
-                return ret;
-            };
-            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
-                ignoreCurrentValue: !window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed(),
-            });
-            this._amount.load();
-            if (engrid_ENGrid.getOption("Debug"))
-                console.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency]);
         }
     }
     // Watch for a clicks on monthly-upsell link
@@ -13324,16 +13265,20 @@ class UpsellLightbox {
     renderLightbox() {
         const title = this.options.title
             .replace("{new-amount}", "<span class='upsell_suggestion'></span>")
-            .replace("{old-amount}", "<span class='upsell_amount'></span>");
+            .replace("{old-amount}", "<span class='upsell_amount'></span>")
+            .replace("{old-frequency}", "<span class='upsell_frequency'></span>");
         const paragraph = this.options.paragraph
             .replace("{new-amount}", "<span class='upsell_suggestion'></span>")
-            .replace("{old-amount}", "<span class='upsell_amount'></span>");
+            .replace("{old-amount}", "<span class='upsell_amount'></span>")
+            .replace("{old-frequency}", "<span class='upsell_frequency'></span>");
         const yes = this.options.yesLabel
             .replace("{new-amount}", "<span class='upsell_suggestion'></span>")
-            .replace("{old-amount}", "<span class='upsell_amount'></span>");
+            .replace("{old-amount}", "<span class='upsell_amount'></span>")
+            .replace("{old-frequency}", "<span class='upsell_frequency'></span>");
         const no = this.options.noLabel
             .replace("{new-amount}", "<span class='upsell_suggestion'></span>")
-            .replace("{old-amount}", "<span class='upsell_amount'></span>");
+            .replace("{old-amount}", "<span class='upsell_amount'></span>")
+            .replace("{old-frequency}", "<span class='upsell_frequency'></span>");
         const markup = `
             <div class="upsellLightboxContainer" id="goMonthly">
               <!-- ideal image size is 480x650 pixels -->
@@ -13449,6 +13394,10 @@ class UpsellLightbox {
         live_upsell_amount.forEach((elem) => (elem.innerHTML = this.getAmountTxt(suggestedAmount)));
         live_amount.forEach((elem) => (elem.innerHTML = this.getAmountTxt(this._amount.amount + this._fees.fee)));
     }
+    liveFrequency() {
+        const live_upsell_frequency = document.querySelectorAll(".upsell_frequency");
+        live_upsell_frequency.forEach((elem) => (elem.innerHTML = this.getFrequencyTxt()));
+    }
     // Return the Suggested Upsell Amount
     getUpsellAmount() {
         var _a, _b;
@@ -13478,14 +13427,13 @@ class UpsellLightbox {
             : this.options.minAmount;
     }
     shouldOpen() {
-        const freq = this._frequency.frequency;
         const upsellAmount = this.getUpsellAmount();
         const paymenttype = engrid_ENGrid.getFieldValue("transaction.paymenttype") || "";
         // If frequency is not onetime or
         // the modal is already opened or
         // there's no suggestion for this donation amount,
         // we should not open
-        if (freq == "onetime" &&
+        if (this.freqAllowed() &&
             !this.shouldSkip() &&
             !this.options.disablePaymentMethods.includes(paymenttype.toLowerCase()) &&
             !this.overlay.classList.contains("is-submitting") &&
@@ -13496,6 +13444,16 @@ class UpsellLightbox {
             return true;
         }
         return false;
+    }
+    // Return true if the current frequency is allowed by the options
+    freqAllowed() {
+        const freq = this._frequency.frequency;
+        const allowed = [];
+        if (this.options.oneTime)
+            allowed.push("onetime");
+        if (this.options.annual)
+            allowed.push("annual");
+        return allowed.includes(freq);
     }
     open() {
         this.logger.log("Upsell script opened");
@@ -13512,6 +13470,7 @@ class UpsellLightbox {
             return true;
         }
         this.liveAmounts();
+        this.liveFrequency();
         this.overlay.classList.remove("is-hidden");
         this._form.submit = false;
         engrid_ENGrid.setBodyData("has-lightbox", "");
@@ -13582,6 +13541,15 @@ class UpsellLightbox {
         const dec_places = amount % 1 == 0 ? 0 : (_d = engrid_ENGrid.getOption("DecimalPlaces")) !== null && _d !== void 0 ? _d : 2;
         const amountTxt = engrid_ENGrid.formatNumber(amount, dec_places, dec_separator, thousands_separator);
         return amount > 0 ? symbol + amountTxt : "";
+    }
+    getFrequencyTxt() {
+        const freqTxt = {
+            onetime: "one-time",
+            monthly: "monthly",
+            annual: "annual",
+        };
+        const frequency = this._frequency.frequency;
+        return frequency in freqTxt ? freqTxt[frequency] : frequency;
     }
     checkOtherAmount(value) {
         const otherInput = document.querySelector(".upsellOtherAmountInput");
@@ -13787,59 +13755,89 @@ function remove(name, attributes) {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/translate-fields.js
+// Component to translate fields based on the country selected
+// It will also adapt the state field to the country selected
 
 
-// This class works when the user has added ".simple_country_select" as a class in page builder for the Country select
 class TranslateFields {
     constructor() {
-        this.countrySelect = document.querySelector("#en__field_supporter_country");
-        this.stateField = document.querySelector("#en__field_supporter_region");
+        this.countryToStateFields = {
+            "supporter.country": "supporter.region",
+            "transaction.shipcountry": "transaction.shipregion",
+            "supporter.billingCountry": "supporter.billingRegion",
+            "transaction.infcountry": "transaction.infreg",
+        };
+        this.countriesSelect = document.querySelectorAll('select[name="supporter.country"], select[name="transaction.shipcountry"], select[name="supporter.billingCountry"], select[name="transaction.infcountry"]');
         let options = "EngridTranslate" in window ? window.EngridTranslate : {};
         this.options = TranslateOptionsDefaults;
         if (options) {
             for (let key in options) {
-                this.options[key] = [...this.options[key], ...options[key]];
+                this.options[key] = this.options[key]
+                    ? [...this.options[key], ...options[key]]
+                    : options[key];
             }
         }
-        if (this.countrySelect) {
-            this.countrySelect.addEventListener("change", this.translateFields.bind(this));
-            this.translateFields();
-        }
-        if (this.stateField) {
-            this.stateField.addEventListener("change", this.rememberState.bind(this));
+        //Storing these values on load so we can set them back after the translation/swap.
+        let countryAndStateValuesOnLoad = {};
+        if (this.countriesSelect) {
+            this.countriesSelect.forEach((select) => {
+                select.addEventListener("change", this.translateFields.bind(this, select.name));
+                if (select.value) {
+                    countryAndStateValuesOnLoad[select.name] = select.value;
+                }
+                const stateField = document.querySelector(`select[name="${this.countryToStateFields[select.name]}"]`);
+                if (stateField) {
+                    stateField.addEventListener("change", this.rememberState.bind(this, select.name));
+                    if (stateField.value) {
+                        countryAndStateValuesOnLoad[stateField.name] = stateField.value;
+                    }
+                }
+            });
+            this.translateFields("supporter.country");
+            //dont set these back if submission failed. EN / cookie will handle it.
+            const submissionFailed = !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") &&
+                window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed());
+            if (!submissionFailed) {
+                for (let field in countryAndStateValuesOnLoad) {
+                    engrid_ENGrid.setFieldValue(field, countryAndStateValuesOnLoad[field], false);
+                }
+            }
         }
     }
-    translateFields() {
+    translateFields(countryName = "supporter.country") {
         this.resetTranslatedFields();
-        if (this.countrySelect.value in this.options) {
-            this.options[this.countrySelect.value].forEach((field) => {
-                // console.log(field);
-                this.translateField(field.field, field.translation);
-            });
-        }
-        // Translate the "To:"
-        const recipient_block = document.querySelectorAll(".recipient-block");
-        if (!!recipient_block.length) {
-            switch (this.countrySelect.value) {
-                case "FR":
-                case "FRA":
-                case "France":
-                    recipient_block.forEach((elem) => (elem.innerHTML = "À:"));
-                    break;
-                case "DE":
-                case "DEU":
-                case "Germany":
-                    recipient_block.forEach((elem) => (elem.innerHTML = "Zu:"));
-                    break;
-                case "NL":
-                case "NLD":
-                case "Netherlands":
-                    recipient_block.forEach((elem) => (elem.innerHTML = "Aan:"));
-                    break;
+        const countryValue = engrid_ENGrid.getFieldValue(countryName);
+        // Translate the State Field
+        this.setStateField(countryValue, this.countryToStateFields[countryName]);
+        if (countryName === "supporter.country") {
+            if (countryValue in this.options) {
+                this.options[countryValue].forEach((field) => {
+                    // console.log(field);
+                    this.translateField(field.field, field.translation);
+                });
+            }
+            // Translate the "To:"
+            const recipient_block = document.querySelectorAll(".recipient-block");
+            if (!!recipient_block.length) {
+                switch (countryValue) {
+                    case "FR":
+                    case "FRA":
+                    case "France":
+                        recipient_block.forEach((elem) => (elem.innerHTML = "À:"));
+                        break;
+                    case "DE":
+                    case "DEU":
+                    case "Germany":
+                        recipient_block.forEach((elem) => (elem.innerHTML = "Zu:"));
+                        break;
+                    case "NL":
+                    case "NLD":
+                    case "Netherlands":
+                        recipient_block.forEach((elem) => (elem.innerHTML = "Aan:"));
+                        break;
+                }
             }
         }
-        // Translate the State Field
-        this.setStateField(this.countrySelect.value);
     }
     translateField(name, translation) {
         const field = document.querySelector(`[name="${name}"]`);
@@ -13848,9 +13846,9 @@ class TranslateFields {
             if (fieldWrapper) {
                 const fieldLabel = fieldWrapper.querySelector(".en__field__label");
                 // Check if there's the simple country select class
-                const simpleCountrySelect = fieldLabel.querySelector(".engrid-simple-country");
-                let simpleCountrySelectClone = simpleCountrySelect
-                    ? simpleCountrySelect.cloneNode(true)
+                const simplecountriesSelect = fieldLabel.querySelector(".engrid-simple-country");
+                let simplecountriesSelectClone = simplecountriesSelect
+                    ? simplecountriesSelect.cloneNode(true)
                     : null;
                 if (field instanceof HTMLInputElement && field.placeholder != "") {
                     if (!fieldLabel || fieldLabel.innerHTML == field.placeholder) {
@@ -13861,8 +13859,8 @@ class TranslateFields {
                 if (fieldLabel) {
                     fieldLabel.dataset.original = fieldLabel.innerHTML;
                     fieldLabel.innerHTML = translation;
-                    if (simpleCountrySelectClone) {
-                        fieldLabel.appendChild(simpleCountrySelectClone);
+                    if (simplecountriesSelectClone) {
+                        fieldLabel.appendChild(simplecountriesSelectClone);
                     }
                 }
             }
@@ -13876,48 +13874,48 @@ class TranslateFields {
             }
             else {
                 // Check if there's the simple country select class
-                const simpleCountrySelect = field.querySelector(".engrid-simple-country");
-                let simpleCountrySelectClone = simpleCountrySelect
-                    ? simpleCountrySelect.cloneNode(true)
+                const simplecountriesSelect = field.querySelector(".engrid-simple-country");
+                let simplecountriesSelectClone = simplecountriesSelect
+                    ? simplecountriesSelect.cloneNode(true)
                     : null;
                 field.innerHTML = field.dataset.original;
-                if (simpleCountrySelectClone) {
-                    field.appendChild(simpleCountrySelectClone);
+                if (simplecountriesSelectClone) {
+                    field.appendChild(simplecountriesSelectClone);
                 }
             }
             field.removeAttribute("data-original");
         });
     }
-    setStateField(country) {
+    setStateField(country, state) {
         switch (country) {
             case "BR":
             case "BRA":
             case "Brazil":
-                this.setStateValues("Estado", null);
+                this.setStateValues(state, "Estado", null);
                 break;
             case "FR":
             case "FRA":
             case "France":
-                this.setStateValues("Région", null);
+                this.setStateValues(state, "Région", null);
                 break;
             case "GB":
             case "GBR":
             case "United Kingdom":
-                this.setStateValues("State/Region", null);
+                this.setStateValues(state, "State/Region", null);
                 break;
             case "DE":
             case "DEU":
             case "Germany":
-                this.setStateValues("Bundesland", null);
+                this.setStateValues(state, "Bundesland", null);
                 break;
             case "NL":
             case "NLD":
             case "Netherlands":
-                this.setStateValues("Provincie", null);
+                this.setStateValues(state, "Provincie", null);
                 break;
             case "AU":
             case "AUS":
-                this.setStateValues("Province / State", [
+                this.setStateValues(state, "Province / State", [
                     { label: "Select", value: "" },
                     { label: "New South Wales", value: "NSW" },
                     { label: "Victoria", value: "VIC" },
@@ -13930,7 +13928,7 @@ class TranslateFields {
                 ]);
                 break;
             case "Australia":
-                this.setStateValues("Province / State", [
+                this.setStateValues(state, "Province / State", [
                     { label: "Select", value: "" },
                     { label: "New South Wales", value: "New South Wales" },
                     { label: "Victoria", value: "Victoria" },
@@ -13947,7 +13945,7 @@ class TranslateFields {
                 break;
             case "US":
             case "USA":
-                this.setStateValues("State", [
+                this.setStateValues(state, "State", [
                     { label: "Select State", value: "" },
                     { label: "Alabama", value: "AL" },
                     { label: "Alaska", value: "AK" },
@@ -14000,10 +13998,32 @@ class TranslateFields {
                     { label: "West Virginia", value: "WV" },
                     { label: "Wisconsin", value: "WI" },
                     { label: "Wyoming", value: "WY" },
+                    {
+                        label: "&#9472&#9472&nbspUS&nbspTerritories&nbsp&#9472&#9472",
+                        value: "",
+                        disabled: true,
+                    },
+                    { label: "American Samoa", value: "AS" },
+                    { label: "Guam", value: "GU" },
+                    { label: "Northern Mariana Islands", value: "MP" },
+                    { label: "Puerto Rico", value: "PR" },
+                    { label: "US Minor Outlying Islands", value: "UM" },
+                    { label: "Virgin Islands", value: "VI" },
+                    {
+                        label: "&#9472&#9472&nbspArmed&nbspForces&nbsp&#9472&#9472",
+                        value: "",
+                        disabled: true,
+                    },
+                    { label: "Armed Forces Americas", value: "AA" },
+                    { label: "Armed Forces Africa", value: "AE" },
+                    { label: "Armed Forces Canada", value: "AE" },
+                    { label: "Armed Forces Europe", value: "AE" },
+                    { label: "Armed Forces Middle East", value: "AE" },
+                    { label: "Armed Forces Pacific", value: "AP" },
                 ]);
                 break;
             case "United States":
-                this.setStateValues("State", [
+                this.setStateValues(state, "State", [
                     { label: "Select State", value: "" },
                     { label: "Alabama", value: "Alabama" },
                     { label: "Alaska", value: "Alaska" },
@@ -14056,11 +14076,42 @@ class TranslateFields {
                     { label: "West Virginia", value: "West Virginia" },
                     { label: "Wisconsin", value: "Wisconsin" },
                     { label: "Wyoming", value: "Wyoming" },
+                    {
+                        label: "&#9472&#9472&nbspUS&nbspTerritories&nbsp&#9472&#9472",
+                        value: "",
+                        disabled: true,
+                    },
+                    { label: "American Samoa", value: "American Samoa" },
+                    { label: "Guam", value: "Guam" },
+                    {
+                        label: "Northern Mariana Islands",
+                        value: "Northern Mariana Islands",
+                    },
+                    { label: "Puerto Rico", value: "Puerto Rico" },
+                    {
+                        label: "US Minor Outlying Islands",
+                        value: "US Minor Outlying Islands",
+                    },
+                    { label: "Virgin Islands", value: "Virgin Islands" },
+                    {
+                        label: "&#9472&#9472&nbspArmed&nbspForces&nbsp&#9472&#9472",
+                        value: "",
+                        disabled: true,
+                    },
+                    { label: "Armed Forces Americas", value: "Armed Forces Americas" },
+                    { label: "Armed Forces Africa", value: "Armed Forces Africa" },
+                    { label: "Armed Forces Canada", value: "Armed Forces Canada" },
+                    { label: "Armed Forces Europe", value: "Armed Forces Europe" },
+                    {
+                        label: "Armed Forces Middle East",
+                        value: "Armed Forces Middle East",
+                    },
+                    { label: "Armed Forces Pacific", value: "Armed Forces Pacific" },
                 ]);
                 break;
             case "CA":
             case "CAN":
-                this.setStateValues("Province / Territory", [
+                this.setStateValues(state, "Province / Territory", [
                     { label: "Select", value: "" },
                     { label: "Alberta", value: "AB" },
                     { label: "British Columbia", value: "BC" },
@@ -14078,7 +14129,7 @@ class TranslateFields {
                 ]);
                 break;
             case "Canada":
-                this.setStateValues("Province / Territory", [
+                this.setStateValues(state, "Province / Territory", [
                     { label: "Select", value: "" },
                     { label: "Alberta", value: "Alberta" },
                     { label: "British Columbia", value: "British Columbia" },
@@ -14100,7 +14151,7 @@ class TranslateFields {
                 break;
             case "MX":
             case "MEX":
-                this.setStateValues("Estado", [
+                this.setStateValues(state, "Estado", [
                     { label: "Seleccione Estado", value: "" },
                     { label: "Aguascalientes", value: "AGU" },
                     { label: "Baja California", value: "BCN" },
@@ -14136,7 +14187,7 @@ class TranslateFields {
                 ]);
                 break;
             case "Mexico":
-                this.setStateValues("Estado", [
+                this.setStateValues(state, "Estado", [
                     { label: "Seleccione Estado", value: "" },
                     { label: "Aguascalientes", value: "Aguascalientes" },
                     { label: "Baja California", value: "Baja California" },
@@ -14172,12 +14223,12 @@ class TranslateFields {
                 ]);
                 break;
             default:
-                this.setStateValues("Province / State", null);
+                this.setStateValues(state, "Province / State", null);
                 break;
         }
     }
-    setStateValues(label, values) {
-        const stateField = document.querySelector("#en__field_supporter_region");
+    setStateValues(state, label, values) {
+        const stateField = engrid_ENGrid.getField(state);
         const stateWrapper = stateField ? stateField.closest(".en__field") : null;
         if (stateWrapper) {
             const stateLabel = stateWrapper.querySelector(".en__field__label");
@@ -14186,34 +14237,40 @@ class TranslateFields {
                 stateLabel.innerHTML = label;
             }
             if (elementWrapper) {
-                const selectedState = get("engrid-state");
+                const selectedState = get(`engrid-state-${state}`);
                 if (values === null || values === void 0 ? void 0 : values.length) {
                     const select = document.createElement("select");
-                    select.name = "supporter.region";
-                    select.id = "en__field_supporter_region";
+                    select.name = state;
+                    select.id = "en__field_" + state.toLowerCase().replace(".", "_");
                     select.classList.add("en__field__input");
                     select.classList.add("en__field__input--select");
                     select.autocomplete = "address-level1";
+                    let valueSelected = false;
                     values.forEach((value) => {
                         const option = document.createElement("option");
                         option.value = value.value;
                         option.innerHTML = value.label;
-                        if (selectedState === value.value) {
+                        if (selectedState === value.value && !valueSelected) {
                             option.selected = true;
+                            valueSelected = true;
+                        }
+                        if (value.disabled) {
+                            option.disabled = true;
                         }
                         select.appendChild(option);
                     });
                     elementWrapper.innerHTML = "";
                     elementWrapper.appendChild(select);
-                    select.addEventListener("change", this.rememberState.bind(this));
+                    select.addEventListener("change", this.rememberState.bind(this, state));
+                    select.dispatchEvent(new Event("change", { bubbles: true }));
                 }
                 else {
                     elementWrapper.innerHTML = "";
                     const input = document.createElement("input");
                     input.type = "text";
-                    input.name = "supporter.region";
+                    input.name = state;
                     input.placeholder = label;
-                    input.id = "en__field_supporter_region";
+                    input.id = "en__field_" + state.toLowerCase().replace(".", "_");
                     input.classList.add("en__field__input");
                     input.classList.add("en__field__input--text");
                     input.autocomplete = "address-level1";
@@ -14221,15 +14278,15 @@ class TranslateFields {
                         input.value = selectedState;
                     }
                     elementWrapper.appendChild(input);
-                    input.addEventListener("change", this.rememberState.bind(this));
+                    input.addEventListener("change", this.rememberState.bind(this, state));
                 }
             }
         }
     }
-    rememberState() {
-        const stateField = document.querySelector("#en__field_supporter_region");
+    rememberState(state) {
+        const stateField = engrid_ENGrid.getField(state);
         if (stateField) {
-            set("engrid-state", stateField.value, {
+            set(`engrid-state-${stateField.name}`, stateField.value, {
                 expires: 1,
                 sameSite: "none",
                 secure: true,
@@ -14238,11 +14295,11 @@ class TranslateFields {
     }
 }
 
-;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/simple-country-select.js
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/auto-country-select.js
 // This class works when the user has added ".simple_country_select" as a class in page builder for the Country select
 
 
-class SimpleCountrySelect {
+class AutoCountrySelect {
     constructor() {
         this.countryWrapper = document.querySelector(".simple_country_select");
         this.countrySelect = document.querySelector("select#en__field_supporter_country");
@@ -14250,8 +14307,15 @@ class SimpleCountrySelect {
         const engridAutofill = get("engrid-autofill");
         const submissionFailed = !!(engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "checkSubmissionFailed") && window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed());
         const hasIntlSupport = !!engrid_ENGrid.checkNested(window.Intl, "DisplayNames");
-        // Only run if there's no engrid-autofill cookie && if it has Intl support
-        if (!engridAutofill && !submissionFailed && hasIntlSupport) {
+        // Only run if there's no engrid-autofill cookie && if it has Intl support && no country data in url
+        const locationDataInUrl = engrid_ENGrid.getUrlParameter("supporter.country") ||
+            engrid_ENGrid.getUrlParameter("supporter.region") ||
+            (engrid_ENGrid.getUrlParameter("ea.url.id") &&
+                !engrid_ENGrid.getUrlParameter("forwarded"));
+        if (!engridAutofill &&
+            !submissionFailed &&
+            hasIntlSupport &&
+            !locationDataInUrl) {
             fetch(`https://${window.location.hostname}/cdn-cgi/trace`)
                 .then((res) => res.text())
                 .then((t) => {
@@ -14276,60 +14340,6 @@ class SimpleCountrySelect {
                 // We are setting the country by Name because the ISO code is not always the same. They have 2 and 3 letter codes.
                 this.setCountryByName(countriesNames.of(this.country));
             }
-            let countrySelectValue = this.countrySelect.options[this.countrySelect.selectedIndex].value;
-            // @TODO Update so that it reads "(Outside X?)" where X is the Value of the Country Select. No need for long form version of it.
-            if (countrySelectValue.toUpperCase() == "US" ||
-                countrySelectValue.toUpperCase() == "USA" ||
-                countrySelectValue.toUpperCase() == "UNITED STATES") {
-                countrySelectValue = "the US";
-            }
-            let countryWrapper = document.querySelector(".simple_country_select");
-            if (countryWrapper) {
-                // Remove Country Select tab index
-                this.countrySelect.tabIndex = -1;
-                // Find the address label
-                let addressLabel = document.querySelector(".en__field--address1 label");
-                // EN does not enforce a labels on fields so we have to check for it
-                // @TODO Update so that this follows the same pattern / HTML structure as the Tippy tooltips which are added to labels. REF: https://github.com/4site-interactive-studios/engrid-aiusa/blob/6e4692d4f9a28b9668d6c1bfed5622ac0cc5bdb9/src/scripts/main.js#L42
-                if (addressLabel) {
-                    let labelText = addressLabel.innerHTML;
-                    // Add our link INSIDE the address label
-                    let newEl = document.createElement("span");
-                    newEl.innerHTML =
-                        '<label class="engrid-simple-country"><a href="javascript:void(0)">(Outside ' +
-                            countrySelectValue +
-                            "?)</a></label>";
-                    addressLabel.innerHTML = `${labelText}${newEl.innerHTML}`;
-                    addressLabel.addEventListener("click", (ev) => {
-                        var _a;
-                        ev.preventDefault();
-                        if (((_a = ev.target) === null || _a === void 0 ? void 0 : _a.tagName) === "A") {
-                            this.showCountrySelect(ev);
-                        }
-                    });
-                }
-            }
-            // Deal with the auto-fill for the country
-            this.countrySelect.addEventListener("change", this.writeLink.bind(this));
-        }
-    }
-    showCountrySelect(e) {
-        var _a;
-        e.preventDefault();
-        this.countryWrapper.classList.add("country-select-visible");
-        let addressLabel = document.querySelector(".en__field--address1 label");
-        let addressWrapper = (_a = addressLabel.parentElement) === null || _a === void 0 ? void 0 : _a.parentElement;
-        addressWrapper.classList.add("country-select-visible");
-        this.countrySelect.focus();
-        // Reinstate Country Select tab index
-        this.countrySelect.removeAttribute("tabIndex");
-    }
-    writeLink() {
-        let countryName = this.countrySelect.options[this.countrySelect.selectedIndex].value;
-        let addressLabel = document.querySelector(".engrid-simple-country");
-        if (addressLabel) {
-            let labelLink = `<a href="javascript:void(0)">(Outside ${countryName}?)</a>`;
-            addressLabel.innerHTML = labelLink;
         }
     }
     setCountryByName(countryName) {
@@ -14614,8 +14624,10 @@ class NeverBounce {
         };
         engrid_ENGrid.loadJS("https://cdn.neverbounce.com/widget/dist/NeverBounce.js");
         if (this.emailField) {
-            if (this.emailField.value)
+            if (this.emailField.value) {
+                this.logger.log("E-mail Field Found");
                 this.shouldRun = false;
+            }
             this.emailField.addEventListener("change", (e) => {
                 var _a;
                 if (!this.nbLoaded) {
@@ -14631,14 +14643,24 @@ class NeverBounce {
                 }
             });
             window.setTimeout(() => {
+                if (this.emailField && this.emailField.value) {
+                    this.logger.log("E-mail Filled Programatically");
+                    this.shouldRun = false;
+                }
                 this.init();
             }, 1000);
         }
         this.form.onValidate.subscribe(this.validate.bind(this));
     }
     init() {
-        if (this.nbLoaded || !this.shouldRun)
+        if (!this.shouldRun) {
+            this.logger.log("Should Not Run");
             return;
+        }
+        if (this.nbLoaded) {
+            this.logger.log("Already Loaded");
+            return;
+        }
         this.logger.log("Init Function");
         if (this.dateField && document.getElementsByName(this.dateField).length)
             this.nbDate = document.querySelector("[name='" + this.dateField + "']");
@@ -14813,6 +14835,210 @@ class NeverBounce {
             this.logger.log("NB-Result:", engrid_ENGrid.getFieldValue("nb-result"));
             this.form.validate = false;
         }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/freshaddress.js
+// According to the FreshAddress documentation, you need to add the following code to your page:
+// jQuery library.
+// <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+// FreshAddress client-side integration library
+// <script src="//api.freshaddress.biz/js/lib/freshaddress-client-7.0.min.js?token=[TOKEN HERE]"></script>
+//
+// I know. jQuery. But it's not my fault. It's FreshAddress's fault.
+
+
+class FreshAddress {
+    constructor() {
+        this.form = EnForm.getInstance();
+        this.emailField = null;
+        this.emailWrapper = document.querySelector(".en__field--emailAddress");
+        this.faDate = null;
+        this.faStatus = null;
+        this.faMessage = null;
+        this.logger = new EngridLogger("FreshAddress", "#039bc4", "#dfdfdf", "📧");
+        this.shouldRun = true;
+        this.options = engrid_ENGrid.getOption("FreshAddress");
+        if (this.options === false || !window.FreshAddress)
+            return;
+        this.emailField = document.getElementById("en__field_supporter_emailAddress");
+        if (this.emailField) {
+            this.createFields();
+            this.addEventListeners();
+            window.FreshAddressStatus = "idle";
+            if (this.emailField.value) {
+                this.logger.log("E-mail Field Found");
+                this.shouldRun = false;
+            }
+            window.setTimeout(() => {
+                if (this.emailField && this.emailField.value) {
+                    this.logger.log("E-mail Filled Programatically");
+                    this.shouldRun = false;
+                }
+            }, 1000);
+        }
+        else {
+            this.logger.log("E-mail Field Not Found");
+        }
+    }
+    createFields() {
+        if (!this.options)
+            return;
+        this.options.dateField = this.options.dateField || "fa_date";
+        this.faDate = engrid_ENGrid.getField(this.options.dateField);
+        if (!this.faDate) {
+            this.logger.log("Date Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.dateField, "");
+            this.faDate = engrid_ENGrid.getField(this.options.dateField);
+        }
+        this.options.statusField = this.options.statusField || "fa_status";
+        this.faStatus = engrid_ENGrid.getField(this.options.statusField);
+        if (!this.faStatus) {
+            this.logger.log("Status Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.statusField, "");
+            this.faStatus = engrid_ENGrid.getField(this.options.statusField);
+        }
+        this.options.messageField = this.options.messageField || "fa_message";
+        this.faMessage = engrid_ENGrid.getField(this.options.messageField);
+        if (!this.faMessage) {
+            this.logger.log("Message Field Not Found. Creating...");
+            engrid_ENGrid.createHiddenInput(this.options.messageField, "");
+            this.faMessage = engrid_ENGrid.getField(this.options.messageField);
+        }
+    }
+    writeToFields(status, message) {
+        if (!this.options)
+            return;
+        this.faDate.value = engrid_ENGrid.formatDate(new Date(), this.options.dateFieldFormat || "yyyy-MM-dd");
+        this.faStatus.value = status;
+        this.faMessage.value = message;
+        this.emailWrapper.dataset.freshaddressSafetosendstatus =
+            status.toLowerCase();
+    }
+    addEventListeners() {
+        var _a;
+        if (!this.options)
+            return;
+        // Add event listeners to fields
+        (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.addEventListener("change", () => {
+            var _a, _b;
+            if (!this.shouldRun ||
+                ((_a = this.emailField) === null || _a === void 0 ? void 0 : _a.value.includes("@4sitestudios.com"))) {
+                engrid_ENGrid.removeError(this.emailWrapper);
+                this.writeToFields("Valid", "Skipped");
+                this.logger.log("Skipping E-mail Validation");
+                return;
+            }
+            this.logger.log("Validating " + ((_b = this.emailField) === null || _b === void 0 ? void 0 : _b.value));
+            this.callAPI();
+        });
+        // Add event listener to submit
+        this.form.onValidate.subscribe(this.validate.bind(this));
+    }
+    callAPI() {
+        var _a;
+        if (!this.options || !window.FreshAddress)
+            return;
+        if (!this.shouldRun)
+            return;
+        window.FreshAddressStatus = "validating";
+        const email = (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.value;
+        const options = { emps: false, rtc_timeout: 1200 };
+        const ret = window.FreshAddress.validateEmail(email, options).then((response) => {
+            this.logger.log("Validate API Response", JSON.parse(JSON.stringify(response)));
+            return this.validateResponse(response);
+        });
+    }
+    validateResponse(data) {
+        var _a;
+        /* ERROR HANDLING: Let through in case of a service error. Enable form submission. */
+        if (data.isServiceError()) {
+            this.logger.log("Service Error");
+            this.writeToFields("Service Error", data.getErrorResponse());
+            return true;
+        }
+        /* CHECK RESULT: */
+        if (data.isValid()) {
+            // Set response message. No action required.
+            this.writeToFields("Valid", data.getComment());
+            engrid_ENGrid.removeError(this.emailWrapper);
+            if (data.hasSuggest()) {
+                // Valid, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+            }
+        }
+        else if (data.isError()) {
+            // Error Condition 1 - the service should always respond with finding E/W/V
+            this.writeToFields("Invalid", data.getErrorResponse());
+            engrid_ENGrid.setError(this.emailWrapper, data.getErrorResponse());
+            (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+            if (data.hasSuggest()) {
+                // Error, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+                this.writeToFields("Error", data.getErrorResponse());
+            }
+        }
+        else if (data.isWarning()) {
+            this.writeToFields("Invalid", data.getErrorResponse());
+            engrid_ENGrid.setError(this.emailWrapper, data.getErrorResponse());
+            if (data.hasSuggest()) {
+                // Warning, with Suggestion
+                engrid_ENGrid.setError(this.emailWrapper, `Did you mean ${data.getSuggEmail()}?`);
+                this.emailField.value = data.getSuggEmail();
+                this.writeToFields("Warning", data.getErrorResponse());
+            }
+        }
+        else {
+            // Error Condition 2 - the service should always respond with finding E/W/V
+            this.writeToFields("API Error", "Unknown Error");
+        }
+        window.FreshAddressStatus = "idle";
+        engrid_ENGrid.enableSubmit();
+    }
+    validate() {
+        var _a;
+        engrid_ENGrid.removeError(this.emailWrapper);
+        if (!this.options) {
+            this.form.validate = true;
+            return;
+        }
+        if (!this.shouldRun) {
+            this.form.validate = true;
+            return;
+        }
+        if (window.FreshAddressStatus === "validating") {
+            this.logger.log("Waiting for API Response");
+            // Self resolving Promise that waits 1000ms
+            const wait = new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    var _a;
+                    const status = this.faStatus.value;
+                    if (status === "" || status === "Invalid") {
+                        this.logger.log("Promise Rejected");
+                        (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+                        reject(false);
+                        return;
+                    }
+                    this.logger.log("Promise Resolved");
+                    resolve(true);
+                }, 700);
+            });
+            this.form.validatePromise = wait;
+            return;
+        }
+        else if (this.faStatus.value === "Invalid") {
+            this.form.validate = false;
+            window.setTimeout(() => {
+                engrid_ENGrid.setError(this.emailWrapper, this.faMessage.value);
+            }, 100);
+            (_a = this.emailField) === null || _a === void 0 ? void 0 : _a.focus();
+            engrid_ENGrid.enableSubmit();
+            return false;
+        }
+        this.form.validate = true;
+        return true;
     }
 }
 
@@ -15027,21 +15253,23 @@ class RememberMe {
 			`;
             const rememberMeOptInFieldChecked = this.rememberMeOptIn ? "checked" : "";
             const rememberMeOptInField = document.createElement("div");
-            rememberMeOptInField.classList.add("en__field", "en__field--checkbox");
+            rememberMeOptInField.classList.add("en__field", "en__field--checkbox", "en__field--question", "rememberme-wrapper");
             rememberMeOptInField.setAttribute("id", "remember-me-opt-in");
             rememberMeOptInField.setAttribute("style", "overflow-x: hidden;");
             rememberMeOptInField.innerHTML = `
-				<div class="en__field__item rememberme-wrapper">
-					<input id="remember-me-checkbox" type="checkbox" class="en__field__input en__field__input--checkbox" ${rememberMeOptInFieldChecked} />
-					<label for="remember-me-checkbox" class="en__field__label en__field__label--item" style="white-space: nowrap;">
-						<div class="rememberme-content" style="display: inline-flex; align-items: center;">
-							${rememberMeLabel}
-							<a id="rememberme-learn-more-toggle" style="display: inline-block; display: inline-flex; align-items: center; cursor: pointer; margin-left: 10px;">
-								<svg style="height: 14px; width: auto; z-index: 1;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7H9V5H11V7ZM11 9H9V15H11V9ZM10 2C5.59 2 2 5.59 2 10C2 14.41 5.59 18 10 18C14.41 18 18 14.41 18 10C18 5.59 14.41 2 10 2ZM10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0Z" fill="currentColor"/></svg>
-							</a>
-						</div>
-					</label>
-				</div>
+        <div class="en__field__element en__field__element--checkbox">
+          <div class="en__field__item">
+            <input id="remember-me-checkbox" type="checkbox" class="en__field__input en__field__input--checkbox" ${rememberMeOptInFieldChecked} />
+            <label for="remember-me-checkbox" class="en__field__label en__field__label--item" style="white-space: nowrap;">
+              <div class="rememberme-content" style="display: inline-flex; align-items: center;">
+                ${rememberMeLabel}
+                <a id="rememberme-learn-more-toggle" style="display: inline-block; display: inline-flex; align-items: center; cursor: pointer; margin-left: 10px; margin-top: var(--rememberme-learn-more-toggle_margin-top)">
+                  <svg style="height: 14px; width: auto; z-index: 1;" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 7H9V5H11V7ZM11 9H9V15H11V9ZM10 2C5.59 2 2 5.59 2 10C2 14.41 5.59 18 10 18C14.41 18 18 14.41 18 10C18 5.59 14.41 2 10 2ZM10 0C15.523 0 20 4.477 20 10C20 15.523 15.523 20 10 20C4.477 20 0 15.523 0 10C0 4.477 4.477 0 10 0Z" fill="currentColor"/></svg>
+                </a>
+              </div>
+            </label>
+          </div>
+        </div>
 			`;
             const targetField = this.getElementByFirstSelector(this.fieldOptInSelectorTarget);
             if (targetField && targetField.parentNode) {
@@ -15322,6 +15550,7 @@ class ShowIfAmount {
 class OtherAmount {
     constructor() {
         this.logger = new EngridLogger("OtherAmount", "green", "black", "💰");
+        this._amount = DonationAmount.getInstance();
         "focusin input".split(" ").forEach((e) => {
             var _a;
             // We're attaching this event to the body because sometimes the other amount input is not in the DOM yet and comes via AJAX.
@@ -15335,6 +15564,11 @@ class OtherAmount {
         });
         const otherAmountField = document.querySelector("[name='transaction.donationAmt.other'");
         if (otherAmountField) {
+            otherAmountField.setAttribute("inputmode", "decimal");
+            // ADD THE MISSING LABEL FOR IMPROVED ACCESSABILITY
+            otherAmountField.setAttribute("aria-label", "Enter your custom donation amount");
+            otherAmountField.setAttribute("autocomplete", "off");
+            otherAmountField.setAttribute("data-lpignore", "true");
             otherAmountField.addEventListener("change", (e) => {
                 const target = e.target;
                 const amount = target.value;
@@ -15351,6 +15585,20 @@ class OtherAmount {
                         cleanAmount % 1 != 0
                             ? cleanAmount.toFixed(2)
                             : cleanAmount.toString();
+                }
+            });
+            // On blur, if the amount is 0, select the previous amount
+            otherAmountField.addEventListener("blur", (e) => {
+                const target = e.target;
+                const amount = target.value;
+                const cleanAmount = engrid_ENGrid.cleanAmount(amount);
+                if (cleanAmount === 0) {
+                    this.logger.log("Other Amount Field Blurred with 0 amount");
+                    // Get Live Amount
+                    const liveAmount = this._amount.amount;
+                    if (liveAmount > 0) {
+                        this._amount.setAmount(liveAmount, false);
+                    }
                 }
             });
         }
@@ -15417,40 +15665,40 @@ class EngridLogger {
         }
     }
     get log() {
-        if (!engrid_ENGrid.debug) {
+        if (!engrid_ENGrid.debug && engrid_ENGrid.getUrlParameter("debug") !== "log") {
             return () => { };
         }
-        return console.log.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get success() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.log.bind(window.console, "%c ✅ " + this.prefix + " %s", `color: green; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c ✅ " + this.prefix + " %s", `color: green; background-color: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get danger() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.log.bind(window.console, "%c ⛔️ " + this.prefix + " %s", `color: red; background: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.log.bind(window.console, "%c ⛔️ " + this.prefix + " %s", `color: red; background-color: white; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get warn() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.warn.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.warn.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get dir() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.dir.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.dir.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
     get error() {
         if (!engrid_ENGrid.debug) {
             return () => { };
         }
-        return console.error.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
+        return console.error.bind(window.console, "%c" + this.emoji + " " + this.prefix + " %s", `color: ${this.color}; background-color: ${this.background}; font-size: 1.2em; padding: 4px; border-radius: 2px; font-family: monospace;`);
     }
 }
 
@@ -15501,6 +15749,15 @@ class MinMaxAmount {
     // Disable Submit Button if the amount is not valid
     liveValidate() {
         const amount = engrid_ENGrid.cleanAmount(this._amount.amount.toString());
+        const activeElement = document.activeElement;
+        if (activeElement &&
+            activeElement.tagName === "INPUT" &&
+            "name" in activeElement &&
+            activeElement.name === "transaction.donationAmt.other" &&
+            amount === 0) {
+            // Don't validate if the other amount has focus and the amount is 0
+            return;
+        }
         this.logger.log(`Amount: ${amount}`);
         if (amount < this.minAmount) {
             this.logger.log("Amount is less than min amount: " + this.minAmount);
@@ -15592,6 +15849,37 @@ class DataLayer {
         this.logger = new EngridLogger("DataLayer", "#f1e5bc", "#009cdc", "📊");
         this.dataLayer = window.dataLayer || [];
         this._form = EnForm.getInstance();
+        this.excludedFields = [
+            // Credit Card
+            "transaction.ccnumber",
+            "transaction.ccexpire.delimiter",
+            "transaction.ccexpire",
+            "transaction.ccvv",
+            "supporter.creditCardHolderName",
+            // Bank Account
+            "supporter.bankAccountNumber",
+            "supporter.bankAccountType",
+            "transaction.bankname",
+            "supporter.bankRoutingNumber",
+        ];
+        this.hashedFields = [
+            // Supporter Address, Phone Numbers, and Address
+            "supporter.emailAddress",
+            "supporter.phoneNumber",
+            "supporter.phoneNumber2",
+            "supporter.address1",
+            "supporter.address2",
+            "supporter.address3",
+            // In Honor/Memory Inform Email and Address
+            "transaction.infemail",
+            "transaction.infadd1",
+            "transaction.infadd2",
+            "transaction.infadd3",
+            // Billing Address
+            "supporter.billingAddress1",
+            "supporter.billingAddress2",
+            "supporter.billingAddress3",
+        ];
         this.onLoad();
         this._form.onSubmit.subscribe(() => this.onSubmit());
     }
@@ -15638,7 +15926,33 @@ class DataLayer {
                     });
                 }
             }
+            if (engrid_ENGrid.getPageCount() === engrid_ENGrid.getPageNumber()) {
+                this.dataLayer.push({
+                    event: "EN_SUBMISSION_SUCCESS_" + pageJson.pageType.toUpperCase(),
+                });
+                this.dataLayer.push({
+                    [`'EN_SUBMISSION_SUCCESS_${pageJson.pageType.toUpperCase()}'`]: "TRUE",
+                });
+            }
         }
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.forEach((value, key) => {
+            this.dataLayer.push({
+                event: `EN_URLPARAM_${key.toUpperCase()}-${this.transformJSON(value)}`,
+            });
+            this.dataLayer.push({
+                [`'EN_URLPARAM_${key.toUpperCase()}'`]: this.transformJSON(value),
+            });
+        });
+        if (engrid_ENGrid.getPageType() === "DONATION") {
+            const recurrFreqEls = document.querySelectorAll('[name="transaction.recurrfreq"]');
+            const recurrValues = [...recurrFreqEls].map((el) => el.value);
+            this.dataLayer.push({
+                event: "EN_RECURRING_FREQUENCIES",
+                [`'EN_RECURRING_FREQEUENCIES'`]: recurrValues,
+            });
+        }
+        this.attachEventListeners();
     }
     onSubmit() {
         const optIn = document.querySelector(".en__field__item:not(.en__field--question) input[name^='supporter.questions'][type='checkbox']:checked");
@@ -15654,6 +15968,71 @@ class DataLayer {
                 event: "EN_SUBMISSION_WITHOUT_EMAIL_OPTIN",
             });
         }
+    }
+    attachEventListeners() {
+        const textInputs = document.querySelectorAll(".en__component--advrow input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]):not([type=hidden]):not([unhidden]), .en__component--advrow textarea");
+        textInputs.forEach((el) => {
+            el.addEventListener("blur", (e) => {
+                this.handleFieldValueChange(e.target);
+            });
+        });
+        const radioAndCheckboxInputs = document.querySelectorAll(".en__component--advrow input[type=checkbox], .en__component--advrow input[type=radio]");
+        radioAndCheckboxInputs.forEach((el) => {
+            el.addEventListener("change", (e) => {
+                this.handleFieldValueChange(e.target);
+            });
+        });
+        const selectInputs = document.querySelectorAll(".en__component--advrow select");
+        selectInputs.forEach((el) => {
+            el.addEventListener("change", (e) => {
+                this.handleFieldValueChange(e.target);
+            });
+        });
+    }
+    handleFieldValueChange(el) {
+        var _a, _b, _c;
+        if (el.value === "" || this.excludedFields.includes(el.name))
+            return;
+        const value = this.hashedFields.includes(el.name)
+            ? this.hash(el.value)
+            : el.value;
+        if (["checkbox", "radio"].includes(el.type)) {
+            if (el.checked) {
+                if (el.name === "en__pg") {
+                    //Premium gift handling
+                    this.dataLayer.push({
+                        event: "EN_FORM_VALUE_UPDATED",
+                        enFieldName: el.name,
+                        enFieldLabel: "Premium Gift",
+                        enFieldValue: (_b = (_a = el
+                            .closest(".en__pg__body")) === null || _a === void 0 ? void 0 : _a.querySelector(".en__pg__name")) === null || _b === void 0 ? void 0 : _b.textContent,
+                        enProductId: (_c = document.querySelector('[name="transaction.selprodvariantid"]')) === null || _c === void 0 ? void 0 : _c.value,
+                    });
+                }
+                else {
+                    this.dataLayer.push({
+                        event: "EN_FORM_VALUE_UPDATED",
+                        enFieldName: el.name,
+                        enFieldLabel: this.getFieldLabel(el),
+                        enFieldValue: value,
+                    });
+                }
+            }
+            return;
+        }
+        this.dataLayer.push({
+            event: "EN_FORM_VALUE_UPDATED",
+            enFieldName: el.name,
+            enFieldLabel: this.getFieldLabel(el),
+            enFieldValue: value,
+        });
+    }
+    hash(value) {
+        return btoa(value);
+    }
+    getFieldLabel(el) {
+        var _a, _b;
+        return ((_b = (_a = el.closest(".en__field")) === null || _a === void 0 ? void 0 : _a.querySelector("label")) === null || _b === void 0 ? void 0 : _b.textContent) || "";
     }
 }
 
@@ -15930,17 +16309,22 @@ class RequiredIfVisible {
             engrid_ENGrid.removeError(field);
             if (engrid_ENGrid.isVisible(field)) {
                 this.logger.log(`${field.getAttribute("class")} is visible`);
-                const fieldElement = field.querySelector("input, select, textarea");
+                const fieldElement = field.querySelector("input:not([type=hidden]) , select, textarea");
                 if (fieldElement &&
+                    fieldElement.closest("[data-unhidden]") === null &&
                     !engrid_ENGrid.getFieldValue(fieldElement.getAttribute("name"))) {
                     const fieldLabel = field.querySelector(".en__field__label");
                     if (fieldLabel) {
                         this.logger.log(`${fieldLabel.innerText} is required`);
-                        engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+                        window.setTimeout(() => {
+                            engrid_ENGrid.setError(field, `${fieldLabel.innerText} is required`);
+                        }, 100);
                     }
                     else {
                         this.logger.log(`${fieldElement.getAttribute("name")} is required`);
-                        engrid_ENGrid.setError(field, `This field is required`);
+                        window.setTimeout(() => {
+                            engrid_ENGrid.setError(field, `This field is required`);
+                        }, 100);
                     }
                     fieldElement.focus();
                     this._form.validate = false;
@@ -17243,11 +17627,1509 @@ class Autosubmit {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/event-tickets.js
+class EventTickets {
+    constructor() {
+        // --------------------------------------------
+        // Format ticket amounts as currency.
+        const ticketCostElements = document.getElementsByClassName("en__ticket__field--cost");
+        const ticketCurrencyElements = document.getElementsByClassName("en__ticket__currency");
+        for (const ticketCurrencyElement of ticketCurrencyElements) {
+            ticketCurrencyElement.classList.add("en__ticket__currency__hidden");
+        }
+        for (const ticketCostElement of ticketCostElements) {
+            const ticketAmountElement = ticketCostElement.getElementsByClassName("en__ticket__price")[0];
+            const ticketCurrencyElement = ticketCostElement.getElementsByClassName("en__ticket__currency")[0];
+            const formatterOptions = {
+                style: "currency",
+                currency: ticketCurrencyElement.innerText
+            };
+            let ticketAmountAsCurrency = Intl.NumberFormat(undefined, formatterOptions)
+                .format(Number(ticketAmountElement.innerText));
+            if (ticketAmountAsCurrency.slice(-3) === '.00') {
+                ticketAmountAsCurrency = ticketAmountAsCurrency.slice(0, -3);
+            }
+            ticketAmountElement.innerText = ticketAmountAsCurrency;
+        }
+        ;
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/swap-amounts.js
+// This script allows you to override the default donation amounts in Engaging Networks
+// with a custom list of amounts.
+/**
+ * Example:
+ * window.EngridAmounts = {
+ *   "onetime": {
+ *     amounts: {
+ *       "10": 10,
+ *       "30": 30,
+ *       "50": 50,
+ *       "100": 100,
+ *       "Other": "other",
+ *     },
+ *     default: 30,
+ *   },
+ *   "monthly": {
+ *     amounts: {
+ *       "5": 5,
+ *       "15": 15,
+ *       "25": 25,
+ *       "30": 30,
+ *       "Other": "other",
+ *     },
+ *     default: 15,
+ *   },
+ * };
+ */
+
+class SwapAmounts {
+    constructor() {
+        this.logger = new EngridLogger("SwapAmounts", "purple", "white", "💰");
+        this._amount = DonationAmount.getInstance();
+        this._frequency = DonationFrequency.getInstance();
+        this.defaultChange = false;
+        this.swapped = false;
+        if (!this.shouldRun())
+            return;
+        this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
+        this._amount.onAmountChange.subscribe(() => {
+            this.defaultChange = false;
+            if (!this.swapped)
+                return;
+            // Check if the amount is not default amount for the frequency
+            if (this._amount.amount !=
+                window.EngridAmounts[this._frequency.frequency].default) {
+                this.defaultChange = true;
+            }
+        });
+    }
+    swapAmounts() {
+        if (this._frequency.frequency in window.EngridAmounts) {
+            window.EngagingNetworks.require._defined.enjs.swapList("donationAmt", this.loadEnAmounts(window.EngridAmounts[this._frequency.frequency]), {
+                ignoreCurrentValue: this.ignoreCurrentValue(),
+            });
+            this._amount.load();
+            this.logger.log("Amounts Swapped To", window.EngridAmounts[this._frequency.frequency]);
+            this.swapped = true;
+        }
+    }
+    loadEnAmounts(amountArray) {
+        let ret = [];
+        for (let amount in amountArray.amounts) {
+            ret.push({
+                selected: amountArray.amounts[amount] === amountArray.default,
+                label: amount,
+                value: amountArray.amounts[amount].toString(),
+            });
+        }
+        return ret;
+    }
+    shouldRun() {
+        return "EngridAmounts" in window;
+    }
+    ignoreCurrentValue() {
+        return !(window.EngagingNetworks.require._defined.enjs.checkSubmissionFailed() ||
+            engrid_ENGrid.getUrlParameter("transaction.donationAmt") !== null ||
+            this.defaultChange);
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-panel.js
+
+class DebugPanel {
+    constructor(pageLayouts) {
+        var _a, _b;
+        this.logger = new EngridLogger("Debug Panel", "#f0f0f0", "#ff0000", "💥");
+        this.brandingHtml = new BrandingHtml();
+        this.element = null;
+        this.currentTimestamp = this.getCurrentTimestamp();
+        this.quickFills = {
+            "pi-general": [
+                {
+                    name: "supporter.title",
+                    value: "Ms",
+                },
+                {
+                    name: "supporter.firstName",
+                    value: "4Site",
+                },
+                {
+                    name: "supporter.lastName",
+                    value: "Studio",
+                },
+                {
+                    name: "supporter.emailAddress",
+                    value: "en-test@4sitestudios.com",
+                },
+                {
+                    name: "supporter.phoneNumber",
+                    value: "555-555-5555",
+                },
+            ],
+            "pi-unique": [
+                {
+                    name: "supporter.title",
+                    value: "Ms",
+                },
+                {
+                    name: "supporter.firstName",
+                    value: `4Site ${this.currentTimestamp}`,
+                },
+                {
+                    name: "supporter.lastName",
+                    value: "Studio",
+                },
+                {
+                    name: "supporter.emailAddress",
+                    value: `en-test+${this.currentTimestamp}@4sitestudios.com`,
+                },
+                {
+                    name: "supporter.phoneNumber",
+                    value: "555-555-5555",
+                },
+            ],
+            "us-address": [
+                {
+                    name: "supporter.address1",
+                    value: "3431 14th St NW",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "Suite 1",
+                },
+                {
+                    name: "supporter.city",
+                    value: "Washington",
+                },
+                {
+                    name: "supporter.region",
+                    value: "DC",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "20010",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "us-address-senate-rep": [
+                {
+                    name: "supporter.address1",
+                    value: "20 W 34th Street",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "",
+                },
+                {
+                    name: "supporter.city",
+                    value: "New York",
+                },
+                {
+                    name: "supporter.region",
+                    value: "NY",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "10001",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "us-address-nonexistent": [
+                {
+                    name: "supporter.address1",
+                    value: "12345 Main Street",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "",
+                },
+                {
+                    name: "supporter.city",
+                    value: "New York",
+                },
+                {
+                    name: "supporter.region",
+                    value: "TX",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "90210",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+            ],
+            "cc-paysafe-visa": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "4530910000012345",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "cc-paysafe-visa-invalid": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "411111",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "cc-paysafe-mastercard": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "5036150000001115",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "cc-stripe-visa": [
+                {
+                    name: "transaction.ccnumber",
+                    value: "4242424242424242",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+            "quick-fill-pi-unique-us-address-senate-rep-cc-stripe-visa": [
+                {
+                    name: "supporter.title",
+                    value: "Ms",
+                },
+                {
+                    name: "supporter.firstName",
+                    value: `4Site ${this.currentTimestamp}`,
+                },
+                {
+                    name: "supporter.lastName",
+                    value: "Studio",
+                },
+                {
+                    name: "supporter.emailAddress",
+                    value: `en-test+${this.currentTimestamp}@4sitestudios.com`,
+                },
+                {
+                    name: "supporter.phoneNumber",
+                    value: "555-555-5555",
+                },
+                {
+                    name: "supporter.address1",
+                    value: "20 W 34th Street",
+                },
+                {
+                    name: "supporter.address2",
+                    value: "",
+                },
+                {
+                    name: "supporter.city",
+                    value: "New York",
+                },
+                {
+                    name: "supporter.region",
+                    value: "NY",
+                },
+                {
+                    name: "supporter.postcode",
+                    value: "10001",
+                },
+                {
+                    name: "supporter.country",
+                    value: "US",
+                },
+                {
+                    name: "transaction.ccnumber",
+                    value: "4242424242424242",
+                },
+                {
+                    name: "transaction.ccexpire",
+                    value: "12/27",
+                },
+                {
+                    name: "transaction.ccvv",
+                    value: "111",
+                },
+            ],
+        };
+        this.logger.log("Adding debug panel and starting a debug session");
+        this.pageLayouts = pageLayouts;
+        this.loadDebugPanel();
+        this.element = document.querySelector(".debug-panel");
+        (_a = this.element) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+            var _a;
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.classList.add("debug-panel--open");
+        });
+        const debugPanelClose = document.querySelector(".debug-panel__close");
+        debugPanelClose === null || debugPanelClose === void 0 ? void 0 : debugPanelClose.addEventListener("click", (e) => {
+            var _a;
+            e.stopPropagation();
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.classList.remove("debug-panel--open");
+        });
+        if (engrid_ENGrid.getUrlParameter("assets") === "local") {
+            (_b = this.element) === null || _b === void 0 ? void 0 : _b.classList.add("debug-panel--local");
+        }
+        window.sessionStorage.setItem(DebugPanel.debugSessionStorageKey, "active");
+    }
+    loadDebugPanel() {
+        document.body.insertAdjacentHTML("beforeend", `<div class="debug-panel">
+          <div class="debug-panel__container">
+            <div class="debug-panel__closed-title">Debug</div>
+            <div class="debug-panel__title">
+              <h2>Debug</h2>
+              <div class="debug-panel__close">X</div>
+            </div>
+            <div class="debug-panel__options">
+              <div class="debug-panel__option">
+                <label class="debug-panel__link-label link-left">
+                  <a class="debug-panel__edit-link">Edit page</a>
+                </label>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-form-quickfill">Quick-fill</label>
+                <select name="engrid-form-quickfill" id="engrid-form-quickfill">
+                  <option disabled selected>Choose an option</option>
+                  <option value="quick-fill-pi-unique-us-address-senate-rep-cc-stripe-visa">Quick-fill - Unique w/ Senate Address - Stripe Visa</option>
+                  <option value="pi-general">Personal Info - General</option>
+                  <option value="pi-unique">Personal Info - Unique</option>
+                  <option value="us-address-senate-rep">US Address - w/ Senate Rep</option>
+                  <option value="us-address">US Address - w/o Senate Rep</option>
+                  <option value="us-address-nonexistent">US Address - Nonexistent</option>
+                  <option value="cc-paysafe-visa">CC - Paysafe - Visa</option>
+                  <option value="cc-paysafe-visa-invalid">CC - Paysafe - Visa (Invalid)</option>
+                  <option value="cc-paysafe-mastercard">CC - Paysafe - Mastercard</option>
+                  <option value="cc-stripe-visa">CC - Stripe - Visa</option>
+                </select>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-layout-switch">Layout</label>
+                <select name="engrid-layout" id="engrid-layout-switch">
+                </select>
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-embedded-layout" id="engrid-embedded-layout">
+                  <label for="engrid-embedded-layout">Embedded layout</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-debug-layout" id="engrid-debug-layout">
+                  <label for="engrid-debug-layout">Debug layout</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <div class="debug-panel__checkbox">
+                  <input type="checkbox" name="engrid-branding" id="engrid-branding">
+                  <label for="engrid-branding">Branding HTML</label>            
+                </div>
+              </div>
+              <div class="debug-panel__option">
+                <label for="engrid-theme">Theme</label>
+                <input type="text" id="engrid-theme">
+              </div>
+              <div class="debug-panel__option debug-panel__option--local">
+                <label for="engrid-theme">Sub-theme</label>
+                <input type="text" id="engrid-subtheme">
+              </div>
+              <div class="debug-panel__option">
+                <button class="btn debug-panel__btn debug-panel__btn--submit" type="button">Submit form</button>
+              </div>
+              <div class="debug-panel__option">
+                <label class="debug-panel__link-label">
+                  <a class="debug-panel__force-submit-link">Force submit form</a>
+                </label>
+              </div>
+             <div class="debug-panel__option">
+                <label class="debug-panel__link-label">
+                  <a class="debug-panel__end-debug-link">End debug</a>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>`);
+        this.setupLayoutSwitcher();
+        this.setupThemeSwitcher();
+        this.setupSubThemeSwitcher();
+        this.setupFormQuickfill();
+        this.createDebugSessionEndHandler();
+        this.setupEmbeddedLayoutSwitcher();
+        this.setupDebugLayoutSwitcher();
+        this.setupBrandingHtmlHandler();
+        this.setupEditBtnHandler();
+        this.setupForceSubmitLinkHandler();
+        this.setupSubmitBtnHandler();
+    }
+    switchENGridLayout(layout) {
+        engrid_ENGrid.setBodyData("layout", layout);
+    }
+    setupLayoutSwitcher() {
+        var _a, _b;
+        const engridLayoutSwitch = document.getElementById("engrid-layout-switch");
+        if (engridLayoutSwitch) {
+            (_a = this.pageLayouts) === null || _a === void 0 ? void 0 : _a.forEach((layout) => {
+                engridLayoutSwitch.insertAdjacentHTML("beforeend", `<option value="${layout}">${layout}</option>`);
+            });
+            engridLayoutSwitch.value = (_b = engrid_ENGrid.getBodyData("layout")) !== null && _b !== void 0 ? _b : "";
+            engridLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                this.switchENGridLayout(target.value);
+            });
+        }
+    }
+    setupThemeSwitcher() {
+        var _a;
+        const engridThemeInput = document.getElementById("engrid-theme");
+        if (engridThemeInput) {
+            engridThemeInput.value = (_a = engrid_ENGrid.getBodyData("theme")) !== null && _a !== void 0 ? _a : "";
+            ["keyup", "blur"].forEach((ev) => {
+                engridThemeInput.addEventListener(ev, (e) => {
+                    const target = e.target;
+                    this.switchENGridTheme(target.value);
+                });
+            });
+        }
+    }
+    switchENGridTheme(theme) {
+        engrid_ENGrid.setBodyData("theme", theme);
+    }
+    setupSubThemeSwitcher() {
+        var _a;
+        const engridSubthemeInput = document.getElementById("engrid-subtheme");
+        if (engridSubthemeInput) {
+            engridSubthemeInput.value = (_a = engrid_ENGrid.getBodyData("subtheme")) !== null && _a !== void 0 ? _a : "";
+            ["keyup", "blur"].forEach((ev) => {
+                engridSubthemeInput.addEventListener(ev, (e) => {
+                    const target = e.target;
+                    this.switchENGridSubtheme(target.value);
+                });
+            });
+        }
+    }
+    switchENGridSubtheme(subtheme) {
+        engrid_ENGrid.setBodyData("subtheme", subtheme);
+    }
+    setupFormQuickfill() {
+        const engridQuickfill = document.getElementById("engrid-form-quickfill");
+        engridQuickfill === null || engridQuickfill === void 0 ? void 0 : engridQuickfill.addEventListener("change", (e) => {
+            const target = e.target;
+            this.quickFills[target.value].forEach((qf) => {
+                this.setFieldValue(qf);
+            });
+        });
+    }
+    setFieldValue(qf) {
+        if (qf.name === "transaction.ccexpire") {
+            const ccExpireEls = document.getElementsByName("transaction.ccexpire");
+            if (ccExpireEls.length > 0) {
+                const expirationDate = qf.value.split("/");
+                ccExpireEls[0].value = expirationDate[0];
+                ccExpireEls[1].value = expirationDate[1];
+                ccExpireEls[0].dispatchEvent(new Event("change", { bubbles: true }));
+                ccExpireEls[1].dispatchEvent(new Event("change", { bubbles: true }));
+            }
+            else {
+                ccExpireEls[0].value = qf.value;
+                ccExpireEls[0].dispatchEvent(new Event("change", { bubbles: true }));
+            }
+            return;
+        }
+        engrid_ENGrid.setFieldValue(qf.name, qf.value, true, true);
+    }
+    getCurrentTimestamp() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        return `${year}${month}${day}-${hours}${minutes}`;
+    }
+    createDebugSessionEndHandler() {
+        const debugSessionEndBtn = document.querySelector(".debug-panel__end-debug-link");
+        debugSessionEndBtn === null || debugSessionEndBtn === void 0 ? void 0 : debugSessionEndBtn.addEventListener("click", () => {
+            var _a;
+            this.logger.log("Removing panel and ending debug session");
+            (_a = this.element) === null || _a === void 0 ? void 0 : _a.remove();
+            window.sessionStorage.removeItem(DebugPanel.debugSessionStorageKey);
+        });
+    }
+    setupEmbeddedLayoutSwitcher() {
+        const embeddedLayoutSwitch = document.getElementById("engrid-embedded-layout");
+        if (embeddedLayoutSwitch) {
+            embeddedLayoutSwitch.checked = !!engrid_ENGrid.getBodyData("embedded");
+            embeddedLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                engrid_ENGrid.setBodyData("embedded", target.checked);
+            });
+        }
+    }
+    setupDebugLayoutSwitcher() {
+        const debugLayoutSwitch = document.getElementById("engrid-debug-layout");
+        if (debugLayoutSwitch) {
+            debugLayoutSwitch.checked = engrid_ENGrid.getBodyData("debug") === "layout";
+            debugLayoutSwitch.addEventListener("change", (e) => {
+                const target = e.target;
+                if (target.checked) {
+                    engrid_ENGrid.setBodyData("debug", "layout");
+                }
+                else {
+                    engrid_ENGrid.setBodyData("debug", "");
+                }
+            });
+        }
+    }
+    setupBrandingHtmlHandler() {
+        const brandingInput = document.getElementById("engrid-branding");
+        brandingInput.checked =
+            engrid_ENGrid.getUrlParameter("development") === "branding";
+        brandingInput.addEventListener("change", (e) => {
+            if (brandingInput.checked) {
+                this.brandingHtml.show();
+            }
+            else {
+                this.brandingHtml.hide();
+            }
+        });
+    }
+    setupEditBtnHandler() {
+        const editBtn = document.querySelector(".debug-panel__edit-link");
+        editBtn === null || editBtn === void 0 ? void 0 : editBtn.addEventListener("click", () => {
+            window.open(`https://${engrid_ENGrid.getDataCenter()}.engagingnetworks.app/index.html#pages/${engrid_ENGrid.getPageID()}/edit`, "_blank");
+        });
+    }
+    setupForceSubmitLinkHandler() {
+        const submitBtn = document.querySelector(".debug-panel__force-submit-link");
+        submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener("click", () => {
+            const enForm = document.querySelector("form.en__component");
+            enForm === null || enForm === void 0 ? void 0 : enForm.submit();
+        });
+    }
+    setupSubmitBtnHandler() {
+        const submitBtn = document.querySelector(".debug-panel__btn--submit");
+        submitBtn === null || submitBtn === void 0 ? void 0 : submitBtn.addEventListener("click", () => {
+            const enForm = document.querySelector(".en__submit button");
+            enForm === null || enForm === void 0 ? void 0 : enForm.click();
+        });
+    }
+}
+DebugPanel.debugSessionStorageKey = "engrid_debug_panel";
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/debug-hidden-fields.js
+// Switches hidden fields to be type text when debug mode is enabled.
+
+class DebugHiddenFields {
+    constructor() {
+        this.logger = new EngridLogger("Debug hidden fields", "#f0f0f0", "#ff0000", "🫣");
+        // Query all hidden input elements within the specified selectors
+        const fields = document.querySelectorAll(".en__component--row [type='hidden'][class*='en_'], .engrid-added-input[type='hidden']");
+        // Check if there are any hidden fields
+        if (fields.length > 0) {
+            // Log the names of the hidden fields being changed to type 'text'
+            this.logger.log(`Switching the following type 'hidden' fields to type 'text':  ${[
+                ...fields,
+            ]
+                .map((f) => f.name)
+                .join(", ")}`);
+            // Iterate through each hidden input element
+            fields.forEach((el) => {
+                // Change the input type to 'text' and add the required classes
+                el.type = "text";
+                el.classList.add("en__field__input", "en__field__input--text");
+                // Create a new label element and set its text and classes
+                const label = document.createElement("label");
+                label.textContent = "Hidden field: " + el.name;
+                label.classList.add("en__field__label");
+                // Create a new 'div' element for the input field and add the required classes
+                const fieldElement = document.createElement("div");
+                fieldElement.classList.add("en__field__element", "en__field__element--text");
+                // Create a new 'div' container for the label and input field, and add the required classes and attribute
+                const fieldContainer = document.createElement("div");
+                fieldContainer.classList.add("en__field", "en__field--text", "hide");
+                fieldContainer.dataset.unhidden = "";
+                fieldContainer.appendChild(label);
+                fieldContainer.appendChild(fieldElement);
+                // Insert the new field container before the original input element and move the input element into the field element div
+                if (el.parentNode) {
+                    el.parentNode.insertBefore(fieldContainer, el);
+                    fieldElement.appendChild(el);
+                }
+            });
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/branding-html.js
+var branding_html_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+/**
+ * Inserts all of the branding HTML from https://github.com/4site-interactive-studios/engrid-scripts/tree/main/reference-materials/html/brand-guide-markup
+ * into the body-main section of the page.
+ */
+class BrandingHtml {
+    constructor() {
+        this.assetBaseUrl = "https://cdn.jsdelivr.net/gh/4site-interactive-studios/engrid-scripts@main/reference-materials/html/brand-guide-markup/";
+        this.brandingHtmlFiles = [
+            "html5-tags.html",
+            "en-common-fields.html",
+            "survey.html",
+            // "en-common-fields-with-errors.html",
+            // "en-common-fields-with-fancy-errors.html",
+            "donation-page.html",
+            "premium-donation.html",
+            "ecards.html",
+            "email-to-target.html",
+            "tweet-to-target.html",
+            // "click-to-call.html",
+            "petition.html",
+            "event.html",
+            // "ecommerce.html",
+            // "membership.html",
+            "styles.html",
+        ];
+        this.bodyMain = document.querySelector(".body-main");
+        this.htmlFetched = false;
+    }
+    fetchHtml() {
+        return branding_html_awaiter(this, void 0, void 0, function* () {
+            const htmlRequests = this.brandingHtmlFiles.map((file) => branding_html_awaiter(this, void 0, void 0, function* () {
+                const res = yield fetch(this.assetBaseUrl + file);
+                return res.text();
+            }));
+            const brandingHtmls = yield Promise.all(htmlRequests);
+            return brandingHtmls;
+        });
+    }
+    appendHtml() {
+        this.fetchHtml().then((html) => html.forEach((h) => {
+            var _a;
+            const brandingSection = document.createElement("div");
+            brandingSection.classList.add("brand-guide-section");
+            brandingSection.innerHTML = h;
+            (_a = this.bodyMain) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement("beforeend", brandingSection);
+        }));
+        this.htmlFetched = true;
+    }
+    show() {
+        if (!this.htmlFetched) {
+            this.appendHtml();
+            return;
+        }
+        const guides = document.querySelectorAll(".brand-guide-section");
+        guides === null || guides === void 0 ? void 0 : guides.forEach((g) => (g.style.display = "block"));
+    }
+    hide() {
+        const guides = document.querySelectorAll(".brand-guide-section");
+        guides === null || guides === void 0 ? void 0 : guides.forEach((g) => (g.style.display = "none"));
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/country-disable.js
+// This class allows you to disable some countries from the country dropdown list.
+
+class CountryDisable {
+    constructor() {
+        this.logger = new EngridLogger("CountryDisable", "#f0f0f0", "#333333", "🌎");
+        const countries = document.querySelectorAll('select[name="supporter.country"], select[name="transaction.shipcountry"], select[name="supporter.billingCountry"], select[name="transaction.infcountry"]');
+        const CountryDisable = engrid_ENGrid.getOption("CountryDisable");
+        // Remove the countries from the dropdown list
+        if (countries.length > 0 && CountryDisable.length > 0) {
+            const countriesLower = CountryDisable.map((country) => country.toLowerCase());
+            countries.forEach((country) => {
+                country.querySelectorAll("option").forEach((option) => {
+                    if (countriesLower.includes(option.value.toLowerCase()) ||
+                        countriesLower.includes(option.text.toLowerCase())) {
+                        this.logger.log(`Removing ${option.text} from ${country.getAttribute("name")}`);
+                        option.remove();
+                    }
+                });
+            });
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/premium-gift.js
+// Component to handle premium gift features
+// 1 - Add a class to body to indicate which premium gift is selected (data-engrid-premium-gift-name="item-name-slugged")
+// 2 - Add a class to body to indicate if the "maximize my impact" is selected (data-engrid-premium-gift-maximize="true|false")
+// 3 - Check the premium gift when click on the title or description
+// 4 - Create new {$PREMIUMTITLE} merge tag that's replaced with the premium gift name
+
+class PremiumGift {
+    constructor() {
+        this.logger = new EngridLogger("PremiumGift", "#232323", "#f7b500", "🎁");
+        this.enElements = new Array();
+        if (!this.shoudRun())
+            return;
+        this.searchElements();
+        this.addEventListeners();
+        this.checkPremiumGift();
+    }
+    shoudRun() {
+        return ("pageJson" in window &&
+            "pageType" in window.pageJson &&
+            window.pageJson.pageType === "premiumgift");
+    }
+    addEventListeners() {
+        ["click", "change"].forEach((event) => {
+            document.addEventListener(event, (e) => {
+                const element = e.target;
+                const premiumGift = element.closest(".en__pg__body");
+                if (premiumGift) {
+                    const premiumGiftInput = premiumGift.querySelector('[name="en__pg"]');
+                    if ("type" in element === false) {
+                        const premiumGiftValue = premiumGiftInput.value;
+                        window.setTimeout(() => {
+                            const newPremiumGift = document.querySelector('[name="en__pg"][value="' + premiumGiftValue + '"]');
+                            if (newPremiumGift) {
+                                newPremiumGift.checked = true;
+                                newPremiumGift.dispatchEvent(new Event("change"));
+                            }
+                        }, 100);
+                    }
+                    window.setTimeout(() => {
+                        this.checkPremiumGift();
+                    }, 110);
+                }
+            });
+        });
+    }
+    checkPremiumGift() {
+        const premiumGift = document.querySelector('[name="en__pg"]:checked');
+        if (premiumGift) {
+            const premiumGiftValue = premiumGift.value;
+            this.logger.log("Premium Gift Value: " + premiumGiftValue);
+            const premiumGiftContainer = premiumGift.closest(".en__pg");
+            if (premiumGiftValue !== "0") {
+                const premiumGiftName = premiumGiftContainer.querySelector(".en__pg__name");
+                engrid_ENGrid.setBodyData("premium-gift-maximize", "false");
+                engrid_ENGrid.setBodyData("premium-gift-name", engrid_ENGrid.slugify(premiumGiftName.innerText));
+                this.setPremiumTitle(premiumGiftName.innerText);
+            }
+            else {
+                engrid_ENGrid.setBodyData("premium-gift-maximize", "true");
+                engrid_ENGrid.setBodyData("premium-gift-name", false);
+                this.setPremiumTitle("");
+            }
+            if (!premiumGiftContainer.classList.contains("en__pg--selected")) {
+                const checkedPremiumGift = document.querySelector(".en__pg--selected");
+                if (checkedPremiumGift) {
+                    checkedPremiumGift.classList.remove("en__pg--selected");
+                }
+                premiumGiftContainer.classList.add("en__pg--selected");
+            }
+        }
+    }
+    searchElements() {
+        const enElements = document.querySelectorAll(`
+      .en__component--copyblock,
+      .en__component--codeblock,
+      .en__field
+      `);
+        if (enElements.length > 0) {
+            enElements.forEach((item) => {
+                if (item instanceof HTMLElement &&
+                    item.innerHTML.includes("{$PREMIUMTITLE}")) {
+                    item.innerHTML = item.innerHTML.replace("{$PREMIUMTITLE}", `<span class="engrid_premium_title"></span>`);
+                    this.enElements.push(item);
+                }
+            });
+        }
+    }
+    setPremiumTitle(title) {
+        this.enElements.forEach((item) => {
+            const premiumTitle = item.querySelector(".engrid_premium_title");
+            if (premiumTitle) {
+                premiumTitle.innerHTML = title;
+            }
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/digital-wallets.js
+
+class DigitalWallets {
+    constructor() {
+        //digital wallets not enabled.
+        if (!document.getElementById("en__digitalWallet")) {
+            engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-google-pay", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-venmo", "false");
+            return;
+        }
+        // Add giveBySelect classes to the separate wallet containers
+        // and hide them on load.
+        const stripeButtons = document.getElementById("en__digitalWallet__stripeButtons__container");
+        if (stripeButtons) {
+            stripeButtons.classList.add("giveBySelect-stripedigitalwallet");
+            stripeButtons.classList.add("showif-stripedigitalwallet-selected");
+            // stripeButtons.style.display = "none";
+        }
+        const paypalTouchButtons = document.getElementById("en__digitalWallet__paypalTouch__container");
+        if (paypalTouchButtons) {
+            paypalTouchButtons.classList.add("giveBySelect-paypaltouch");
+            paypalTouchButtons.classList.add("showif-paypaltouch-selected");
+            // paypalTouchButtons.style.display = "none";
+        }
+        /**
+         * Check for presence of elements that indicated Stripe digital wallets
+         * (Google Pay, Apple Pay) have loaded, and add functionality for them.
+         * If they haven't yet loaded, set up a Mutation Observer to check for
+         * when they do.
+         */
+        if (document.querySelector("#en__digitalWallet__stripeButtons__container > *")) {
+            this.addStripeDigitalWallets();
+        }
+        else {
+            engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-google-pay", "false");
+            const stripeContainer = document.getElementById("en__digitalWallet__stripeButtons__container");
+            if (stripeContainer) {
+                this.checkForWalletsBeingAdded(stripeContainer, "stripe");
+            }
+        }
+        /**
+         * Check for presence of elements that indicated Paypal digital wallets
+         * (Paypal One Touch, Venmo, Etc) have loaded, and add functionality for them.
+         * If they haven't yet loaded, set up a Mutation Observer to check for
+         * when they do.
+         */
+        if (document.querySelector("#en__digitalWallet__paypalTouch__container > *")) {
+            this.addPaypalTouchDigitalWallets();
+        }
+        else {
+            engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-venmo", "false");
+            const paypalContainer = document.getElementById("en__digitalWallet__paypalTouch__container");
+            if (paypalContainer) {
+                this.checkForWalletsBeingAdded(paypalContainer, "paypalTouch");
+            }
+        }
+    }
+    addStripeDigitalWallets() {
+        this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
+        engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "true");
+        engrid_ENGrid.setBodyData("payment-type-option-google-pay", "true");
+    }
+    addPaypalTouchDigitalWallets() {
+        this.addOptionToPaymentTypeField("paypaltouch", "Paypal / Venmo");
+        engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "true");
+        engrid_ENGrid.setBodyData("payment-type-option-venmo", "true");
+    }
+    addOptionToPaymentTypeField(value, label) {
+        const paymentTypeField = document.querySelector('[name="transaction.paymenttype"]');
+        if (paymentTypeField &&
+            !paymentTypeField.querySelector(`[value=${value}]`)) {
+            const walletOption = document.createElement("option");
+            walletOption.value = value;
+            walletOption.innerText = label;
+            paymentTypeField.appendChild(walletOption);
+        }
+    }
+    checkForWalletsBeingAdded(node, walletType) {
+        const callback = (mutationList, observer) => {
+            for (const mutation of mutationList) {
+                //Once a child node has been added, set up the appropriate digital wallet
+                if (mutation.type === "childList" && mutation.addedNodes.length) {
+                    if (walletType === "stripe") {
+                        this.addStripeDigitalWallets();
+                    }
+                    else if (walletType === "paypalTouch") {
+                        this.addPaypalTouchDigitalWallets();
+                    }
+                    //Disconnect observer to prevent multiple additions
+                    observer.disconnect();
+                }
+            }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(node, { childList: true, subtree: true });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/mobile-cta.js
+// This component adds a floating CTA button to the page, which can be used to scroll to the top of the form
+
+class MobileCTA {
+    constructor() {
+        var _a, _b, _c;
+        // Initialize options with the MobileCTA value or false
+        this.options = (_a = engrid_ENGrid.getOption("MobileCTA")) !== null && _a !== void 0 ? _a : false;
+        this.buttonLabel = "";
+        // Return early if the options object is falsy or the current page type is not in the options.pages array
+        if (!this.options ||
+            !((_b = this.options.pages) === null || _b === void 0 ? void 0 : _b.includes(engrid_ENGrid.getPageType())) ||
+            engrid_ENGrid.getPageNumber() !== 1)
+            return;
+        // Set the button label using the options.label or the default value "Take Action"
+        this.buttonLabel = (_c = this.options.label) !== null && _c !== void 0 ? _c : "Take Action";
+        this.renderButton();
+        this.addEventListeners();
+    }
+    renderButton() {
+        const engridDiv = document.querySelector("#engrid");
+        const formBlock = document.querySelector(".body-main .en__component--widgetblock:first-child, .en__component--formblock");
+        // Return early if engridDiv or formBlock are not found
+        if (!engridDiv || !formBlock)
+            return;
+        const buttonContainer = document.createElement("div");
+        const button = document.createElement("button");
+        // Add necessary classes and set the initial display style for the button container
+        buttonContainer.classList.add("engrid-mobile-cta-container");
+        buttonContainer.style.display = "none";
+        button.classList.add("primary");
+        // Set the button's innerHTML and add a click event listener
+        button.innerHTML = this.buttonLabel;
+        button.addEventListener("click", () => {
+            formBlock.scrollIntoView({ behavior: "smooth" });
+        });
+        // Append the button to the button container and the container to engridDiv
+        buttonContainer.appendChild(button);
+        engridDiv.appendChild(buttonContainer);
+    }
+    addEventListeners() {
+        const bodyMain = document.querySelector(".body-main");
+        // Return early if formBlock is not found
+        if (!bodyMain)
+            return;
+        // Define a function to toggle the button visibility based on the bodyMain position
+        const toggleButton = () => {
+            if (bodyMain.getBoundingClientRect().top <= window.innerHeight - 100) {
+                this.hideButton();
+            }
+            else {
+                this.showButton();
+            }
+        };
+        // Add event listeners for load, resize, and scroll events to toggle the button visibility
+        window.addEventListener("load", toggleButton);
+        window.addEventListener("resize", toggleButton);
+        window.addEventListener("scroll", toggleButton);
+    }
+    // Hide the button by setting the container's display style to "none"
+    hideButton() {
+        const buttonContainer = document.querySelector(".engrid-mobile-cta-container");
+        if (buttonContainer)
+            buttonContainer.style.display = "none";
+    }
+    // Show the button by setting the container's display style to "block"
+    showButton() {
+        const buttonContainer = document.querySelector(".engrid-mobile-cta-container");
+        if (buttonContainer)
+            buttonContainer.style.display = "block";
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/live-frequency.js
+// This script creates merge tags: [[frequency]], [[Frequency]], or [[FREQUENCY]]
+// that gets replaced with the donation frequency
+// and can be used on any Code Block, Text Block, or Form Block
+
+class LiveFrequency {
+    constructor() {
+        this.logger = new EngridLogger("LiveFrequency", "#00ff00", "#000000", "🧾");
+        this.elementsFound = false;
+        this._amount = DonationAmount.getInstance();
+        this._frequency = DonationFrequency.getInstance();
+        this.searchElements();
+        if (!this.shouldRun())
+            return;
+        this.updateFrequency();
+        this.addEventListeners();
+    }
+    searchElements() {
+        const enElements = document.querySelectorAll(`
+      .en__component--copyblock,
+      .en__component--codeblock,
+      .en__field label,
+      .en__submit
+      `);
+        if (enElements.length > 0) {
+            const pattern = /\[\[(frequency)\]\]/gi;
+            let totalFound = 0;
+            enElements.forEach((item) => {
+                const match = item.innerHTML.match(pattern);
+                if (item instanceof HTMLElement && match) {
+                    this.elementsFound = true;
+                    match.forEach((matchedSubstring) => {
+                        totalFound++;
+                        this.replaceMergeTags(matchedSubstring, item);
+                    });
+                }
+            });
+            if (totalFound > 0) {
+                this.logger.log(`Found ${totalFound} merge tag${totalFound > 1 ? "s" : ""} in the page.`);
+            }
+        }
+    }
+    shouldRun() {
+        if (!this.elementsFound) {
+            this.logger.log("No merge tags found. Skipping.");
+            return false;
+        }
+        return true;
+    }
+    addEventListeners() {
+        this._amount.onAmountChange.subscribe(() => {
+            setTimeout(() => {
+                this.updateFrequency();
+            }, 10);
+        });
+        this._frequency.onFrequencyChange.subscribe(() => {
+            setTimeout(() => {
+                this.searchElements();
+                this.updateFrequency();
+            }, 10);
+        });
+    }
+    updateFrequency() {
+        const frequency = this._frequency.frequency === "onetime"
+            ? "one-time"
+            : this._frequency.frequency;
+        const elemenst = document.querySelectorAll(".engrid-frequency");
+        elemenst.forEach((item) => {
+            if (item.classList.contains("engrid-frequency--lowercase")) {
+                item.innerHTML = frequency.toLowerCase();
+            }
+            else if (item.classList.contains("engrid-frequency--capitalized")) {
+                item.innerHTML = frequency.charAt(0).toUpperCase() + frequency.slice(1);
+            }
+            else if (item.classList.contains("engrid-frequency--uppercase")) {
+                item.innerHTML = frequency.toUpperCase();
+            }
+            else {
+                item.innerHTML = frequency;
+            }
+        });
+    }
+    replaceMergeTags(tag, element) {
+        const frequency = this._frequency.frequency === "onetime"
+            ? "one-time"
+            : this._frequency.frequency;
+        const frequencyElement = document.createElement("span");
+        frequencyElement.classList.add("engrid-frequency");
+        frequencyElement.innerHTML = frequency;
+        switch (tag) {
+            case "[[frequency]]":
+                frequencyElement.classList.add("engrid-frequency--lowercase");
+                frequencyElement.innerHTML = frequencyElement.innerHTML.toLowerCase();
+                element.innerHTML = element.innerHTML.replace(tag, frequencyElement.outerHTML);
+                break;
+            case "[[Frequency]]":
+                frequencyElement.classList.add("engrid-frequency--capitalized");
+                frequencyElement.innerHTML =
+                    frequencyElement.innerHTML.charAt(0).toUpperCase() +
+                        frequencyElement.innerHTML.slice(1);
+                element.innerHTML = element.innerHTML.replace(tag, frequencyElement.outerHTML);
+                break;
+            case "[[FREQUENCY]]":
+                frequencyElement.classList.add("engrid-frequency--uppercase");
+                frequencyElement.innerHTML = frequencyElement.innerHTML.toUpperCase();
+                element.innerHTML = element.innerHTML.replace(tag, frequencyElement.outerHTML);
+                break;
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/universal-opt-in.js
+/**
+ * This class will add event listeners to every yes/no radio button or checkbox
+ * inside a universal opt-in element (any form block with the CSS class universal-opt-in). When the user clicks on a radio/checkbox
+ * button, we will search for every other radio/checkbox button inside the same
+ * universal opt-in element and mirror the user's selection.
+ * If instead of universal-opt-in you use universal-opt-in_null, the class will
+ * not mirror the user's selection when a radio "No" option is selected. Instead,
+ * it will unset all other radio buttons.
+ */
+
+class UniversalOptIn {
+    constructor() {
+        this.logger = new EngridLogger("UniversalOptIn", "#f0f0f0", "#d2691e", "🪞");
+        this._elements = document.querySelectorAll(".universal-opt-in, .universal-opt-in_null");
+        if (!this.shouldRun())
+            return;
+        this.addEventListeners();
+    }
+    shouldRun() {
+        if (this._elements.length === 0) {
+            this.logger.log("No universal opt-in elements found. Skipping.");
+            return false;
+        }
+        this.logger.log(`Found ${this._elements.length} universal opt-in elements.`);
+        return true;
+    }
+    addEventListeners() {
+        this._elements.forEach((element) => {
+            const yesNoElements = element.querySelectorAll(".en__field__input--radio, .en__field__input--checkbox");
+            if (yesNoElements.length > 0) {
+                yesNoElements.forEach((yesNoElement) => {
+                    yesNoElement.addEventListener("click", () => {
+                        if (yesNoElement instanceof HTMLInputElement &&
+                            yesNoElement.getAttribute("type") === "checkbox") {
+                            const yesNoValue = yesNoElement.checked;
+                            if (yesNoValue) {
+                                this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is checked");
+                                yesNoElements.forEach((yesNoElement2) => {
+                                    if (yesNoElement === yesNoElement2)
+                                        return;
+                                    if (yesNoElement2 instanceof HTMLInputElement &&
+                                        yesNoElement2.getAttribute("type") === "checkbox")
+                                        yesNoElement2.checked = true;
+                                });
+                            }
+                            else {
+                                this.logger.log("Yes/No " +
+                                    yesNoElement.getAttribute("type") +
+                                    " is unchecked");
+                                yesNoElements.forEach((yesNoElement2) => {
+                                    if (yesNoElement === yesNoElement2)
+                                        return;
+                                    if (yesNoElement2 instanceof HTMLInputElement &&
+                                        yesNoElement2.getAttribute("type") === "checkbox")
+                                        yesNoElement2.checked = false;
+                                });
+                            }
+                            return;
+                        }
+                        const yesNoValue = yesNoElement.getAttribute("value");
+                        if (yesNoValue === "Y") {
+                            this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is checked");
+                            yesNoElements.forEach((yesNoElement2) => {
+                                const fieldName = yesNoElement2.getAttribute("name");
+                                const clickedFieldName = yesNoElement.getAttribute("name");
+                                if (!fieldName || fieldName === clickedFieldName)
+                                    return;
+                                engrid_ENGrid.setFieldValue(fieldName, "Y");
+                            });
+                        }
+                        else {
+                            this.logger.log("Yes/No " + yesNoElement.getAttribute("type") + " is unchecked");
+                            yesNoElements.forEach((yesNoElement2) => {
+                                const fieldName = yesNoElement2.getAttribute("name");
+                                const clickedFieldName = yesNoElement.getAttribute("name");
+                                if (!fieldName || fieldName === clickedFieldName)
+                                    return;
+                                if (element.classList.contains("universal-opt-in")) {
+                                    engrid_ENGrid.setFieldValue(fieldName, "N");
+                                }
+                                else {
+                                    yesNoElement2.checked = false;
+                                }
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/plaid.js
+// Component with a helper to auto-click on the Plaid link
+// when that payment method is selected
+
+class Plaid {
+    constructor() {
+        this.logger = new EngridLogger("Plaid", "peru", "yellow", "🔗");
+        this._form = EnForm.getInstance();
+        this.logger.log("Enabled");
+        this._form.onSubmit.subscribe(() => this.submit());
+    }
+    submit() {
+        const plaidLink = document.querySelector("#plaid-link-button");
+        if (plaidLink && plaidLink.textContent === "Link Account") {
+            // Click the Plaid Link button
+            this.logger.log("Clicking Link");
+            plaidLink.click();
+            this._form.submit = false;
+            // Create a observer to watch the Link ID #plaid-link-button for a new Text Node
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === "childList") {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === Node.TEXT_NODE) {
+                                // If the Text Node is "Link Account" then the Link has failed
+                                if (node.nodeValue === "Account Linked") {
+                                    this.logger.log("Plaid Linked");
+                                    this._form.submit = true;
+                                    this._form.submitForm();
+                                }
+                                else {
+                                    this._form.submit = true;
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+            // Start observing the Link ID #plaid-link-button
+            observer.observe(plaidLink, {
+                childList: true,
+                subtree: true,
+            });
+            window.setTimeout(() => {
+                this.logger.log("Enabling Submit");
+                engrid_ENGrid.enableSubmit();
+            }, 1000);
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/give-by-select.js
+
+class GiveBySelect {
+    constructor() {
+        this.logger = new EngridLogger("GiveBySelect", "#FFF", "#333", "🐇");
+        this.transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
+        if (!this.transactionGiveBySelect)
+            return;
+        this.transactionGiveBySelect.forEach((giveBySelect) => {
+            giveBySelect.addEventListener("change", () => {
+                this.logger.log("Changed to " + giveBySelect.value);
+                if (giveBySelect.value.toLowerCase() === "card") {
+                    engrid_ENGrid.setPaymentType("");
+                }
+                else {
+                    engrid_ENGrid.setPaymentType(giveBySelect.value);
+                }
+            });
+        });
+        // Set the initial value of giveBySelect to the transaction.paymenttype field
+        const paymentType = engrid_ENGrid.getPaymentType();
+        if (paymentType) {
+            this.logger.log("Setting giveBySelect to " + paymentType);
+            const isCard = [
+                "visa",
+                "mastercard",
+                "amex",
+                "discover",
+                "diners",
+                "jcb",
+                "vi",
+                "mc",
+                "ax",
+                "dc",
+                "di",
+                "jc",
+            ].includes(paymentType.toLowerCase());
+            this.transactionGiveBySelect.forEach((giveBySelect) => {
+                if (isCard && giveBySelect.value.toLowerCase() === "card") {
+                    giveBySelect.checked = true;
+                }
+                else if (giveBySelect.value.toLowerCase() === paymentType.toLowerCase()) {
+                    giveBySelect.checked = true;
+                }
+            });
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/url-params-to-body-attrs.js
+//This component adds any url parameters that begin with "data-engrid-" to the body as attributes.
+
+class UrlParamsToBodyAttrs {
+    constructor() {
+        this.logger = new EngridLogger("UrlParamsToBodyAttrs", "white", "magenta", "📌");
+        this.urlParams = new URLSearchParams(document.location.search);
+        this.urlParams.forEach((value, key) => {
+            if (key.startsWith("data-engrid-")) {
+                engrid_ENGrid.setBodyData(key.split("data-engrid-")[1], value);
+                this.logger.log(`Set "${key}" on body to "${value}" from URL params`);
+            }
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/exit-intent-lightbox.js
+
+
+class ExitIntentLightbox {
+    constructor() {
+        this.opened = false;
+        this.dataLayer = window.dataLayer || [];
+        this.logger = new EngridLogger("ExitIntentLightbox", "yellow", "black", "🚪");
+        let options = "EngridExitIntent" in window ? window.EngridExitIntent : {};
+        this.options = Object.assign(Object.assign({}, ExitIntentOptionsDefaults), options);
+        if (!this.options.enabled) {
+            this.logger.log("Not enabled");
+            return;
+        }
+        if (get(this.options.cookieName)) {
+            this.logger.log("Not showing - cookie found.");
+            return;
+        }
+        const activeTriggers = Object.keys(this.options.triggers)
+            .filter((t) => this.options.triggers[t])
+            .join(", ");
+        this.logger.log("Enabled, waiting for trigger. Active triggers: " + activeTriggers);
+        this.watchForTriggers();
+    }
+    watchForTriggers() {
+        if (this.options.triggers.mousePosition) {
+            this.watchMouse();
+        }
+        if (this.options.triggers.visibilityState) {
+            this.watchDocumentVisibility();
+        }
+    }
+    watchMouse() {
+        document.addEventListener("mouseout", (e) => {
+            // If this is an autocomplete element.
+            if (e.target.tagName.toLowerCase() == "input")
+                return;
+            // Get the current viewport width.
+            const vpWidth = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+            // If the current mouse X position is within 50px of the right edge
+            // of the viewport, return.
+            if (e.clientX >= vpWidth - 50)
+                return;
+            // If the current mouse Y position is not within 50px of the top
+            // edge of the viewport, return.
+            if (e.clientY >= 50)
+                return;
+            // Reliable, works on mouse exiting window and
+            // user switching active program
+            const from = e.relatedTarget;
+            if (!from) {
+                this.logger.log("Triggered by mouse position");
+                this.open();
+            }
+        });
+    }
+    watchDocumentVisibility() {
+        const visibilityListener = () => {
+            if (document.visibilityState === "hidden") {
+                this.logger.log("Triggered by visibilityState is hidden");
+                this.open();
+                document.removeEventListener("visibilitychange", visibilityListener);
+            }
+        };
+        document.addEventListener("visibilitychange", visibilityListener);
+    }
+    open() {
+        var _a, _b, _c;
+        if (this.opened)
+            return;
+        engrid_ENGrid.setBodyData("exit-intent-lightbox", "open");
+        set(this.options.cookieName, "1", {
+            expires: this.options.cookieDuration,
+        });
+        document.body.insertAdjacentHTML("beforeend", `
+        <div class="ExitIntent">
+          <div class="ExitIntent__overlay">
+            <div class="ExitIntent__container">
+              <div class="ExitIntent__close">X</div>
+              <div class="ExitIntent__body">
+                <h2>${this.options.title}</h2>
+                <p>${this.options.text}</p>
+                <button type="button" class="ExitIntent__button">
+                  ${this.options.buttonText}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `);
+        this.opened = true;
+        this.dataLayer.push({ event: "exit_intent_lightbox_shown" });
+        (_a = document
+            .querySelector(".ExitIntent__close")) === null || _a === void 0 ? void 0 : _a.addEventListener("click", () => {
+            this.dataLayer.push({ event: "exit_intent_lightbox_closed" });
+            this.close();
+        });
+        (_b = document
+            .querySelector(".ExitIntent__overlay")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", (event) => {
+            if (event.target === event.currentTarget) {
+                this.dataLayer.push({ event: "exit_intent_lightbox_closed" });
+                this.close();
+            }
+        });
+        (_c = document
+            .querySelector(".ExitIntent__button")) === null || _c === void 0 ? void 0 : _c.addEventListener("click", () => {
+            this.dataLayer.push({ event: "exit_intent_lightbox_cta_clicked" });
+            this.close();
+            const target = this.options.buttonLink;
+            if (target.startsWith(".") || target.startsWith("#")) {
+                const targetEl = document.querySelector(target);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+            else {
+                window.open(target, "_blank");
+            }
+        });
+    }
+    close() {
+        var _a;
+        (_a = document.querySelector(".ExitIntent")) === null || _a === void 0 ? void 0 : _a.remove();
+        engrid_ENGrid.setBodyData("exit-intent-lightbox", "closed");
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.13.32";
+const AppVersion = "0.14.14";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -17429,72 +19311,97 @@ const customScript = function () {
     });
     setOptIn(countrySelect.value);
   } // Digital Wallets Moving Parts
+  //
+  // const digitalWalletWrapper = document.querySelector(
+  //   ".merge-with-give-by-select #en__digitalWallet"
+  // );
+  // const digitalWalletFirstChild = document.querySelector("#en__digitalWallet");
+  // const giveBySelect = document.querySelector(".give-by-select");
+  // if (digitalWalletWrapper && giveBySelect) {
+  //   giveBySelect.appendChild(digitalWalletWrapper);
+  //   digitalWalletFirstChild.insertAdjacentHTML(
+  //     "beforeend",
+  //     "<div class='digital-divider'><span class='divider-left'></span><p class='divider-center'>or enter manually</p><span class='divider-right'></span></div>"
+  //   );
+  // }
+  //
+  // let digitalWalletsExist;
+  //
+  // setTimeout(function () {
+  //   digitalWalletsExist = document.querySelectorAll(
+  //     ".en__digitalWallet__container > *"
+  //   );
+  //   if (digitalWalletsExist.length > 0 && giveBySelect) {
+  //     giveBySelect.setAttribute("show-wallets", "");
+  //   }
+  // }, 500);
+  //
+  // setTimeout(function () {
+  //   digitalWalletsExist = document.querySelectorAll(
+  //     ".en__digitalWallet__container > *"
+  //   );
+  //   if (digitalWalletsExist.length > 0 && giveBySelect) {
+  //     giveBySelect.setAttribute("show-wallets", "");
+  //   }
+  // }, 2500);
+  //
+  // //Digital wallets are hiddens via CSS on page load
+  // //this will show them on page load if required
+  // if (
+  //   document
+  //     .getElementById("en__field_transaction_paymenttype")
+  //     .value.toLowerCase() === "paypal"
+  // ) {
+  //   document.getElementById("en__digitalWallet").style.display = "flex";
+  // }
+  //
+  // /**
+  //  * Get the payment type value from the GiveBySelect. Workaround because
+  //  * EN requires payment type for both venmo and paypal to be "paypal".
+  //  * @returns "card", "venmo" or "paypal"
+  //  */
+  // function getGiveBySelectValue() {
+  //   let giveBySelectInput = document.querySelector(
+  //     'input[name="transaction.giveBySelect"]:checked'
+  //   );
+  //   let giveBySelectInputValue = giveBySelectInput.value.toLowerCase();
+  //
+  //   if (giveBySelectInputValue !== "paypal") return "card";
+  //
+  //   return giveBySelectInput.parentElement.classList.contains("venmo")
+  //     ? "venmo"
+  //     : "paypal";
+  // }
+  //
+  // function getPaymentFrequency() {
+  //   return document
+  //     .querySelector('input[name="transaction.recurrfreq"]:checked')
+  //     .value.toLowerCase();
+  // }
+  //
+  // //Toggles display of submit button and digital wallet buttons based on giveBySelect
+  // //and payment frequency
+  // document
+  //   .querySelectorAll(
+  //     '[name="transaction.giveBySelect"],[name="transaction.recurrfreq"]'
+  //   )
+  //   .forEach((el) => {
+  //     el.addEventListener("change", () => {
+  //       let submitButtonContainer = document.querySelector(".en__submit");
+  //       let digitalWalletsContainer =
+  //         document.getElementById("en__digitalWallet");
+  //       let giveBySelectValue = getGiveBySelectValue();
+  //
+  //       if (giveBySelectValue === "venmo") {
+  //         submitButtonContainer.style.display = "none";
+  //         digitalWalletsContainer.style.display = "flex";
+  //       } else {
+  //         submitButtonContainer.style.display = "block";
+  //         digitalWalletsContainer.style.display = "none";
+  //       }
+  //     });
+  //   });
 
-
-  const digitalWalletWrapper = document.querySelector(".merge-with-give-by-select #en__digitalWallet");
-  const digitalWalletFirstChild = document.querySelector("#en__digitalWallet");
-  const giveBySelect = document.querySelector(".give-by-select");
-
-  if (digitalWalletWrapper && giveBySelect) {
-    giveBySelect.appendChild(digitalWalletWrapper);
-    digitalWalletFirstChild.insertAdjacentHTML("beforeend", "<div class='digital-divider'><span class='divider-left'></span><p class='divider-center'>or enter manually</p><span class='divider-right'></span></div>");
-  }
-
-  let digitalWalletsExist;
-  setTimeout(function () {
-    digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
-
-    if (digitalWalletsExist.length > 0 && giveBySelect) {
-      giveBySelect.setAttribute("show-wallets", "");
-    }
-  }, 500);
-  setTimeout(function () {
-    digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
-
-    if (digitalWalletsExist.length > 0 && giveBySelect) {
-      giveBySelect.setAttribute("show-wallets", "");
-    }
-  }, 2500); //Digital wallets are hiddens via CSS on page load
-  //this will show them on page load if required
-
-  if (document.getElementById("en__field_transaction_paymenttype").value.toLowerCase() === "paypal") {
-    document.getElementById("en__digitalWallet").style.display = "flex";
-  }
-  /**
-   * Get the payment type value from the GiveBySelect. Workaround because
-   * EN requires payment type for both venmo and paypal to be "paypal".
-   * @returns "card", "venmo" or "paypal"
-   */
-
-
-  function getGiveBySelectValue() {
-    let giveBySelectInput = document.querySelector('input[name="transaction.giveBySelect"]:checked');
-    let giveBySelectInputValue = giveBySelectInput.value.toLowerCase();
-    if (giveBySelectInputValue !== "paypal") return "card";
-    return giveBySelectInput.parentElement.classList.contains("venmo") ? "venmo" : "paypal";
-  }
-
-  function getPaymentFrequency() {
-    return document.querySelector('input[name="transaction.recurrfreq"]:checked').value.toLowerCase();
-  } //Toggles display of submit button and digital wallet buttons based on giveBySelect
-  //and payment frequency
-
-
-  document.querySelectorAll('[name="transaction.giveBySelect"],[name="transaction.recurrfreq"]').forEach(el => {
-    el.addEventListener("change", () => {
-      let submitButtonContainer = document.querySelector(".en__submit");
-      let digitalWalletsContainer = document.getElementById("en__digitalWallet");
-      let giveBySelectValue = getGiveBySelectValue();
-
-      if (giveBySelectValue === "venmo") {
-        submitButtonContainer.style.display = "none";
-        digitalWalletsContainer.style.display = "flex";
-      } else {
-        submitButtonContainer.style.display = "block";
-        digitalWalletsContainer.style.display = "none";
-      }
-    });
-  });
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM

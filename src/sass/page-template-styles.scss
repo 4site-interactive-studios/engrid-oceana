@@ -312,50 +312,50 @@
   }
 
   /* Digital Wallets styling */
-
-  #en__pagebuilder .merge-with-give-by-select {
-    background-color: #ff00001a !important;
-  }
-
-  /* If Give by Select has a Digital Wallet, hide it until we add our data-attribute */
-  .give-by-select:not([show-wallets]) #en__digitalWallet .digital-divider {
-    display: none;
-  }
-
-  #en__digitalWallet {
-    margin-bottom: 0 !important;
-    padding-top: 15px !important;
-  }
-
-  .en__digitalWallet__button {
-    margin-top: 0 !important;
-  }
-
-  .en__digitalWallet__container {
-    margin-bottom: 0px !important;
-  }
-
-  .digital-divider {
-    width: 100%;
-    align-items: center;
-    color: #9b9b94;
-    display: flex;
-    padding-left: var(--fields_spacing-inline);
-    padding-right: var(--fields_spacing-inline);
-    margin-bottom: calc(var(--fields_spacing-block) - 4px);
-  }
-
-  .divider-left,
-  .divider-right {
-    background: #dfdfd7;
-    content: "";
-    flex: 1 1;
-    height: 1px;
-  }
-
-  .divider-center {
-    margin: 0 0.5rem;
-  }
+  //
+  //#en__pagebuilder .merge-with-give-by-select {
+  //  background-color: #ff00001a !important;
+  //}
+  //
+  ///* If Give by Select has a Digital Wallet, hide it until we add our data-attribute */
+  //.give-by-select:not([show-wallets]) #en__digitalWallet .digital-divider {
+  //  display: none;
+  //}
+  //
+  //#en__digitalWallet {
+  //  margin-bottom: 0 !important;
+  //  padding-top: 15px !important;
+  //}
+  //
+  //.en__digitalWallet__button {
+  //  margin-top: 0 !important;
+  //}
+  //
+  //.en__digitalWallet__container {
+  //  margin-bottom: 0px !important;
+  //}
+  //
+  //.digital-divider {
+  //  width: 100%;
+  //  align-items: center;
+  //  color: #9b9b94;
+  //  display: flex;
+  //  padding-left: var(--fields_spacing-inline);
+  //  padding-right: var(--fields_spacing-inline);
+  //  margin-bottom: calc(var(--fields_spacing-block) - 4px);
+  //}
+  //
+  //.divider-left,
+  //.divider-right {
+  //  background: #dfdfd7;
+  //  content: "";
+  //  flex: 1 1;
+  //  height: 1px;
+  //}
+  //
+  //.divider-center {
+  //  margin: 0 0.5rem;
+  //}
 }
 
 /** HEADER STYLES **/
@@ -839,9 +839,9 @@
   }
 }
 
-#en__digitalWallet {
-  display: none;
-}
+//#en__digitalWallet {
+//  display: none;
+//}
 
 // #en__digitalWallet #en__digitalWallet__paypalTouch {
 //   overflow: hidden;
