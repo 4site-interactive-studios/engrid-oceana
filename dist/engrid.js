@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, March 14, 2023 @ 07:52:19 ET
+ *  Date: Monday, August 7, 2023 @ 07:31:25 ET
  *  By: michael
  *  ENGrid styles: v0.13.34
  *  ENGrid scripts: v0.13.32
@@ -17444,14 +17444,14 @@ const customScript = function () {
   setTimeout(function () {
     digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
 
-    if (digitalWalletsExist.length > 0) {
+    if (digitalWalletsExist.length > 0 && giveBySelect) {
       giveBySelect.setAttribute("show-wallets", "");
     }
   }, 500);
   setTimeout(function () {
     digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
 
-    if (digitalWalletsExist.length > 0) {
+    if (digitalWalletsExist.length > 0 && giveBySelect) {
       giveBySelect.setAttribute("show-wallets", "");
     }
   }, 2500); //Digital wallets are hiddens via CSS on page load
