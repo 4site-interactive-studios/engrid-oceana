@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, August 7, 2023 @ 08:20:57 ET
+ *  Date: Wednesday, August 9, 2023 @ 07:55:34 ET
  *  By: michael
  *  ENGrid styles: v0.14.13
- *  ENGrid scripts: v0.14.14
+ *  ENGrid scripts: v0.14.15
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11283,12 +11283,12 @@ class engrid_ENGrid {
             const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => option.value.toLowerCase() === paymentType.toLowerCase());
             if (paymentTypeOption) {
                 paymentTypeOption.selected = true;
-                const event = new Event("change");
-                enFieldPaymentType.dispatchEvent(event);
             }
             else {
                 enFieldPaymentType.value = paymentType;
             }
+            const event = new Event("change");
+            enFieldPaymentType.dispatchEvent(event);
         }
     }
 }
@@ -19107,7 +19107,7 @@ class ExitIntentLightbox {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.14.14";
+const AppVersion = "0.14.15";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
