@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 4, 2023 @ 15:29:21 ET
- *  By: fernando
+ *  Date: Wednesday, August 9, 2023 @ 07:55:34 ET
+ *  By: michael
  *  ENGrid styles: v0.14.13
- *  ENGrid scripts: v0.14.14
+ *  ENGrid scripts: v0.14.15
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11283,12 +11283,12 @@ class engrid_ENGrid {
             const paymentTypeOption = Array.from(enFieldPaymentType.options).find((option) => option.value.toLowerCase() === paymentType.toLowerCase());
             if (paymentTypeOption) {
                 paymentTypeOption.selected = true;
-                const event = new Event("change");
-                enFieldPaymentType.dispatchEvent(event);
             }
             else {
                 enFieldPaymentType.value = paymentType;
             }
+            const event = new Event("change");
+            enFieldPaymentType.dispatchEvent(event);
         }
     }
 }
@@ -19107,7 +19107,7 @@ class ExitIntentLightbox {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.14.14";
+const AppVersion = "0.14.15";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -19311,32 +19311,97 @@ const customScript = function () {
     });
     setOptIn(countrySelect.value);
   } // Digital Wallets Moving Parts
+  //
+  // const digitalWalletWrapper = document.querySelector(
+  //   ".merge-with-give-by-select #en__digitalWallet"
+  // );
+  // const digitalWalletFirstChild = document.querySelector("#en__digitalWallet");
+  // const giveBySelect = document.querySelector(".give-by-select");
+  // if (digitalWalletWrapper && giveBySelect) {
+  //   giveBySelect.appendChild(digitalWalletWrapper);
+  //   digitalWalletFirstChild.insertAdjacentHTML(
+  //     "beforeend",
+  //     "<div class='digital-divider'><span class='divider-left'></span><p class='divider-center'>or enter manually</p><span class='divider-right'></span></div>"
+  //   );
+  // }
+  //
+  // let digitalWalletsExist;
+  //
+  // setTimeout(function () {
+  //   digitalWalletsExist = document.querySelectorAll(
+  //     ".en__digitalWallet__container > *"
+  //   );
+  //   if (digitalWalletsExist.length > 0 && giveBySelect) {
+  //     giveBySelect.setAttribute("show-wallets", "");
+  //   }
+  // }, 500);
+  //
+  // setTimeout(function () {
+  //   digitalWalletsExist = document.querySelectorAll(
+  //     ".en__digitalWallet__container > *"
+  //   );
+  //   if (digitalWalletsExist.length > 0 && giveBySelect) {
+  //     giveBySelect.setAttribute("show-wallets", "");
+  //   }
+  // }, 2500);
+  //
+  // //Digital wallets are hiddens via CSS on page load
+  // //this will show them on page load if required
+  // if (
+  //   document
+  //     .getElementById("en__field_transaction_paymenttype")
+  //     .value.toLowerCase() === "paypal"
+  // ) {
+  //   document.getElementById("en__digitalWallet").style.display = "flex";
+  // }
+  //
+  // /**
+  //  * Get the payment type value from the GiveBySelect. Workaround because
+  //  * EN requires payment type for both venmo and paypal to be "paypal".
+  //  * @returns "card", "venmo" or "paypal"
+  //  */
+  // function getGiveBySelectValue() {
+  //   let giveBySelectInput = document.querySelector(
+  //     'input[name="transaction.giveBySelect"]:checked'
+  //   );
+  //   let giveBySelectInputValue = giveBySelectInput.value.toLowerCase();
+  //
+  //   if (giveBySelectInputValue !== "paypal") return "card";
+  //
+  //   return giveBySelectInput.parentElement.classList.contains("venmo")
+  //     ? "venmo"
+  //     : "paypal";
+  // }
+  //
+  // function getPaymentFrequency() {
+  //   return document
+  //     .querySelector('input[name="transaction.recurrfreq"]:checked')
+  //     .value.toLowerCase();
+  // }
+  //
+  // //Toggles display of submit button and digital wallet buttons based on giveBySelect
+  // //and payment frequency
+  // document
+  //   .querySelectorAll(
+  //     '[name="transaction.giveBySelect"],[name="transaction.recurrfreq"]'
+  //   )
+  //   .forEach((el) => {
+  //     el.addEventListener("change", () => {
+  //       let submitButtonContainer = document.querySelector(".en__submit");
+  //       let digitalWalletsContainer =
+  //         document.getElementById("en__digitalWallet");
+  //       let giveBySelectValue = getGiveBySelectValue();
+  //
+  //       if (giveBySelectValue === "venmo") {
+  //         submitButtonContainer.style.display = "none";
+  //         digitalWalletsContainer.style.display = "flex";
+  //       } else {
+  //         submitButtonContainer.style.display = "block";
+  //         digitalWalletsContainer.style.display = "none";
+  //       }
+  //     });
+  //   });
 
-
-  const digitalWalletWrapper = document.querySelector(".merge-with-give-by-select #en__digitalWallet");
-  const digitalWalletFirstChild = document.querySelector("#en__digitalWallet");
-  const giveBySelect = document.querySelector(".give-by-select");
-
-  if (digitalWalletWrapper && giveBySelect) {
-    giveBySelect.appendChild(digitalWalletWrapper);
-    digitalWalletFirstChild.insertAdjacentHTML("beforeend", "<div class='digital-divider'><span class='divider-left'></span><p class='divider-center'>or enter manually</p><span class='divider-right'></span></div>");
-  }
-
-  let digitalWalletsExist;
-  setTimeout(function () {
-    digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
-
-    if (digitalWalletsExist.length > 0 && giveBySelect) {
-      giveBySelect.setAttribute("show-wallets", "");
-    }
-  }, 500);
-  setTimeout(function () {
-    digitalWalletsExist = document.querySelectorAll(".en__digitalWallet__container > *");
-
-    if (digitalWalletsExist.length > 0 && giveBySelect) {
-      giveBySelect.setAttribute("show-wallets", "");
-    }
-  }, 2500);
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM

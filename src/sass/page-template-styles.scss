@@ -162,6 +162,16 @@
   .en__contact__toggle {
     display: none;
   }
+
+  // GIVE BY SELECT VARIABLES
+  --give-by-select__button_background-color: #fff;
+  --give-by-select__button_border-color: #999;
+
+  --give-by-select__button_background-color_checked: #fff;
+  --give-by-select__button_border-color_checked: #3b84de;
+
+  --give-by-select__button_background-color_hover: #fff;
+  --give-by-select__button_border-color_hover: #999;
 }
 
 [data-engrid-subtheme="sailorsfortheseas"] {
@@ -302,51 +312,50 @@
   }
 
   /* Digital Wallets styling */
-
-  #en__pagebuilder .merge-with-give-by-select {
-    background-color: #ff00001a !important;
-  }
-
-  /* If Give by Select has a Digital Wallet, hide it until we add our data-attribute */
-  .give-by-select:not([show-wallets]) #en__digitalWallet .digital-divider {
-    display: none;
-  }
-
-  #en__digitalWallet {
-    margin-bottom: 0 !important;
-    order: -1;
-    padding-top: 15px !important;
-  }
-
-  .en__digitalWallet__button {
-    margin-top: 0 !important;
-  }
-
-  .en__digitalWallet__container {
-    margin-bottom: 0px !important;
-  }
-
-  .digital-divider {
-    width: 100%;
-    align-items: center;
-    color: #9b9b94;
-    display: flex;
-    padding-left: var(--fields_spacing-inline);
-    padding-right: var(--fields_spacing-inline);
-    margin-bottom: calc(var(--fields_spacing-block) - 4px);
-  }
-
-  .divider-left,
-  .divider-right {
-    background: #dfdfd7;
-    content: "";
-    flex: 1 1;
-    height: 1px;
-  }
-
-  .divider-center {
-    margin: 0 0.5rem;
-  }
+  //
+  //#en__pagebuilder .merge-with-give-by-select {
+  //  background-color: #ff00001a !important;
+  //}
+  //
+  ///* If Give by Select has a Digital Wallet, hide it until we add our data-attribute */
+  //.give-by-select:not([show-wallets]) #en__digitalWallet .digital-divider {
+  //  display: none;
+  //}
+  //
+  //#en__digitalWallet {
+  //  margin-bottom: 0 !important;
+  //  padding-top: 15px !important;
+  //}
+  //
+  //.en__digitalWallet__button {
+  //  margin-top: 0 !important;
+  //}
+  //
+  //.en__digitalWallet__container {
+  //  margin-bottom: 0px !important;
+  //}
+  //
+  //.digital-divider {
+  //  width: 100%;
+  //  align-items: center;
+  //  color: #9b9b94;
+  //  display: flex;
+  //  padding-left: var(--fields_spacing-inline);
+  //  padding-right: var(--fields_spacing-inline);
+  //  margin-bottom: calc(var(--fields_spacing-block) - 4px);
+  //}
+  //
+  //.divider-left,
+  //.divider-right {
+  //  background: #dfdfd7;
+  //  content: "";
+  //  flex: 1 1;
+  //  height: 1px;
+  //}
+  //
+  //.divider-center {
+  //  margin: 0 0.5rem;
+  //}
 }
 
 /** HEADER STYLES **/
@@ -790,4 +799,60 @@
   .en__field__element--checkbox .en__field__item {
     width: 100%;
   }
+
+  // GIVE BY SELECT STYLES
+  .give-by-select .en__field__element--radio {
+    align-items: stretch;
+  }
+
+  .en__field--give-by-select.en__field--radio input[type="radio"] + label {
+    height: 100%;
+    padding: 12px 22px;
+  }
+
+  // GIFT SUMMARY STYLES
+  .gift-summary-list {
+    background-color: #f9f9f9;
+    border-top: 1px solid #d5d5d5;
+    border-bottom: 1px solid #d5d5d5;
+    color: #344857;
+    font-size: 14px;
+  }
+
+  .gift-summary-list__item {
+    display: flex;
+    padding: 15px 20px;
+  }
+
+  .gift-summary-list__item:not(:first-of-type) {
+    border-top: 1px solid #d5d5d5;
+  }
+
+  .gift-summary-list__term {
+    flex-basis: 33.3%;
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  .gift-summary-list__description {
+    flex-basis: 66.6%;
+  }
 }
+
+//#en__digitalWallet {
+//  display: none;
+//}
+
+// #en__digitalWallet #en__digitalWallet__paypalTouch {
+//   overflow: hidden;
+// }
+
+// #en__digitalWallet #en__digitalWallet__paypalTouch.paypal {
+//   height: 45px;
+// }
+
+// #en__digitalWallet #en__digitalWallet__paypalTouch.venmo >  #en__digitalWallet__paypalTouch__container {
+//   position: relative;
+//   top: -59px;
+//   height: 45px;
+// }
