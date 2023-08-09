@@ -108,6 +108,10 @@
   --radio_background-color_selected: var(--theme-cta);
   --radio_box-shadow_selected: rgb(255 255 255) 0px 0px 0px 2px inset;
 
+  --give-by-select__button_color: #000000;
+  --give-by-select__button_color_hover: #000000;
+  --give-by-select__button_color_checked: var(--theme-cta);
+
   // HIDES UNUSED SECTION FROM PAGE BUILDER
   &#en__pagebuilder {
     .page-alert,

@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, August 9, 2023 @ 07:55:34 ET
- *  By: michael
+ *  Date: Wednesday, August 9, 2023 @ 17:21:32 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.14.13
  *  ENGrid scripts: v0.14.15
  *
@@ -7875,6 +7875,9 @@ body[data-engrid-debug]:before{
   --radio_color_selected:var(--theme-cta);
   --radio_background-color_selected:var(--theme-cta);
   --radio_box-shadow_selected:#fff 0px 0px 0px 2px inset;
+  --give-by-select__button_color:#000;
+  --give-by-select__button_color_hover:#000;
+  --give-by-select__button_color_checked:var(--theme-cta);
   --give-by-select__button_background-color:#fff;
   --give-by-select__button_border-color:#999;
   --give-by-select__button_background-color_checked:#fff;
