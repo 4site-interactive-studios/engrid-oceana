@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 24, 2023 @ 10:25:19 ET
+ *  Date: Thursday, August 24, 2023 @ 13:27:34 ET
  *  By: bryancasler
  *  ENGrid styles: v0.14.13
  *  ENGrid scripts: v0.14.15
@@ -19214,38 +19214,21 @@ const customScript = function (App) {
         }
       });
     });
-  } // Add a notice to the mobile phone field
-
-
-  App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', '[name="supporter.phoneNumber2"]', "after");
+  }
   /**
    * This function checks the value of the mobile phone input field and toggles
    * the SMS opt-in checkbox accordingly. It also adds the checkbox field if needed
    * and adds event listeners to monitor changes.
    */
 
+
   function toggleSMSOptInCheckboxBasedOnMobilePhone() {
     const mobilePhoneInput = document.querySelector('[name="supporter.phoneNumber2"]');
-    let smsOptInCheckbox = document.querySelector(".en__field--sms input[type='checkbox']");
-    const phoneNumberField = document.querySelector(".en__field--phoneNumber2");
+    const smsOptInCheckbox = document.querySelector(".en__field--sms input[type='checkbox']");
 
-    if (mobilePhoneInput) {
-      // If SMS opt-in checkbox is not present, add it after phoneNumberField
-      if (!smsOptInCheckbox && phoneNumberField) {
-        const checkboxMarkup = `
-        <div class="en__field en__field--checkbox en__field--question en__field--1658202 en__field--sms hide">
-          <div class="en__field__element en__field__element--checkbox">
-            <div class="en__field__item">
-              <input id="en__field_supporter_questions_1658202" type="checkbox" class="en__field__input en__field__input--checkbox" value="Y" name="supporter.questions.1658202">
-              <label for="en__field_supporter_questions_1658202" class="en__field__label en__field__label--item"><p>SMS Opt-in</p></label>
-            </div>
-          </div>
-        </div>
-      `;
-        phoneNumberField.insertAdjacentHTML("afterend", checkboxMarkup);
-        smsOptInCheckbox = document.querySelector(".en__field--sms input[type='checkbox']");
-      } // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
-
+    if (mobilePhoneInput && smsOptInCheckbox) {
+      // Add a notice to the mobile phone field
+      App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', '[name="supporter.phoneNumber2"]', "after"); // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
 
       const toggleCheckbox = () => {
         if (mobilePhoneInput.value.trim() !== "") {
