@@ -1,4 +1,4 @@
-export const customScript = function () {
+export const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
   if (tidepoolButton) {
@@ -36,6 +36,69 @@ export const customScript = function () {
       });
     });
   }
+
+  // Add a notice to the mobile phone field
+  App.addHtml(
+    '<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>',
+    '[name="supporter.phoneNumber2"]',
+    "after"
+  );
+
+  /**
+   * This function checks the value of the mobile phone input field and toggles
+   * the SMS opt-in checkbox accordingly. It also adds the checkbox field if needed
+   * and adds event listeners to monitor changes.
+   */
+  function toggleSMSOptInCheckboxBasedOnMobilePhone() {
+    const mobilePhoneInput = document.querySelector(
+      '[name="supporter.phoneNumber2"]'
+    );
+    const smsOptInCheckbox = document.querySelector(
+      '[name="supporter.questions.1658202"]'
+    );
+
+    if (mobilePhoneInput) {
+      // If SMS opt-in checkbox is not present, add it
+      if (!smsOptInCheckbox) {
+        const checkboxMarkup = `
+        <div class="en__field en__field--checkbox en__field--question en__field--1658202 en__field--sms has-value">
+          <div class="en__field__element en__field__element--checkbox">
+            <div class="en__field__item">
+              <input id="en__field_supporter_questions_1658202" type="checkbox" class="en__field__input en__field__input--checkbox" value="Y" name="supporter.questions.1658202">
+              <label for="en__field_supporter_questions_1658202" class="en__field__label en__field__label--item"><p>SMS Opt-in</p></label>
+            </div>
+          </div>
+        </div>
+      `;
+        mobilePhoneInput.insertAdjacentHTML("afterend", checkboxMarkup);
+      }
+
+      // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
+      const toggleCheckbox = () => {
+        if (mobilePhoneInput.value.trim() !== "") {
+          smsOptInCheckbox.checked = true;
+          console.log(
+            "SMS Opt-in Checkbox checked: Mobile phone input has a value."
+          );
+        } else {
+          smsOptInCheckbox.checked = false;
+          console.log(
+            "SMS Opt-in Checkbox unchecked: Mobile phone input is empty."
+          );
+        }
+      };
+
+      // Call the function on page load
+      toggleCheckbox();
+
+      // Add event listener to mobile phone input for changes
+      mobilePhoneInput.addEventListener("input", toggleCheckbox);
+    }
+  }
+
+  // Call the function to toggle SMS opt-in checkbox based on mobile phone input
+  toggleSMSOptInCheckboxBasedOnMobilePhone();
+
   const countrySelect = document.querySelector("#en__field_supporter_country");
   if (countrySelect) {
     const defaultCheckbox = document.querySelector(
