@@ -53,15 +53,16 @@ export const customScript = function (App) {
     const mobilePhoneInput = document.querySelector(
       '[name="supporter.phoneNumber2"]'
     );
-    const smsOptInCheckbox = document.querySelector(
-      '[name="supporter.questions.1658202"]'
+    let smsOptInCheckbox = document.querySelector(
+      ".en__field--sms input[type='checkbox']"
     );
+    const phoneNumberField = document.querySelector(".en__field--phoneNumber2");
 
     if (mobilePhoneInput) {
-      // If SMS opt-in checkbox is not present, add it
-      if (!smsOptInCheckbox) {
+      // If SMS opt-in checkbox is not present, add it after phoneNumberField
+      if (!smsOptInCheckbox && phoneNumberField) {
         const checkboxMarkup = `
-        <div class="en__field en__field--checkbox en__field--question en__field--1658202 en__field--sms has-value">
+        <div class="en__field en__field--checkbox en__field--question en__field--1658202 en__field--sms hide">
           <div class="en__field__element en__field__element--checkbox">
             <div class="en__field__item">
               <input id="en__field_supporter_questions_1658202" type="checkbox" class="en__field__input en__field__input--checkbox" value="Y" name="supporter.questions.1658202">
@@ -70,12 +71,18 @@ export const customScript = function (App) {
           </div>
         </div>
       `;
-        mobilePhoneInput.insertAdjacentHTML("afterend", checkboxMarkup);
+        phoneNumberField.insertAdjacentHTML("afterend", checkboxMarkup);
+        smsOptInCheckbox = document.querySelector(
+          ".en__field--sms input[type='checkbox']"
+        );
       }
 
       // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
       const toggleCheckbox = () => {
         if (mobilePhoneInput.value.trim() !== "") {
+          /* `smsOptInCheckbox` is a variable that stores a reference to the checkbox element for SMS
+          opt-in. It is used to toggle the checked state of the checkbox based on the value of the
+          mobile phone input field. */
           smsOptInCheckbox.checked = true;
           console.log(
             "SMS Opt-in Checkbox checked: Mobile phone input has a value."
