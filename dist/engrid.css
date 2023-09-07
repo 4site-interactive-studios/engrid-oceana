@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 7, 2023 @ 12:53:14 ET
+ *  Date: Thursday, September 7, 2023 @ 13:24:53 ET
  *  By: bryancasler
  *  ENGrid styles: v0.15.0
  *  ENGrid scripts: v0.15.2
@@ -1667,8 +1667,6 @@ template{
   }
 }
 .en__hubMembership__card__update,.en__hubUpdateCC__toggle{
-  background:url(https://e-activist.com/pageassets/images/en_edit.png) 50% no-repeat;
-  visibility:hidden;
   background:url(https://e-activist.com/pageassets/images/en_edit.png) 50% no-repeat;
   visibility:hidden;
 }
@@ -5745,9 +5743,6 @@ body[data-engrid-exit-intent-lightbox=open]{
 [data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-address-details=true]) .showif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-personal-details=true]) .showif-fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .hideif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .hideif-fast-personal-details{
   display:none !important;
 }
-[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-address-details=true]) .showif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder):not([data-engrid-hide-fast-personal-details=true]) .showif-fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-address-details=true] .hideif-fast-address-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .fast-personal-details,[data-engrid-theme]:not(#en__pagebuilder)[data-engrid-hide-fast-personal-details=true] .hideif-fast-personal-details{
-  display:none !important;
-}
 [data-engrid-theme]{
   --engrid__page_padding:0px;
   --engrid__page_margin:0px;
@@ -7666,12 +7661,7 @@ body[data-engrid-debug]:before{
 }
 
 #en__pagebuilder .fast-address-details,#en__pagebuilder .fast-personal-details,#en__pagebuilder [class*=engrid__],#en__pagebuilder [class*=hideif],#en__pagebuilder [class*=showif],[data-engrid-debug] .fast-address-details,[data-engrid-debug] .fast-personal-details,[data-engrid-debug] [class*=engrid__],[data-engrid-debug] [class*=hideif],[data-engrid-debug] [class*=showif]{
-#en__pagebuilder .fast-address-details,#en__pagebuilder .fast-personal-details,#en__pagebuilder [class*=engrid__],#en__pagebuilder [class*=hideif],#en__pagebuilder [class*=showif],[data-engrid-debug] .fast-address-details,[data-engrid-debug] .fast-personal-details,[data-engrid-debug] [class*=engrid__],[data-engrid-debug] [class*=hideif],[data-engrid-debug] [class*=showif]{
   background-color:rgba(0,0,255,.102) !important;
-}
-
-#en__pagebuilder [class*=setattr],[data-engrid-debug] [class*=setattr]{
-  background-color:rgba(255,255,0,.102) !important;
 }
 
 #en__pagebuilder [class*=setattr],[data-engrid-debug] [class*=setattr]{
