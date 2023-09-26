@@ -13,6 +13,7 @@ const options: Options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
+  Plaid: true,
   // ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),

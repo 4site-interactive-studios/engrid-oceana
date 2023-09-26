@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, September 7, 2023 @ 13:24:53 ET
- *  By: bryancasler
+ *  Date: Tuesday, September 26, 2023 @ 14:48:09 ET
+ *  By: fernando
  *  ENGrid styles: v0.15.0
  *  ENGrid scripts: v0.15.2
  *
@@ -19526,6 +19526,7 @@ const options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
+  Plaid: true,
   // ProgressBar: true,
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),
