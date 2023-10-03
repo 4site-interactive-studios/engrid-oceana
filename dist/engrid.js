@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 26, 2023 @ 14:48:09 ET
+ *  Date: Tuesday, October 3, 2023 @ 14:52:35 ET
  *  By: fernando
- *  ENGrid styles: v0.15.0
- *  ENGrid scripts: v0.15.2
+ *  ENGrid styles: v0.15.3
+ *  ENGrid scripts: v0.15.7
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10762,8 +10762,15 @@ class DonationAmount {
         }
         else {
             const otherField = document.querySelector('input[name="' + this._other + '"]');
-            otherField.focus();
-            otherField.value = parseFloat(amount.toString()).toFixed(2);
+            if (otherField) {
+                const enFieldOtherAmountRadio = document.querySelector('input[name="' + this._radios + '"][value="other" i]');
+                if (enFieldOtherAmountRadio) {
+                    enFieldOtherAmountRadio.checked = true;
+                }
+                otherField.value = parseFloat(amount.toString()).toFixed(2);
+                const otherWrapper = otherField.parentNode;
+                otherWrapper.classList.remove("en__field__item--hidden");
+            }
         }
         // Set the new amount and trigger all live variables
         this.amount = amount;
@@ -11743,6 +11750,7 @@ class App extends engrid_ENGrid {
         new UrlParamsToBodyAttrs();
         new FastFormFill();
         new SetAttr();
+        new ShowIfPresent();
         //Debug panel
         if (this.options.Debug ||
             window.sessionStorage.hasOwnProperty(DebugPanel.debugSessionStorageKey)) {
@@ -12090,7 +12098,9 @@ class CreditCard {
                 return;
             const current_date = new Date();
             const current_month = current_date.getMonth() + 1;
-            const current_year = current_date.getFullYear() - 2000;
+            const current_year = parseInt(this.field_expiration_year[this.field_expiration_year.length - 1].value) > 2000
+                ? current_date.getFullYear()
+                : current_date.getFullYear() - 2000;
             // handle if year is changed to current year (disable all months less than current month)
             // handle if month is changed to less than current month (disable current year)
             if (e == "month") {
@@ -12883,10 +12893,10 @@ class InputPlaceholders {
             ".en__mandatory input#en__field_supporter_phoneNumber2": "000-000-0000",
             "input#en__field_supporter_country": "Country",
             "input#en__field_supporter_address1": "Street Address",
-            "input#en__field_supporter_address2": "Apt., ste., bldg.",
+            "input#en__field_supporter_address2": "Apt., Ste., Bldg.",
             "input#en__field_supporter_city": "City",
             "input#en__field_supporter_region": "Region",
-            "input#en__field_supporter_postcode": "Zip Code",
+            "input#en__field_supporter_postcode": "ZIP Code",
             ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Other",
             "input#en__field_transaction_ccnumber": "•••• •••• •••• ••••",
             "input#en__field_transaction_ccexpire": "MM / YY",
@@ -12898,7 +12908,7 @@ class InputPlaceholders {
             "input#en__field_transaction_infemail": "Recipient Email Address",
             "input#en__field_transaction_infcountry": "Country",
             "input#en__field_transaction_infadd1": "Recipient Street Address",
-            "input#en__field_transaction_infadd2": "Recipient Apt., ste., bldg.",
+            "input#en__field_transaction_infadd2": "Recipient Apt., Ste., Bldg.",
             "input#en__field_transaction_infcity": "Recipient City",
             "input#en__field_transaction_infpostcd": "Recipient Postal Code",
             "input#en__field_transaction_gftrsn": "Reason for your gift",
@@ -12907,13 +12917,13 @@ class InputPlaceholders {
             "input#en__field_transaction_shipemail": "Shipping Email Address",
             "input#en__field_transaction_shipcountry": "Shipping Country",
             "input#en__field_transaction_shipadd1": "Shipping Street Address",
-            "input#en__field_transaction_shipadd2": "Shipping Apt., ste., bldg.",
+            "input#en__field_transaction_shipadd2": "Shipping Apt., Ste., Bldg.",
             "input#en__field_transaction_shipcity": "Shipping City",
             "input#en__field_transaction_shipregion": "Shipping Region",
             "input#en__field_transaction_shippostcode": "Shipping Postal Code",
             "input#en__field_supporter_billingCountry": "Billing Country",
             "input#en__field_supporter_billingAddress1": "Billing Street Address",
-            "input#en__field_supporter_billingAddress2": "Billing Apt., ste., bldg.",
+            "input#en__field_supporter_billingAddress2": "Billing Apt., Ste., Bldg.",
             "input#en__field_supporter_billingCity": "Billing City",
             "input#en__field_supporter_billingRegion": "Billing Region",
             "input#en__field_supporter_billingPostcode": "Billing Postal Code",
@@ -19174,11 +19184,93 @@ class SetAttr {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/show-if-present.js
+/**
+ * This class contains the logic for special classes that can be used to hide elements if
+ * certain supporter questions are present or absent.
+ * Typically, this can be used to hide elements when an opt in question is not rendered on the page
+ * because the supporter came from a campaign link and is already opted in, so EN doesn't render
+ * the question on the page.
+ *
+ * The class names are of the format:
+ * engrid__supporterquestions{id}-present -- show this element when the supporter question is present
+ * engrid__supporterquestions{id}-absent -- show this element when the supporter question is absent
+ *
+ * The {id} is the id of the supporter question. This can be found by inspecting the element on the page.
+ *
+ * It's also possible to combine multiple questions using the following format. These examples show 2 questions,
+ * but you can use as many as you like:
+ * engrid__supporterquestions{id1}__supporterquestions{id2}-present -- show this element when EITHER question is present
+ * engrid__supporterquestions{id1}__supporterquestions{id2}-absent -- show this element when EITHER question is absent
+ */
+
+class ShowIfPresent {
+    constructor() {
+        this.logger = new EngridLogger("ShowIfPresent", "yellow", "black", "👀");
+        this.elements = [];
+        if (this.shouldRun()) {
+            this.run();
+        }
+    }
+    shouldRun() {
+        // Check if we have any elements on the page that match the pattern for this functionality
+        // e.g. engrid__supporterquestions{id}__supporterquestions{id}-present, etc.
+        this.elements = [
+            ...document.querySelectorAll('[class*="engrid__supporterquestions"]'),
+        ].filter((el) => {
+            const classNames = el.className.split(" ");
+            return classNames.some((className) => /^engrid__supporterquestions\d+(__supporterquestions\d+)*-(present|absent)$/.test(className));
+        });
+        return this.elements.length > 0;
+    }
+    run() {
+        const actions = [];
+        // Create an array of actions for each element we have
+        this.elements.forEach((el) => {
+            // Mapping to an object with the class name, field name(s), and type
+            const classNames = el.className.split(" ");
+            const matchingClass = classNames.find((className) => /^engrid__supporterquestions\d+(__supporterquestions\d+)*-(present|absent)$/.test(className));
+            if (!matchingClass)
+                return null;
+            const typeIndex = matchingClass.lastIndexOf("-");
+            const type = matchingClass.substring(typeIndex + 1);
+            // Getting an array of the matching input names
+            // e.g. engrid__supporterquestions12345-present => ['supporter.questions.12345']
+            // e.g. engrid__supporterquestions12345__supporterquestions67890-present => ['supporter.questions.12345', 'supporter.questions.67890']
+            const inputIds = matchingClass
+                .substring(8, typeIndex)
+                .split("__")
+                .map((id) => `supporter.questions.${id.substring(18)}`);
+            actions.push({
+                class: matchingClass,
+                fieldNames: inputIds,
+                type: type,
+            });
+        });
+        //Process the actions
+        actions.forEach((action) => {
+            const inputElements = action.fieldNames.map((fieldName) => document.getElementsByName(fieldName)[0]);
+            const elements = document.querySelectorAll(`.${action.class}`);
+            const areAllInputsPresent = inputElements.every((input) => !!input);
+            const areAllInputsAbsent = inputElements.every((input) => !input);
+            // Hide the elements based on AND conditions
+            if ((action.type === "present" && areAllInputsAbsent) ||
+                (action.type === "absent" && areAllInputsPresent)) {
+                this.logger.log(`Conditions not met, hiding elements with class ${action.class}`);
+                elements.forEach((el) => {
+                    el.style.display = "none";
+                });
+            }
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.15.2";
+const AppVersion = "0.15.7";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
