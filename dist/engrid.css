@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, October 3, 2023 @ 15:03:55 ET
- *  By: fernando
+ *  Date: Friday, October 27, 2023 @ 11:10:53 ET
+ *  By: michael
  *  ENGrid styles: v0.15.3
  *  ENGrid scripts: v0.15.7
  *
@@ -8225,8 +8225,22 @@ body[data-engrid-debug]:before{
   align-items:stretch;
 }
 [data-engrid-theme=oceana] .en__field--give-by-select.en__field--radio input[type=radio]+label{
-  height:100%;
+  height:112px;
   padding:12px 22px;
+}
+[data-engrid-theme=oceana] .give-by-select .en__field__label{
+  flex-direction:column !important;
+}
+[data-engrid-theme=oceana] .give-by-select .en__field__label img{
+  height:auto;
+  max-height:50%;
+  width:auto;
+}
+[data-engrid-theme=oceana] .give-by-select .en__field__label img:only-child{
+  max-height:100%;
+}
+[data-engrid-theme=oceana] .give-by-select .venmo label>img:last-of-type{
+  height:30px;
 }
 [data-engrid-theme=oceana] .gift-summary-list{
   background-color:#f9f9f9;
@@ -8249,6 +8263,23 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana] .gift-summary-list__description{
   flex-basis:66.6%;
+}
+
+#en__digitalWallet__paypalTouch__container,#en__digitalWallet__stripeButtons__container{
+  max-width:100%;
+  width:100%;
+}
+@media screen and (min-width:600px){
+  #en__digitalWallet__paypalTouch__container,#en__digitalWallet__stripeButtons__container{
+    width:501px !important;
+  }
+}
+
+.new-gift-summary{
+  border-bottom:1px solid #ccc;
+  border-top:1px solid #ccc;
+  margin:10px auto;
+  padding:12px 16px;
 }
 body{
   opacity:1;
