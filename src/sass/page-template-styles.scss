@@ -805,13 +805,23 @@
   }
 
   // GIVE BY SELECT STYLES
+  .give-by-select {
+    @media screen and (max-width: 600px) {
+      --give-by-select__button_count: 1;
+    }
+  }
+
+  .give-by-select .en__field__item.card {
+    flex-basis: 100%;
+  }
+
   .give-by-select .en__field__element--radio {
     align-items: stretch;
   }
 
   .en__field--give-by-select.en__field--radio input[type="radio"] + label {
     padding: 12px 22px;
-    height: 112px;
+    height: 90px;
   }
 
   .give-by-select .en__field__label {
@@ -829,7 +839,8 @@
   }
 
   .give-by-select .venmo label > img:last-of-type {
-    height: 30px;
+    height: 20px;
+    margin-top: 5px;
   }
 
   // GIFT SUMMARY STYLES
@@ -862,7 +873,9 @@
 }
 
 #en__digitalWallet__stripeButtons__container,
-#en__digitalWallet__paypalTouch__container {
+#en__digitalWallet__paypalTouch__container,
+#en__digitalWallet__paypalTouch,
+#en__digitalWallet__stripeButtons {
   max-width: 100%;
   width: 100%;
   @media screen and (min-width: 600px) {
