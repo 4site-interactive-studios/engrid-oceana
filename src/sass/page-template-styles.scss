@@ -875,6 +875,39 @@
   .gift-summary-list__description {
     flex-basis: 66.6%;
   }
+
+  .monthly-nudge {
+    background-color: #d2def1;
+    color: #3182c4;
+    padding: 0 50px;
+    margin: 0 0 15px;
+    position: relative;
+
+    @media (max-width: 420px) {
+      padding: 0 20px;
+    }
+
+    &:before {
+      border-bottom: 12px solid #d2def1;
+      border-left: 10px solid #0000;
+      border-right: 10px solid #0000;
+      content: "";
+      display: block;
+      height: 0;
+      position: absolute;
+      width: 0;
+      top: -12px;
+      left: 17px;
+    }
+
+    p {
+      text-align: center;
+      font-style: italic;
+      font-size: 20px;
+      margin: 10px 0 12px;
+      line-height: 1.1;
+    }
+  }
 }
 
 #en__digitalWallet__stripeButtons__container,
