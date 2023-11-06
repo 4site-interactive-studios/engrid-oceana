@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 6, 2023 @ 13:12:35 ET
+ *  Date: Monday, November 6, 2023 @ 17:58:23 ET
  *  By: fernando
  *  ENGrid styles: v0.15.12
- *  ENGrid scripts: v0.15.16
+ *  ENGrid scripts: v0.15.17
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -17666,6 +17666,7 @@ class LiveCurrency {
     constructor() {
         this.logger = new EngridLogger("LiveCurrency", "#1901b1", "#feb47a", "💲");
         this.elementsFound = false;
+        this.isUpdating = false;
         this._amount = DonationAmount.getInstance();
         this._frequency = DonationFrequency.getInstance();
         this._fees = ProcessingFees.getInstance();
@@ -17689,6 +17690,11 @@ class LiveCurrency {
             const currencyElement = `<span class="engrid-currency-symbol">${currency}</span>`;
             const currencyCodeElement = `<span class="engrid-currency-code">${currencyCode}</span>`;
             enElements.forEach((item) => {
+                // If item starts with <script, skip it
+                if (item instanceof HTMLElement &&
+                    item.innerHTML.startsWith("<script")) {
+                    return;
+                }
                 if (item instanceof HTMLElement &&
                     (item.innerHTML.includes("[$]") || item.innerHTML.includes("[$$$]"))) {
                     this.logger.log("Old Value:", item.innerHTML);
@@ -17704,6 +17710,28 @@ class LiveCurrency {
     shouldRun() {
         return this.elementsFound;
     }
+    addMutationObserver() {
+        const targetNode = document.querySelector(".en__field--donationAmt .en__field__element--radio");
+        if (!targetNode)
+            return;
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === "childList") {
+                    // Update the currency only once, after the mutation is complete
+                    if (this.isUpdating)
+                        return;
+                    this.isUpdating = true;
+                    setTimeout(() => {
+                        this.searchElements();
+                        this.updateCurrency();
+                        this.isUpdating = false;
+                    }, 20);
+                }
+            });
+        });
+        const config = { childList: true };
+        observer.observe(targetNode, config);
+    }
     addEventListeners() {
         this._fees.onFeeChange.subscribe(() => {
             setTimeout(() => {
@@ -17716,9 +17744,13 @@ class LiveCurrency {
             }, 10);
         });
         this._frequency.onFrequencyChange.subscribe(() => {
+            if (this.isUpdating)
+                return;
+            this.isUpdating = true;
             setTimeout(() => {
                 this.searchElements();
                 this.updateCurrency();
+                this.isUpdating = false;
             }, 10);
         });
         const currencyField = engrid_ENGrid.getField("transaction.paycurrency");
@@ -17735,6 +17767,7 @@ class LiveCurrency {
                 }, 10);
             });
         }
+        this.addMutationObserver();
     }
     updateCurrency() {
         const currencySymbolElements = document.querySelectorAll(".engrid-currency-symbol");
@@ -19703,7 +19736,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.15.16";
+const AppVersion = "0.15.17";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
