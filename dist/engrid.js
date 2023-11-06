@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 6, 2023 @ 12:35:57 ET
- *  By: michael
+ *  Date: Monday, November 6, 2023 @ 13:12:35 ET
+ *  By: fernando
  *  ENGrid styles: v0.15.12
- *  ENGrid scripts: v0.15.15
+ *  ENGrid scripts: v0.15.16
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10319,6 +10319,7 @@ const OptionsDefaults = {
     Placeholders: false,
     ENValidators: false,
     MobileCTA: false,
+    CustomCurrency: false,
     PageLayouts: [
         "leftleft1col",
         "centerleft1col",
@@ -11198,6 +11199,11 @@ class engrid_ENGrid {
     static getCurrencySymbol() {
         const currencyField = engrid_ENGrid.getField("transaction.paycurrency");
         if (currencyField) {
+            // Check if the selected currency field option have a data-currency-symbol attribute
+            const selectedOption = currencyField.options[currencyField.selectedIndex];
+            if (selectedOption.dataset.currencySymbol) {
+                return selectedOption.dataset.currencySymbol;
+            }
             const currencyArray = {
                 USD: "$",
                 EUR: "€",
@@ -11681,8 +11687,6 @@ class App extends engrid_ENGrid {
             this.logger.success("Validation Passed");
             return true;
         };
-        // Live Currency
-        new LiveCurrency();
         // iFrame Logic
         new iFrame();
         // Live Variables
@@ -11708,6 +11712,9 @@ class App extends engrid_ENGrid {
         this._frequency.load();
         // Fast Form Fill
         new FastFormFill();
+        // Currency Related Components
+        new LiveCurrency();
+        new CustomCurrency();
         // Auto Country Select
         new AutoCountrySelect();
         // Add Image Attribution
@@ -17746,6 +17753,120 @@ class LiveCurrency {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/custom-currency.js
+// This component allows you to customize the currency options in the currency field
+// It is used in the following way:
+//
+// CustomCurrency: {
+//   label: "Give with [$$$]",
+//   default: {
+//     USD: "$",
+//     GBP: "£",
+//     EUR: "€",
+//   },
+//   countries: {
+//     US: {
+//       USD: "$",
+//     },
+//     GB: {
+//       GBP: "£",
+//     },
+//     DE: {
+//       EUR: "€",
+//     },
+//   },
+// },
+//
+// The label is the text that appears in the currency field
+// The default is the currency options that appear when the selected country does not have a custom option
+// The countries object is a list of countries and their currency options
+// The country codes must match the country codes in the country field
+// Because the CustomCurrency component works with the country field, it's automatically integrated with the AutoCountrySelect component.
+// So if you visit the page from a country that has a custom currency option, the currency field will automatically be updated.
+// The CustomCurrency component can also be set at the page level. Useful for Regional Pages, with a Code Block like this:
+// <script>
+//   window.EngridPageOptions = window.EngridPageOptions || [];
+//   window.EngridPageOptions.CustomCurrency = {
+//     label: "Give with [$$$]",
+//     default: {
+//       USD: "$",
+//       GBP: "£",
+//       EUR: "€",
+//     },
+//     countries: {
+//       US: {
+//         USD: "$",
+//       },
+//       GB: {
+//         GBP: "£",
+//       },
+//       DE: {
+//         EUR: "€",
+//       },
+//     },
+//   };
+// </script>
+//
+// This will override the default CustomCurrency options for that page.
+//
+
+class CustomCurrency {
+    constructor() {
+        this.logger = new EngridLogger("CustomCurrency", "#1901b1", "#00cc95", "🤑");
+        this.currencyElement = document.querySelector("[name='transaction.paycurrency']");
+        this.countryElement = document.getElementById("en__field_supporter_country");
+        if (!this.shouldRun())
+            return;
+        this.addEventListeners();
+        this.loadCurrencies();
+    }
+    shouldRun() {
+        // Only run if the currency field is present, and the CustomCurrency option is not false
+        if (!this.currencyElement || !engrid_ENGrid.getOption("CustomCurrency")) {
+            return false;
+        }
+        return true;
+    }
+    addEventListeners() {
+        if (this.countryElement) {
+            this.countryElement.addEventListener("change", (e) => {
+                this.loadCurrencies(e.target.value);
+            });
+        }
+    }
+    // Changes the options in the currency field to match the selected country options
+    loadCurrencies(country = "default") {
+        const options = engrid_ENGrid.getOption("CustomCurrency");
+        if (!options)
+            return;
+        const label = options.label || `Give with [$$$]`;
+        let currencies = options.default;
+        if (options.countries && options.countries[country]) {
+            currencies = options.countries[country];
+        }
+        if (!currencies) {
+            this.logger.log(`No currencies found for ${country}`);
+            return;
+        }
+        this.logger.log(`Loading currencies for ${country}`);
+        this.currencyElement.innerHTML = "";
+        for (const currency in currencies) {
+            const option = document.createElement("option");
+            option.value = currency;
+            option.text = label
+                .replace("[$$$]", currency)
+                .replace("[$]", currencies[currency]);
+            option.setAttribute("data-currency-code", currency);
+            option.setAttribute("data-currency-symbol", currencies[currency]);
+            this.currencyElement.appendChild(option);
+        }
+        // Set the currency to the first option and trigger a change event
+        this.currencyElement.selectedIndex = 0;
+        const event = new Event("change", { bubbles: true });
+        this.currencyElement.dispatchEvent(event);
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/autosubmit.js
 // Automatically submits the page if a URL argument is present
 
@@ -19582,10 +19703,11 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.15.15";
+const AppVersion = "0.15.16";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 

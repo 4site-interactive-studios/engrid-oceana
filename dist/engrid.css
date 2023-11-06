@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 6, 2023 @ 12:35:57 ET
- *  By: michael
+ *  Date: Monday, November 6, 2023 @ 13:12:35 ET
+ *  By: fernando
  *  ENGrid styles: v0.15.12
- *  ENGrid scripts: v0.15.15
+ *  ENGrid scripts: v0.15.16
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -8272,6 +8272,16 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana] .gift-summary-list__description{
   flex-basis:66.6%;
+}
+[data-engrid-theme=oceana] .en__field--paycurrency select{
+  background-color:initial;
+  border:none;
+  box-shadow:none;
+  font-size:1.5rem;
+  margin:18px auto 0 !important;
+  text-align:center;
+  text-transform:uppercase;
+  width:auto;
 }
 [data-engrid-theme=oceana] .monthly-nudge{
   background-color:#d2def1;

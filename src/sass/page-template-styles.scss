@@ -811,7 +811,6 @@
     }
   }
 
-
   //When we have "give by select" options that should split over 2 lines (Card, Paypal, Digital Wallets and ACH all on page)
   //First line will be the column option 100% width, then next 3 on 1 line below equal width.
   &[data-engrid-payment-type-option-apple-pay="true"][data-engrid-payment-type-option-paypal-one-touch="true"] {
@@ -830,7 +829,7 @@
   }
 
   .give-by-select .en__field__label {
-    flex-direction: column!important;
+    flex-direction: column !important;
   }
 
   .give-by-select .en__field__label img {
@@ -876,6 +875,17 @@
     flex-basis: 66.6%;
   }
 
+  .en__field--paycurrency select {
+    background-color: initial;
+    border: none;
+    box-shadow: none;
+    font-size: 1.5rem;
+    margin: 18px auto 0 !important;
+    text-align: center;
+    text-transform: uppercase;
+    width: auto;
+  }
+
   .monthly-nudge {
     background-color: #d2def1;
     color: #3182c4;
@@ -917,7 +927,7 @@
   max-width: 100%;
   width: 100%;
   @media screen and (min-width: 600px) {
-    width: 501px!important;
+    width: 501px !important;
   }
 }
 
