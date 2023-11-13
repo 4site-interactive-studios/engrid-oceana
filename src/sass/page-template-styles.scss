@@ -930,6 +930,16 @@
     width: 501px !important;
   }
 }
+[data-engrid-country="United States"] {
+  .en__field--paycurrency {
+    display: none;
+  }
+}
+.show-currency-list {
+  .en__field--paycurrency {
+    display: block !important;
+  }
+}
 
 .new-gift-summary {
   border-top: 1px solid #ccc;
