@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, November 13, 2023 @ 19:17:49 ET
+ *  Date: Wednesday, January 10, 2024 @ 15:44:24 ET
  *  By: fernando
- *  ENGrid styles: v0.16.0
- *  ENGrid scripts: v0.16.1
+ *  ENGrid styles: v0.16.4
+ *  ENGrid scripts: v0.16.10
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11805,6 +11805,12 @@ class DonationAmount {
                 this.amount = currentAmountValue;
             }
         }
+        else if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getDonationTotal")) {
+            const total = window.EngagingNetworks.require._defined.enjs.getDonationTotal();
+            if (total) {
+                this.amount = total;
+            }
+        }
     }
     // Force a new amount
     setAmount(amount, dispatch = true) {
@@ -11826,7 +11832,7 @@ class DonationAmount {
         else {
             const otherField = document.querySelector('input[name="' + this._other + '"]');
             if (otherField) {
-                const enFieldOtherAmountRadio = document.querySelector('input[name="' + this._radios + '"][value="other" i]');
+                const enFieldOtherAmountRadio = document.querySelector(`.en__field--donationAmt.en__field--withOther .en__field__item:nth-last-child(2) input[name="${this._radios}"]`);
                 if (enFieldOtherAmountRadio) {
                     enFieldOtherAmountRadio.checked = true;
                 }
@@ -12444,12 +12450,20 @@ class DonationFrequency {
     }
     // Set amount var with currently selected amount
     load() {
-        const freqField = engrid_ENGrid.getField("transaction.recurrfreq");
-        if (freqField)
-            this.frequency = engrid_ENGrid.getFieldValue("transaction.recurrfreq");
+        var _a;
+        this.frequency =
+            engrid_ENGrid.getFieldValue("transaction.recurrfreq") ||
+                sessionStorage.getItem("engrid-transaction-recurring-frequency") ||
+                "onetime";
         const recurrField = engrid_ENGrid.getField("transaction.recurrpay");
-        if (recurrField)
+        if (recurrField) {
             this.recurring = engrid_ENGrid.getFieldValue("transaction.recurrpay");
+        }
+        else if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "getSupporterData")) {
+            this.recurring =
+                ((_a = window.EngagingNetworks.require._defined.enjs
+                    .getSupporterData("recurrpay")) === null || _a === void 0 ? void 0 : _a.toLowerCase()) || "n";
+        }
         // ENGrid.enParseDependencies();
     }
     // Force a new recurrency
@@ -13303,6 +13317,9 @@ class CreditCard {
         };
         if (!this.ccField)
             return;
+        // Set credit card field to type="tel" to prevent mobile browsers from
+        //  showing a credit card number keyboard
+        this.ccField.type = "tel";
         const expireFiels = document.getElementsByName("transaction.ccexpire");
         if (expireFiels) {
             this.field_expiration_month = expireFiels[0];
@@ -13595,6 +13612,10 @@ class Ecard {
             const futureDeliveryH2 = document.createElement("h2");
             futureDeliveryH2.innerText = futureDeliveryLabel.innerText;
             futureDeliveryLabel.replaceWith(futureDeliveryH2);
+        }
+        if (emailField) {
+            emailField.setAttribute("type", "email");
+            emailField.setAttribute("autocomplete", "off");
         }
     }
     shouldRun() {
@@ -15647,6 +15668,7 @@ class SrcDefer {
 class setRecurrFreq {
     constructor() {
         this._frequency = DonationFrequency.getInstance();
+        this._amount = DonationAmount.getInstance();
         this.linkClass = "setRecurrFreq-";
         this.checkboxName = "engrid.recurrfreq";
         // Watch the links that starts with linkClass
@@ -15686,11 +15708,13 @@ class setRecurrFreq {
                     engrid_ENGrid.setFieldValue("transaction.recurrfreq", frequency);
                     engrid_ENGrid.setFieldValue("transaction.recurrpay", "Y");
                     this._frequency.load();
+                    this._amount.setAmount(this._amount.amount, false);
                 }
                 else if (frequency !== "ONETIME") {
                     engrid_ENGrid.setFieldValue("transaction.recurrfreq", "ONETIME");
                     engrid_ENGrid.setFieldValue("transaction.recurrpay", "N");
                     this._frequency.load();
+                    this._amount.setAmount(this._amount.amount, false);
                 }
             });
         });
@@ -18826,8 +18850,15 @@ class LiveCurrency {
         this.searchElements();
         if (!this.shouldRun())
             return;
+        engrid_ENGrid.setBodyData("live-currency", "active");
         this.updateCurrency();
         this.addEventListeners();
+        // Make labels visible on page load
+        document
+            .querySelectorAll(".en__field--donationAmt .en__field__element--radio .en__field__item")
+            .forEach((node) => {
+            node.setAttribute("data-engrid-currency-symbol-updated", "true");
+        });
     }
     searchElements() {
         const enElements = document.querySelectorAll(`
@@ -18877,6 +18908,9 @@ class LiveCurrency {
                     setTimeout(() => {
                         this.searchElements();
                         this.updateCurrency();
+                        targetNode.querySelectorAll(".en__field__item").forEach((node) => {
+                            node.setAttribute("data-engrid-currency-symbol-updated", "true");
+                        });
                         this.isUpdating = false;
                     }, 20);
                 }
@@ -18903,6 +18937,11 @@ class LiveCurrency {
             setTimeout(() => {
                 this.searchElements();
                 this.updateCurrency();
+                document
+                    .querySelectorAll(".en__field--donationAmt .en__field__element--radio .en__field__item")
+                    .forEach((node) => {
+                    node.setAttribute("data-engrid-currency-symbol-updated", "true");
+                });
                 this.isUpdating = false;
             }, 10);
         });
@@ -19875,6 +19914,25 @@ class PremiumGift {
                 }
             });
         });
+        // Check when visibility of the Premium Gift Block changes.
+        // EN will add "display: none" to this element when the supporter does not qualify for a premium
+        const premiumGiftsBlock = document.querySelector(".en__component--premiumgiftblock");
+        if (premiumGiftsBlock) {
+            const observer = new MutationObserver((mutationsList) => {
+                for (const mutation of mutationsList) {
+                    if (mutation.type === "attributes" &&
+                        mutation.attributeName === "style") {
+                        if (premiumGiftsBlock.style.display === "none") {
+                            this.logger.log("Premium Gift Section hidden - removing premium gift body data attributes and premium title.");
+                            engrid_ENGrid.setBodyData("premium-gift-maximize", false);
+                            engrid_ENGrid.setBodyData("premium-gift-name", false);
+                            this.setPremiumTitle("");
+                        }
+                    }
+                }
+            });
+            observer.observe(premiumGiftsBlock, { attributes: true });
+        }
     }
     checkPremiumGift() {
         const premiumGift = document.querySelector('[name="en__pg"]:checked');
@@ -20702,6 +20760,9 @@ class SetAttr {
         if (enGrid) {
             enGrid.addEventListener("click", (e) => {
                 const clickedEl = e.target;
+                if (typeof clickedEl.className !== "string") {
+                    return;
+                }
                 const clickedElClassNames = clickedEl.className.split(" ");
                 if (clickedElClassNames.some((className) => className.startsWith("setattr--"))) {
                     clickedEl.classList.forEach((className) => {
@@ -20891,7 +20952,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.16.1";
+const AppVersion = "0.16.10";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
