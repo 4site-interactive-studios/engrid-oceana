@@ -965,3 +965,23 @@
 //   top: -59px;
 //   height: 45px;
 // }
+
+// Hide the Phone 2 field if...
+// You are not in Page Builder, and
+// You are not in Debug Mode, and
+// The page has the country field data attribute, and
+// The country field value is not "United States", and
+// The Phone 2 field is not mandatory, and
+// The Phone 2 field is not in an error state.
+body[data-engrid-country]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
+  .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
+    display: none;
+  }
+}
+
+body[data-engrid-debug][data-engrid-country]:not(#en__pagebuilder):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
+  .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
+    background-color: rgba(255,0,0,.102)!important;
+  }
+}
+
