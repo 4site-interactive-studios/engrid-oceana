@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, January 27, 2024 @ 06:24:25 ET
+ *  Date: Saturday, January 27, 2024 @ 07:08:26 ET
  *  By: fernando
  *  ENGrid styles: v0.17.0
  *  ENGrid scripts: v0.17.0
@@ -8365,6 +8365,15 @@ body[data-engrid-country]:not(#en__pagebuilder):not([data-engrid-debug]):not([da
 
 body[data-engrid-debug][data-engrid-country]:not(#en__pagebuilder):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed){
   background-color:rgba(255,0,0,.102) !important;
+}
+
+.en__field__input--vgs{
+  border-color:var(--input_border-color);
+  margin-bottom:0 !important;
+}
+
+.en__field--ccvv .en__field__input--vgs{
+  margin-top:0 !important;
 }
 body{
   opacity:1;
