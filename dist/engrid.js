@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, January 18, 2024 @ 10:41:33 ET
- *  By: michael
+ *  Date: Saturday, January 27, 2024 @ 06:32:39 ET
+ *  By: fernando
  *  ENGrid styles: v0.16.4
- *  ENGrid scripts: v0.16.10
+ *  ENGrid scripts: v0.16.13
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11500,7 +11500,7 @@ class Loader {
     // Returns true if ENgrid should reload (that means the current ENgrid is not the right one)
     // Returns false if ENgrid should not reload (that means the current ENgrid is the right one)
     reload() {
-        var _a, _b, _c, _d;
+        var _a, _b, _c;
         const assets = this.getOption("assets");
         const isLoaded = engrid_ENGrid.getBodyData("loaded");
         let shouldSkipCss = this.getOption("engridcss") === "false";
@@ -11532,7 +11532,6 @@ class Loader {
         // Fetch the desired repo, assets location, and override JS/CSS
         const theme = engrid_ENGrid.getBodyData("theme");
         const engrid_repo = (_a = this.getOption("repo-name")) !== null && _a !== void 0 ? _a : `engrid-${theme}`;
-        const engrid_repo_owner = (_b = this.getOption("repo-owner")) !== null && _b !== void 0 ? _b : "4site-interactive-studios";
         let engrid_js_url = "";
         let engrid_css_url = "";
         switch (assets) {
@@ -11545,31 +11544,17 @@ class Loader {
             case "flush":
                 this.logger.log("FLUSHING CACHE");
                 const timestamp = Date.now();
-                const jsCurrentURL = new URL(((_c = this.jsElement) === null || _c === void 0 ? void 0 : _c.getAttribute("src")) || "");
+                const jsCurrentURL = new URL(((_b = this.jsElement) === null || _b === void 0 ? void 0 : _b.getAttribute("src")) || "");
                 jsCurrentURL.searchParams.set("v", timestamp.toString());
                 engrid_js_url = jsCurrentURL.toString();
-                const cssCurrentURL = new URL(((_d = this.cssElement) === null || _d === void 0 ? void 0 : _d.getAttribute("href")) || "");
+                const cssCurrentURL = new URL(((_c = this.cssElement) === null || _c === void 0 ? void 0 : _c.getAttribute("href")) || "");
                 cssCurrentURL.searchParams.set("v", timestamp.toString());
                 engrid_css_url = cssCurrentURL.toString();
                 break;
             default:
                 this.logger.log("LOADING EXTERNAL");
-                engrid_js_url =
-                    "https://cdn.jsdelivr.net/gh/" +
-                        engrid_repo_owner +
-                        "/" +
-                        engrid_repo +
-                        "@" +
-                        assets +
-                        "/dist/engrid.js";
-                engrid_css_url =
-                    "https://cdn.jsdelivr.net/gh/" +
-                        engrid_repo_owner +
-                        "/" +
-                        engrid_repo +
-                        "@" +
-                        assets +
-                        "/dist/engrid.css";
+                engrid_js_url = `https://s3.amazonaws.com/engrid-dev.4sitestudios.com/${engrid_repo}/${assets}/engrid.js`;
+                engrid_css_url = `https://s3.amazonaws.com/engrid-dev.4sitestudios.com/${engrid_repo}/${assets}/engrid.css`;
         }
         if (shouldSkipCss && this.cssElement) {
             this.logger.log("engridcss=false | Removing original stylesheet:", this.cssElement);
@@ -13520,9 +13505,14 @@ class AutoYear {
         if (this.yearField) {
             this.yearLength =
                 this.yearField.options[this.yearField.options.length - 1].value.length;
-            while (this.yearField.options.length > 1) {
-                this.yearField.remove(1);
-            }
+            [...this.yearField.options].forEach((option) => {
+                var _a;
+                if (option.value !== "" && !isNaN(Number(option.value))) {
+                    // @ts-ignore
+                    const index = [...this.yearField.options].findIndex((i) => i.value === option.value);
+                    (_a = this.yearField) === null || _a === void 0 ? void 0 : _a.remove(index);
+                }
+            });
         }
     }
 }
@@ -20489,6 +20479,8 @@ class ExitIntentLightbox {
         this.opened = false;
         this.dataLayer = window.dataLayer || [];
         this.logger = new EngridLogger("ExitIntentLightbox", "yellow", "black", "🚪");
+        this.triggerDelay = 1000; // Don't run the exit intent lightbox until at least 1 second has passed after page load
+        this.triggerTimeout = null;
         let options = "EngridExitIntent" in window ? window.EngridExitIntent : {};
         this.options = Object.assign(Object.assign({}, ExitIntentOptionsDefaults), options);
         if (!this.options.enabled) {
@@ -20506,12 +20498,16 @@ class ExitIntentLightbox {
         this.watchForTriggers();
     }
     watchForTriggers() {
-        if (this.options.triggers.mousePosition) {
-            this.watchMouse();
-        }
-        if (this.options.triggers.visibilityState) {
-            this.watchDocumentVisibility();
-        }
+        window.addEventListener("load", () => {
+            setTimeout(() => {
+                if (this.options.triggers.mousePosition) {
+                    this.watchMouse();
+                }
+                if (this.options.triggers.visibilityState) {
+                    this.watchDocumentVisibility();
+                }
+            }, this.triggerDelay); // Delay activation of triggers
+        });
     }
     watchMouse() {
         document.addEventListener("mouseout", (e) => {
@@ -20535,14 +20531,28 @@ class ExitIntentLightbox {
                 this.logger.log("Triggered by mouse position");
                 this.open();
             }
+            if (!this.triggerTimeout) {
+                this.triggerTimeout = window.setTimeout(() => {
+                    if (!from) {
+                        this.logger.log("Triggered by mouse position");
+                        this.open();
+                    }
+                    this.triggerTimeout = null;
+                }, this.triggerDelay);
+            }
         });
     }
     watchDocumentVisibility() {
         const visibilityListener = () => {
             if (document.visibilityState === "hidden") {
-                this.logger.log("Triggered by visibilityState is hidden");
-                this.open();
-                document.removeEventListener("visibilitychange", visibilityListener);
+                if (!this.triggerTimeout) {
+                    this.triggerTimeout = window.setTimeout(() => {
+                        this.logger.log("Triggered by visibilityState is hidden");
+                        this.open();
+                        document.removeEventListener("visibilitychange", visibilityListener);
+                        this.triggerTimeout = null;
+                    }, this.triggerDelay);
+                }
             }
         };
         document.addEventListener("visibilitychange", visibilityListener);
@@ -20952,7 +20962,7 @@ class ENValidators {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.16.10";
+const AppVersion = "0.16.13";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
