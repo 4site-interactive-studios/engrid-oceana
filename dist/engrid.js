@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, January 27, 2024 @ 07:08:26 ET
+ *  Date: Wednesday, January 31, 2024 @ 11:19:46 ET
  *  By: fernando
- *  ENGrid styles: v0.17.0
- *  ENGrid scripts: v0.17.0
+ *  ENGrid styles: v0.17.1
+ *  ENGrid scripts: v0.17.2
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -20430,13 +20430,19 @@ class GiveBySelect {
     constructor() {
         this.logger = new EngridLogger("GiveBySelect", "#FFF", "#333", "🐇");
         this.transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
+        this.vgsField = document.querySelector(".en__field--vgs");
         if (!this.transactionGiveBySelect)
             return;
         this.transactionGiveBySelect.forEach((giveBySelect) => {
             giveBySelect.addEventListener("change", () => {
                 this.logger.log("Changed to " + giveBySelect.value);
                 if (giveBySelect.value.toLowerCase() === "card") {
-                    engrid_ENGrid.setPaymentType("");
+                    if (this.vgsField) {
+                        engrid_ENGrid.setPaymentType("visa"); // VGS will not change the payment type field, so we have to do it manually to avoid errors
+                    }
+                    else {
+                        engrid_ENGrid.setPaymentType("");
+                    }
                 }
                 else {
                     engrid_ENGrid.setPaymentType(giveBySelect.value);
@@ -21064,11 +21070,20 @@ class PostalCodeValidator {
         if (!this.shouldValidateUSZipCode())
             return;
         let value = (_a = this.postalCodeField) === null || _a === void 0 ? void 0 : _a.value;
-        // Removing all non-numeric characters and separators in the wrong position
-        value = value.replace(/[^0-9\s+-]|(?<!^.{5})[\s+-]/g, "");
-        //replace + and space with - and insert a dash after the 5th character if a 6th character is entered
-        if (value.match(/\d{5}/)) {
-            value = value.replace(/[\s+]/g, this.separator);
+        // If the value is 5 characters or less, remove all non-numeric characters
+        if (value.length <= 5) {
+            value = value.replace(/\D/g, "");
+        }
+        // If one of the supported separators is endered as the 6th character, replace it with the official separator
+        else if (value.length === 6 &&
+            this.supportedSeparators.includes(value[5])) {
+            // Removing all non-numeric characters
+            value = value.replace(/\D/g, "") + this.separator;
+        }
+        else {
+            // Removing all non-numeric characters
+            value = value.replace(/\D/g, "");
+            // Adding the separator after the 5th character
             value = value.replace(/(\d{5})(\d)/, `$1${this.separator}$2`);
         }
         //set field value with max 10 characters
@@ -21166,12 +21181,16 @@ class VGS {
                 icons: {
                     cardPlaceholder: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABMCAYAAADHl1ErAAAACXBIWXMAABYlAAAWJQFJUiTwAAAB8ElEQVR4nO2c4W3CMBBGz1H/NyNkAzoCo2SDrkI3YJSOABt0g9IJXBnOqUkMyifUqkrek04RlvMjT2c7sc6EGKPBfBpcaSBMBGEiCBNBmAjCRBAmgjARhIkgTARhIggTQZhK2q0Yh5l1ZrYzs0PqsrI4+LN3VTeThkvntUm6Fbuxn2E/LITQmtm7mW08Sb/MbO9tpxhjui6WEMLWzJKDdO3N7Nmf9ZjaYoyn8y8X1o6GXxLV1lJyDeE+9oWPQ/ZRG4b9WkVVpqe+8LLLo7ErM6t248qllZnWBc+uV5+zumGsQjm3f/ic9tb4JGeeXcga4U723rptilVx0avgg2Q3m/JNn+y6zeAm+GSWUi/c7L5yfB77RJhACOHs6WnuLfmGpTI3YditEEGYCMJEECaCMJHZqySvHRfIMBGEiSBMBGEiCBNBmAjCRBAmgjARhIkgTGT2t+R/59EdYXZcfwmEiSBMBGEiCBNZzCr5VzvCZJjIIMxrPKFC6abMsHbaFcZuGq8StqKwDqZkN8emKBbrvawHCtxJ7y1nVxQF34lxUXBupOy8EtWy88jBhknUDjbkPhyd+Xn2l9lHZ8rgcNZVTA5nTYRFjv/dPf7HvzuJ8C0pgjARhIkgTARhIggTQZgIwkQQJoIwEYSJIEwEYQpm9g2Ro5zhLcuLBwAAAABJRU5ErkJggg==",
                 },
+                // Autocomplete is not customizable
+                autoComplete: "cc-number",
             },
             "transaction.ccvv": {
                 showCardIcon: false,
                 autoFocus: false,
                 placeholder: "CVV",
                 hideValue: false,
+                // Autocomplete is not customizable
+                autoComplete: "cc-csc",
             },
         };
         // Merge the default options with the options set in the theme
@@ -21217,7 +21236,7 @@ class VGS {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.17.0";
+const AppVersion = "0.17.2";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires

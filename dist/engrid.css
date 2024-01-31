@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, January 27, 2024 @ 07:08:26 ET
+ *  Date: Wednesday, January 31, 2024 @ 11:19:46 ET
  *  By: fernando
- *  ENGrid styles: v0.17.0
- *  ENGrid scripts: v0.17.0
+ *  ENGrid styles: v0.17.1
+ *  ENGrid scripts: v0.17.2
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2424,6 +2424,14 @@ input.en__field__input:focus,input.en__field__input:hover,input:focus,input:hove
   color:var(--input_color_hover);
 }
 
+.en__field__input--vgs{
+  width:100%;
+}
+.en__field__input--vgs.vgs-collect-container__focused{
+  border-color:var(--input_border-color_hover);
+  border-bottom-color:var(--input_border-bottom-color_hover);
+}
+
 input[type=date],input[type=email],input[type=number],input[type=password],input[type=tel],input[type=text],input[type=textarea]{
   box-shadow:var(--input_box-shadow);
 }
@@ -4315,6 +4323,11 @@ body:not[data-engrid-show-ecard-options] .show-if-ecard{
 
 .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--withOther[class*=validationFail] .en__field__error{
   border-radius:var(--donation-amount__button_border-radius);
+}
+
+.en__field--validationFailed .en__field__input--vgs:not(.vgs-collect-container__empty).vgs-collect-container__invalid{
+  background-color:var(--error__color_faded);
+  border-color:var(--error__color);
 }
 
 .en__additional__amount,.en__additional__label,.en__ticket__currency,.en__ticket__name,.en__ticket__price{
