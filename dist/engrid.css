@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, January 31, 2024 @ 11:19:46 ET
+ *  Date: Thursday, February 1, 2024 @ 20:42:02 ET
  *  By: fernando
- *  ENGrid styles: v0.17.1
- *  ENGrid scripts: v0.17.2
+ *  ENGrid styles: v0.17.6
+ *  ENGrid scripts: v0.17.4
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2425,11 +2425,25 @@ input.en__field__input:focus,input.en__field__input:hover,input:focus,input:hove
 }
 
 .en__field__input--vgs{
+  transition:box-shadow .25s,border-color .25s ease-in-out;
   width:100%;
 }
-.en__field__input--vgs.vgs-collect-container__focused{
+.en__field__input--vgs.vgs-collect-container__focused,.en__field__input--vgs:hover{
+  background-color:var(--input_background-color_hover);
   border-color:var(--input_border-color_hover);
   border-bottom-color:var(--input_border-bottom-color_hover);
+}
+.en__field__input--vgs.vgs-collect-container__focused{
+  outline-color:-webkit-focus-ring-color;
+  outline-style:auto;
+}
+@-moz-document url-prefix(){
+  .en__field__input--vgs.vgs-collect-container__focused{
+    outline:1px dotted #000;
+  }
+}
+.en__field__input--vgs iframe{
+  border-radius:var(--input_border-radius);
 }
 
 input[type=date],input[type=email],input[type=number],input[type=password],input[type=tel],input[type=text],input[type=textarea]{
