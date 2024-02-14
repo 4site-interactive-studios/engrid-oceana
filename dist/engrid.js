@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, February 9, 2024 @ 12:17:23 ET
+ *  Date: Wednesday, February 14, 2024 @ 10:27:11 ET
  *  By: fernando
  *  ENGrid styles: v0.17.9
- *  ENGrid scripts: v0.17.10
+ *  ENGrid scripts: v0.17.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -21378,16 +21378,14 @@ class CountryRedirect {
         this._country = Country.getInstance();
         if (!this.shouldRun())
             return;
-        if (this._country.countryField) {
-            this._country.onCountryChange.subscribe((country) => {
-                this.checkRedirect(country);
-            });
-        }
-        this.checkRedirect(this._country.country);
+        this._country.onCountryChange.subscribe((country) => {
+            this.checkRedirect(country);
+        });
+        this.checkRedirect(this._country.country); // This will check the redirect when the page loads
     }
     shouldRun() {
-        // Only run if the CountryRedirect option is not false
-        if (!engrid_ENGrid.getOption("CountryRedirect")) {
+        // Only run if the CountryRedirect option is not false and the country field is present
+        if (!engrid_ENGrid.getOption("CountryRedirect") || !this._country.countryField) {
             return false;
         }
         return true;
@@ -21400,13 +21398,18 @@ class CountryRedirect {
             country in countryRedirect &&
             window.location.href.includes(countryRedirect[country]) === false) {
             this.logger.log(`${country}: Redirecting to ${countryRedirect[country]}`);
-            window.location.href = countryRedirect[country];
+            let redirectUrl = new URL(countryRedirect[country]);
+            // If the redirect URL doesn't contain "?chain", add it
+            if (!redirectUrl.search.includes("chain")) {
+                redirectUrl.search += (redirectUrl.search ? "&" : "?") + "chain";
+            }
+            window.location.href = redirectUrl.href;
         }
     }
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.17.10";
+const AppVersion = "0.17.11";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
