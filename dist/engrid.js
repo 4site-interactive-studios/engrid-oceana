@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, February 14, 2024 @ 10:27:11 ET
+ *  Date: Thursday, February 29, 2024 @ 16:37:35 ET
  *  By: fernando
- *  ENGrid styles: v0.17.9
- *  ENGrid scripts: v0.17.11
+ *  ENGrid styles: v0.17.16
+ *  ENGrid scripts: v0.17.18
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11387,6 +11387,7 @@ const OptionsDefaults = {
     VGS: false,
     PostalCodeValidator: false,
     CountryRedirect: false,
+    WelcomeBack: false,
     PageLayouts: [
         "leftleft1col",
         "centerleft1col",
@@ -11488,7 +11489,7 @@ const ExitIntentOptionsDefaults = {
     triggers: {
         visibilityState: true,
         mousePosition: true,
-    }
+    },
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/loader.js
@@ -12948,6 +12949,8 @@ class App extends engrid_ENGrid {
         new PostalCodeValidator();
         // Very Good Security
         new VGS();
+        new WelcomeBack();
+        new EcardToTarget();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -14494,7 +14497,7 @@ class UpsellLightbox {
         this.options = Object.assign(Object.assign({}, UpsellOptionsDefaults), options);
         //Disable for "applepay" via Vantiv payment method. Adding it to the array like this so it persists
         //even if the client provides custom options.
-        this.options.disablePaymentMethods.push('applepay');
+        this.options.disablePaymentMethods.push("applepay");
         if (!this.shouldRun()) {
             this.logger.log("Upsell script should NOT run");
             // If we're not on a Donation Page, get out
@@ -17555,7 +17558,8 @@ class AddNameToMessage {
         let addedFirstName = false;
         let addedLastName = false;
         if (message) {
-            if (message.value.includes("{user_data~First Name") || message.value.includes("{user_data~Last Name")) {
+            if (message.value.includes("{user_data~First Name") ||
+                message.value.includes("{user_data~Last Name")) {
                 return;
             }
             else {
@@ -18024,32 +18028,33 @@ class TidyContact {
         }
     }
     loadOptions() {
-        var _a, _b, _c;
-        if (this.options && !this.options.address_fields) {
-            this.options.address_fields = {
-                address1: "supporter.address1",
-                address2: "supporter.address2",
-                address3: "supporter.address3",
-                city: "supporter.city",
-                region: "supporter.region",
-                postalCode: "supporter.postcode",
-                country: "supporter.country",
-                phone: "supporter.phoneNumber2", // Phone field
-            };
-        }
-        if (this.options && this.options.phone_enable) {
-            this.options.phone_flags = (_a = this.options.phone_flags) !== null && _a !== void 0 ? _a : true;
-            this.options.phone_country_from_ip =
-                (_b = this.options.phone_country_from_ip) !== null && _b !== void 0 ? _b : true;
-            this.options.phone_preferred_countries =
-                (_c = this.options.phone_preferred_countries) !== null && _c !== void 0 ? _c : [];
+        var _a, _b, _c, _d;
+        if (this.options) {
+            if (!this.options.address_fields) {
+                this.options.address_fields = {
+                    address1: "supporter.address1",
+                    address2: "supporter.address2",
+                    address3: "supporter.address3",
+                    city: "supporter.city",
+                    region: "supporter.region",
+                    postalCode: "supporter.postcode",
+                    country: "supporter.country",
+                    phone: "supporter.phoneNumber2", // Phone field
+                };
+            }
+            this.options.address_enable = (_a = this.options.address_enable) !== null && _a !== void 0 ? _a : true;
+            if (this.options.phone_enable) {
+                this.options.phone_flags = (_b = this.options.phone_flags) !== null && _b !== void 0 ? _b : true;
+                this.options.phone_country_from_ip =
+                    (_c = this.options.phone_country_from_ip) !== null && _c !== void 0 ? _c : true;
+                this.options.phone_preferred_countries =
+                    (_d = this.options.phone_preferred_countries) !== null && _d !== void 0 ? _d : [];
+            }
         }
     }
     createFields() {
         var _a, _b, _c, _d, _e, _f;
-        if (!this.options)
-            return;
-        if (!this.hasAddressFields())
+        if (!this.options || !this.hasAddressFields())
             return;
         // Creating Latitude and Longitude fields
         const latitudeField = engrid_ENGrid.getField("supporter.geo.latitude");
@@ -18179,6 +18184,10 @@ class TidyContact {
         var _a;
         if (!this.options)
             return false;
+        // If the country list is empty, allow all countries
+        if (!this.options.countries || this.options.countries.length === 0) {
+            return true;
+        }
         return !!((_a = this.options.countries) === null || _a === void 0 ? void 0 : _a.includes(country.toLowerCase()));
     }
     fetchTimeOut(url, params) {
@@ -18240,7 +18249,7 @@ class TidyContact {
     }
     setFields(data) {
         var _a, _b, _c, _d, _e;
-        if (!this.options)
+        if (!this.options || !this.options.address_enable)
             return {};
         let response = {};
         const country = this.getCountry();
@@ -18290,7 +18299,7 @@ class TidyContact {
     }
     hasAddressFields() {
         var _a, _b, _c, _d, _e, _f;
-        if (!this.options)
+        if (!this.options || !this.options.address_enable)
             return false;
         const address1 = engrid_ENGrid.getField((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.address1);
         const address2 = engrid_ENGrid.getField((_b = this.options.address_fields) === null || _b === void 0 ? void 0 : _b.address2);
@@ -18302,7 +18311,7 @@ class TidyContact {
     }
     canUseAPI() {
         var _a, _b, _c, _d;
-        if (!this.options)
+        if (!this.options || !this.hasAddressFields())
             return false;
         const country = !!this.getCountry();
         const address1 = !!engrid_ENGrid.getFieldValue((_a = this.options.address_fields) === null || _a === void 0 ? void 0 : _a.address1);
@@ -19192,16 +19201,14 @@ class EventTickets {
             const ticketCurrencyElement = ticketCostElement.getElementsByClassName("en__ticket__currency")[0];
             const formatterOptions = {
                 style: "currency",
-                currency: ticketCurrencyElement.innerText
+                currency: ticketCurrencyElement.innerText,
             };
-            let ticketAmountAsCurrency = Intl.NumberFormat(undefined, formatterOptions)
-                .format(Number(ticketAmountElement.innerText));
-            if (ticketAmountAsCurrency.slice(-3) === '.00') {
+            let ticketAmountAsCurrency = Intl.NumberFormat(undefined, formatterOptions).format(Number(ticketAmountElement.innerText));
+            if (ticketAmountAsCurrency.slice(-3) === ".00") {
                 ticketAmountAsCurrency = ticketAmountAsCurrency.slice(0, -3);
             }
             ticketAmountElement.innerText = ticketAmountAsCurrency;
         }
-        ;
     }
 }
 
@@ -21252,6 +21259,7 @@ class VGS {
                 },
                 // Autocomplete is not customizable
                 autoComplete: "cc-number",
+                validations: ["required", "validCardNumber"],
             },
             "transaction.ccvv": {
                 showCardIcon: false,
@@ -21259,6 +21267,7 @@ class VGS {
                 hideValue: false,
                 // Autocomplete is not customizable
                 autoComplete: "cc-csc",
+                validations: ["required", "validCardSecurityCode"],
                 css: {
                     "&::placeholder": placeholderStyles,
                 },
@@ -21293,7 +21302,9 @@ class VGS {
                 // Create a mutation observer that cleans the VGS Elements before anything is rendered
                 const observer = new MutationObserver((mutations) => {
                     mutations.forEach((mutation) => {
-                        if (mutation.type === "childList" && mutation.addedNodes.length > 0)
+                        var _a;
+                        if (mutation.type === "childList" &&
+                            mutation.addedNodes.length > 0) {
                             mutation.addedNodes.forEach((node) => {
                                 if (node.nodeName === "IFRAME" &&
                                     mutation.previousSibling &&
@@ -21302,11 +21313,25 @@ class VGS {
                                     mutation.previousSibling.remove();
                                 }
                             });
+                        }
+                        // Check if the VGS Element is valid, and remove any validation classes and errors
+                        if (mutation.type === "attributes" &&
+                            mutation.attributeName === "class") {
+                            const target = mutation.target;
+                            if (target.classList.contains("vgs-collect-container__valid")) {
+                                const fieldWrapper = target.closest(".en__field--vgs");
+                                fieldWrapper === null || fieldWrapper === void 0 ? void 0 : fieldWrapper.classList.remove("en__field--validationFailed");
+                                (_a = fieldWrapper === null || fieldWrapper === void 0 ? void 0 : fieldWrapper.querySelector(".en__field__error")) === null || _a === void 0 ? void 0 : _a.remove();
+                            }
+                        }
                     });
                 });
                 // Observe the VGS Elements
                 vgsIElements.forEach((vgsIElement) => {
-                    observer.observe(vgsIElement, { childList: true });
+                    observer.observe(vgsIElement, {
+                        childList: true,
+                        attributeFilter: ["class"],
+                    });
                 });
                 if (engrid_ENGrid.checkNested(window.EngagingNetworks, "require", "_defined", "enjs", "vgs")) {
                     window.EngagingNetworks.require._defined.enjs.vgs.init();
@@ -21408,11 +21433,212 @@ class CountryRedirect {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/welcome-back.js
+/**
+ * This component adds a welcome back message and a personal details summary to the page.
+ * It depends on the "fast-personal-details" functionality from the FastFormFill component.
+ * The component will only run, when the "WelcomeBack" option is set,
+ * if the "fast-personal-details" class is present on the page and the FastFormFill conditions
+ * are met (all mandatory inputs in that block are filled).
+ *
+ * All the text content and positioning is configurable through the "WelcomeBack" option.
+ */
+
+
+class WelcomeBack {
+    constructor() {
+        var _a;
+        this.supporterDetails = {};
+        this.options = (_a = engrid_ENGrid.getOption("WelcomeBack")) !== null && _a !== void 0 ? _a : false;
+        if (this.shouldRun()) {
+            this.supporterDetails = {
+                firstName: engrid_ENGrid.getFieldValue("supporter.firstName"),
+                lastName: engrid_ENGrid.getFieldValue("supporter.lastName"),
+                emailAddress: engrid_ENGrid.getFieldValue("supporter.emailAddress"),
+                address1: engrid_ENGrid.getFieldValue("supporter.address1"),
+                address2: engrid_ENGrid.getFieldValue("supporter.address2"),
+                city: engrid_ENGrid.getFieldValue("supporter.city"),
+                region: engrid_ENGrid.getFieldValue("supporter.region"),
+                postcode: engrid_ENGrid.getFieldValue("supporter.postcode"),
+                country: engrid_ENGrid.getFieldValue("supporter.country"),
+            };
+            this.addWelcomeBack();
+            this.addPersonalDetailsSummary();
+            this.addEventListeners();
+        }
+    }
+    shouldRun() {
+        return (!!document.querySelector(".fast-personal-details") &&
+            this.options !== false);
+    }
+    addWelcomeBack() {
+        var _a;
+        if (typeof this.options !== "object" ||
+            !this.options.welcomeBackMessage.display)
+            return;
+        const options = this.options.welcomeBackMessage;
+        const welcomeBack = document.createElement("div");
+        welcomeBack.classList.add("engrid-welcome-back", "showif-fast-personal-details");
+        const title = options.title.replace("{firstName}", this.supporterDetails["firstName"]);
+        welcomeBack.innerHTML = `<p>
+      ${title}
+      <span class="engrid-reset-welcome-back">${options.editText}</span>
+    </p>`;
+        (_a = document
+            .querySelector(options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(options.placement, welcomeBack);
+    }
+    resetWelcomeBack() {
+        const inputs = document.querySelectorAll(".fast-personal-details .en__field__input");
+        inputs.forEach((input) => {
+            if (input.type === "checkbox" || input.type === "radio") {
+                input.checked = false;
+            }
+            else {
+                input.value = "";
+            }
+        });
+        this.supporterDetails = {};
+        engrid_ENGrid.setBodyData("hide-fast-personal-details", false);
+        remove("engrid-autofill");
+    }
+    addPersonalDetailsSummary() {
+        var _a;
+        if (typeof this.options !== "object" ||
+            !this.options.personalDetailsSummary.display)
+            return;
+        let options = this.options.personalDetailsSummary;
+        const personalDetailsSummary = document.createElement("div");
+        personalDetailsSummary.classList.add("engrid-personal-details-summary", "showif-fast-personal-details");
+        personalDetailsSummary.innerHTML = `<h3>${options.title}</h3>`;
+        personalDetailsSummary.insertAdjacentHTML("beforeend", `
+     <p>
+        ${this.supporterDetails["firstName"]} ${this.supporterDetails["lastName"]}
+        <br>
+        ${this.supporterDetails["emailAddress"]}
+     </p>
+    `);
+        if (this.supporterDetails["address1"] &&
+            this.supporterDetails["city"] &&
+            this.supporterDetails["region"] &&
+            this.supporterDetails["postcode"]) {
+            personalDetailsSummary.insertAdjacentHTML("beforeend", `
+        <p>
+          ${this.supporterDetails["address1"]} ${this.supporterDetails["address2"]}
+          <br>
+          ${this.supporterDetails["city"]}, ${this.supporterDetails["region"]} 
+          ${this.supporterDetails["postcode"]}
+        </p>
+      `);
+        }
+        personalDetailsSummary.insertAdjacentHTML("beforeend", `
+      <p class="engrid-welcome-back-clear setattr--data-engrid-hide-fast-personal-details--false">${options.editText}<svg viewbox="0 0 528.899 528.899" xmlns="http://www.w3.org/2000/svg"> <g> <path d="M328.883,89.125l107.59,107.589l-272.34,272.34L56.604,361.465L328.883,89.125z M518.113,63.177l-47.981-47.981 c-18.543-18.543-48.653-18.543-67.259,0l-45.961,45.961l107.59,107.59l53.611-53.611 C532.495,100.753,532.495,77.559,518.113,63.177z M0.3,512.69c-1.958,8.812,5.998,16.708,14.811,14.565l119.891-29.069 L27.473,390.597L0.3,512.69z"></path></g></svg></p>
+    `);
+        (_a = document
+            .querySelector(options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(options.placement, personalDetailsSummary);
+    }
+    addEventListeners() {
+        document
+            .querySelectorAll(".engrid-reset-welcome-back")
+            .forEach((element) => {
+            element.addEventListener("click", () => {
+                this.resetWelcomeBack();
+            });
+        });
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/ecard-to-target-options.js
+const EcardToTargetOptionsDefaults = {
+    targetName: "",
+    targetEmail: "",
+    hideSendDate: true,
+    hideTarget: true,
+    hideMessage: true,
+    addSupporterNameToMessage: false,
+};
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/ecard-to-target.js
+/**
+ * This component adjusts an ecard form to target a specific recipient,
+ * defined in a code block
+ */
+
+
+
+
+class EcardToTarget {
+    constructor() {
+        this.options = EcardToTargetOptionsDefaults;
+        this.logger = new EngridLogger("EcardToTarget", "DarkBlue", "Azure", "📧");
+        this._form = EnForm.getInstance();
+        this.supporterNameAddedToMessage = false;
+        if (!this.shouldRun())
+            return;
+        this.options = Object.assign(Object.assign({}, this.options), window.EngridEcardToTarget);
+        this.logger.log("EcardToTarget running. Options:", this.options);
+        this.setTarget();
+        this.hideElements();
+        this.addSupporterNameToMessage();
+    }
+    shouldRun() {
+        return (window.hasOwnProperty("EngridEcardToTarget") &&
+            typeof window.EngridEcardToTarget === "object" &&
+            window.EngridEcardToTarget.hasOwnProperty("targetName") &&
+            window.EngridEcardToTarget.hasOwnProperty("targetEmail"));
+    }
+    setTarget() {
+        const targetNameField = document.querySelector(".en__ecardrecipients__name input");
+        const targetEmailField = document.querySelector(".en__ecardrecipients__email input");
+        const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
+        if (!targetNameField || !targetEmailField || !addRecipientButton) {
+            this.logger.error("Could not add recipient. Required elements not found.");
+            return;
+        }
+        targetNameField.value = this.options.targetName;
+        targetEmailField.value = this.options.targetEmail;
+        addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+        this.logger.log("Added recipient", this.options.targetName, this.options.targetEmail);
+    }
+    hideElements() {
+        const messageBlock = document.querySelector(".en__ecardmessage");
+        const sendDateBlock = document.querySelector(".en__ecardrecipients__futureDelivery");
+        const targetBlock = document.querySelector(".en__ecardrecipients");
+        if (this.options.hideMessage && messageBlock) {
+            messageBlock.classList.add("hide");
+        }
+        if (this.options.hideSendDate && sendDateBlock) {
+            sendDateBlock.classList.add("hide");
+        }
+        if (this.options.hideTarget && targetBlock) {
+            targetBlock.classList.add("hide");
+        }
+    }
+    addSupporterNameToMessage() {
+        if (!this.options.addSupporterNameToMessage)
+            return;
+        this._form.onSubmit.subscribe(() => {
+            if (!this._form.submit)
+                return;
+            if (!this.supporterNameAddedToMessage) {
+                this.supporterNameAddedToMessage = true;
+                const supporterName = `${engrid_ENGrid.getFieldValue("supporter.firstName")} ${engrid_ENGrid.getFieldValue("supporter.lastName")}`;
+                const messageField = document.querySelector("[name='transaction.comments']");
+                if (!messageField)
+                    return;
+                messageField.value = `${messageField.value}\n${supporterName}`;
+                this.logger.log("Added supporter name to personalized message", supporterName);
+            }
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.17.11";
+const AppVersion = "0.17.18";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
