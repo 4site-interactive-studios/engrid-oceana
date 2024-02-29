@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 29, 2024 @ 16:37:35 ET
+ *  Date: Thursday, February 29, 2024 @ 16:40:04 ET
  *  By: fernando
  *  ENGrid styles: v0.17.16
  *  ENGrid scripts: v0.17.18
@@ -21766,7 +21766,7 @@ const customScript = function (App) {
 
     if (mobilePhoneInput && smsOptInCheckbox) {
       // Add a notice to the mobile phone field
-      App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', '[name="supporter.phoneNumber2"]', "after"); // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
+      App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', ".en__field--phoneNumber2 .en__field__element", "after"); // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
 
       const toggleCheckbox = () => {
         if (mobilePhoneInput.value.trim() !== "") {
@@ -21995,6 +21995,15 @@ const options = {
   SrcDefer: true,
   Plaid: true,
   // ProgressBar: true,
+  // TidyContact: {
+  //   cid: "1ad9c6ab-a7ae-4da2-a1aa-065a140b2c27",
+  //   phone_enable: true,
+  //   address_enable: false,
+  //   // phone_preferred_countries: ["us", "ca", "gb", "jp", "au"],
+  //   phone_record_field: "supporter.NOT_TAGGED_5",
+  //   phone_date_field: "supporter.NOT_TAGGED_6",
+  //   phone_status_field: "supporter.NOT_TAGGED_7",
+  // },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),
   onResize: () => console.log("Starter Theme Window Resized")
