@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 29, 2024 @ 22:47:15 ET
+ *  Date: Thursday, March 21, 2024 @ 17:09:37 ET
  *  By: fernando
  *  ENGrid styles: v0.17.16
- *  ENGrid scripts: v0.17.17
+ *  ENGrid scripts: v0.17.18
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12950,6 +12950,7 @@ class App extends engrid_ENGrid {
         // Very Good Security
         new VGS();
         new WelcomeBack();
+        new EcardToTarget();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -21546,11 +21547,97 @@ class WelcomeBack {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/ecard-to-target-options.js
+const EcardToTargetOptionsDefaults = {
+    targetName: "",
+    targetEmail: "",
+    hideSendDate: true,
+    hideTarget: true,
+    hideMessage: true,
+    addSupporterNameToMessage: false,
+};
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/ecard-to-target.js
+/**
+ * This component adjusts an ecard form to target a specific recipient,
+ * defined in a code block
+ */
+
+
+
+
+class EcardToTarget {
+    constructor() {
+        this.options = EcardToTargetOptionsDefaults;
+        this.logger = new EngridLogger("EcardToTarget", "DarkBlue", "Azure", "📧");
+        this._form = EnForm.getInstance();
+        this.supporterNameAddedToMessage = false;
+        if (!this.shouldRun())
+            return;
+        this.options = Object.assign(Object.assign({}, this.options), window.EngridEcardToTarget);
+        this.logger.log("EcardToTarget running. Options:", this.options);
+        this.setTarget();
+        this.hideElements();
+        this.addSupporterNameToMessage();
+    }
+    shouldRun() {
+        return (window.hasOwnProperty("EngridEcardToTarget") &&
+            typeof window.EngridEcardToTarget === "object" &&
+            window.EngridEcardToTarget.hasOwnProperty("targetName") &&
+            window.EngridEcardToTarget.hasOwnProperty("targetEmail"));
+    }
+    setTarget() {
+        const targetNameField = document.querySelector(".en__ecardrecipients__name input");
+        const targetEmailField = document.querySelector(".en__ecardrecipients__email input");
+        const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
+        if (!targetNameField || !targetEmailField || !addRecipientButton) {
+            this.logger.error("Could not add recipient. Required elements not found.");
+            return;
+        }
+        targetNameField.value = this.options.targetName;
+        targetEmailField.value = this.options.targetEmail;
+        addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+        this.logger.log("Added recipient", this.options.targetName, this.options.targetEmail);
+    }
+    hideElements() {
+        const messageBlock = document.querySelector(".en__ecardmessage");
+        const sendDateBlock = document.querySelector(".en__ecardrecipients__futureDelivery");
+        const targetBlock = document.querySelector(".en__ecardrecipients");
+        if (this.options.hideMessage && messageBlock) {
+            messageBlock.classList.add("hide");
+        }
+        if (this.options.hideSendDate && sendDateBlock) {
+            sendDateBlock.classList.add("hide");
+        }
+        if (this.options.hideTarget && targetBlock) {
+            targetBlock.classList.add("hide");
+        }
+    }
+    addSupporterNameToMessage() {
+        if (!this.options.addSupporterNameToMessage)
+            return;
+        this._form.onSubmit.subscribe(() => {
+            if (!this._form.submit)
+                return;
+            if (!this.supporterNameAddedToMessage) {
+                this.supporterNameAddedToMessage = true;
+                const supporterName = `${engrid_ENGrid.getFieldValue("supporter.firstName")} ${engrid_ENGrid.getFieldValue("supporter.lastName")}`;
+                const messageField = document.querySelector("[name='transaction.comments']");
+                if (!messageField)
+                    return;
+                messageField.value = `${messageField.value}\n${supporterName}`;
+                this.logger.log("Added supporter name to personalized message", supporterName);
+            }
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.17.17";
+const AppVersion = "0.17.18";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
