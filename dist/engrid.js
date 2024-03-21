@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, February 29, 2024 @ 16:40:04 ET
+ *  Date: Thursday, March 21, 2024 @ 17:12:38 ET
  *  By: fernando
  *  ENGrid styles: v0.17.16
  *  ENGrid scripts: v0.17.18
@@ -21995,15 +21995,15 @@ const options = {
   SrcDefer: true,
   Plaid: true,
   // ProgressBar: true,
-  // TidyContact: {
-  //   cid: "1ad9c6ab-a7ae-4da2-a1aa-065a140b2c27",
-  //   phone_enable: true,
-  //   address_enable: false,
-  //   // phone_preferred_countries: ["us", "ca", "gb", "jp", "au"],
-  //   phone_record_field: "supporter.NOT_TAGGED_5",
-  //   phone_date_field: "supporter.NOT_TAGGED_6",
-  //   phone_status_field: "supporter.NOT_TAGGED_7",
-  // },
+  TidyContact: {
+    cid: "1ad9c6ab-a7ae-4da2-a1aa-065a140b2c27",
+    phone_enable: true,
+    address_enable: false,
+    // phone_preferred_countries: ["us", "ca", "gb", "jp", "au"],
+    phone_record_field: "supporter.NOT_TAGGED_5",
+    phone_date_field: "supporter.NOT_TAGGED_6",
+    phone_status_field: "supporter.NOT_TAGGED_7"
+  },
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),
   onResize: () => console.log("Starter Theme Window Resized")
