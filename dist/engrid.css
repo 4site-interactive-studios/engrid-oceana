@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, March 21, 2024 @ 17:12:38 ET
+ *  Date: Friday, March 22, 2024 @ 14:48:12 ET
  *  By: fernando
- *  ENGrid styles: v0.17.16
- *  ENGrid scripts: v0.17.18
+ *  ENGrid styles: v0.18.1
+ *  ENGrid scripts: v0.18.2
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2425,6 +2425,13 @@ input.en__field__input:focus,input.en__field__input:hover,input:focus,input:hove
 }
 
 .en__field__input--vgs{
+  --en-vgs-width:100%;
+  --en-vgs-borderWidth:var(--input_border-width);
+  --en-vgs-borderStyle:solid;
+  --en-vgs-borderColor:var(--input_border-color);
+  --en-vgs-borderRadius:var(--input_border-radius);
+  --en-vgs-backgroundColor:var(--input_background-color);
+  --en-vgs-fontSize:var(--input_font-size);
   transition:box-shadow .25s,border-color .25s ease-in-out;
   width:100%;
 }
