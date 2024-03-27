@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, March 22, 2024 @ 14:48:12 ET
+ *  Date: Wednesday, March 27, 2024 @ 17:53:33 ET
  *  By: fernando
  *  ENGrid styles: v0.18.1
- *  ENGrid scripts: v0.18.2
+ *  ENGrid scripts: v0.18.3
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -16818,7 +16818,7 @@ class TidyContact {
         if (transactionGiveBySelect) {
             transactionGiveBySelect.forEach((giveBySelect) => {
                 giveBySelect.addEventListener("change", () => {
-                    if (giveBySelect.value.toLowerCase() === "stripedigitalwallet") {
+                    if (["stripedigitalwallet", "paypaltouch"].includes(giveBySelect.value.toLowerCase())) {
                         this.logger.log("Clicked Digital Wallet Button");
                         window.setTimeout(() => {
                             this.callAPI();
@@ -20389,7 +20389,7 @@ class EcardToTarget {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.2";
+const AppVersion = "0.18.3";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
