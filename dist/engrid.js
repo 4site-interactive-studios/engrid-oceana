@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 9, 2024 @ 12:01:47 ET
+ *  Date: Wednesday, April 10, 2024 @ 08:19:15 ET
  *  By: michael
  *  ENGrid styles: v0.18.1
  *  ENGrid scripts: v0.18.4
@@ -18970,7 +18970,7 @@ class UsOnlyForm {
 
 }
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/version.js
-const AppVersion = "0.18.6";
+const AppVersion = "0.18.7";
 ;// CONCATENATED MODULE: ../engrid-scripts/packages/common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
 
