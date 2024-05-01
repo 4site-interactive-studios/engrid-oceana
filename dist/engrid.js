@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 2, 2024 @ 14:29:09 ET
+ *  Date: Wednesday, May 1, 2024 @ 16:06:40 ET
  *  By: fernando
- *  ENGrid styles: v0.18.1
- *  ENGrid scripts: v0.18.4
+ *  ENGrid styles: v0.18.8
+ *  ENGrid scripts: v0.18.8
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10367,6 +10367,7 @@ const UpsellOptionsDefaults = {
     annual: false,
     disablePaymentMethods: [],
     skipUpsell: false,
+    conversionField: "",
 };
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/translate-options.js
@@ -11779,7 +11780,7 @@ class App extends engrid_ENGrid {
         // about 20% of the time and we get a race condition if the client is also using the SwapAmounts feature
         window.setTimeout(() => {
             this._frequency.load();
-        }, 150);
+        }, 1000);
         // Fast Form Fill
         new FastFormFill();
         // Currency Related Components
@@ -11886,6 +11887,8 @@ class App extends engrid_ENGrid {
         new VGS();
         new WelcomeBack();
         new EcardToTarget();
+        new UsOnlyForm();
+        new EmbeddedEcard();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -13148,6 +13151,7 @@ class UpsellLightbox {
         this._fees = ProcessingFees.getInstance();
         this._frequency = DonationFrequency.getInstance();
         this._dataLayer = DataLayer.getInstance();
+        this._suggestAmount = 0;
         this.logger = new EngridLogger("UpsellLightbox", "black", "pink", "🪟");
         let options = "EngridUpsell" in window ? window.EngridUpsell : {};
         this.options = Object.assign(Object.assign({}, UpsellOptionsDefaults), options);
@@ -13260,7 +13264,6 @@ class UpsellLightbox {
     }
     // Should we run the script?
     shouldRun() {
-        // const hideModal = cookie.get("hideUpsell"); // Get cookie
         // if it's a first page of a Donation page
         return (
         // !hideModal &&
@@ -13332,6 +13335,7 @@ class UpsellLightbox {
     shouldOpen() {
         const upsellAmount = this.getUpsellAmount();
         const paymenttype = engrid_ENGrid.getFieldValue("transaction.paymenttype") || "";
+        this._suggestAmount = upsellAmount;
         // If frequency is not onetime or
         // the modal is already opened or
         // there's no suggestion for this donation amount,
@@ -13426,22 +13430,24 @@ class UpsellLightbox {
             this._dataLayer.addEndOfGiftProcessVariable("ENGRID_UPSELL", true);
             this._dataLayer.addEndOfGiftProcessVariable("ENGRID_UPSELL_ORIGINAL_AMOUNT", originalAmount);
             this._dataLayer.addEndOfGiftProcessVariable("ENGRID_UPSELL_DONATION_FREQUENCY", "MONTHLY");
+            this.renderConversionField("upsellSuccess", "onetime", originalAmount, "monthly", this._suggestAmount, "monthly", upsoldAmount);
         }
         else {
             this.setOriginalAmount("");
             window.sessionStorage.removeItem("original");
             this._dataLayer.addEndOfGiftProcessVariable("ENGRID_UPSELL", false);
             this._dataLayer.addEndOfGiftProcessVariable("ENGRID_UPSELL_DONATION_FREQUENCY", "ONE-TIME");
+            this.renderConversionField("upsellFail", this._frequency.frequency, this._amount.amount, "monthly", this._suggestAmount, this._frequency.frequency, this._amount.amount);
         }
         this._form.submitForm();
     }
-    // Close the lightbox (no cookies)
+    // Close the lightbox
     close(e) {
         e.preventDefault();
-        // cookie.set("hideUpsell", "1", { expires: 1 }); // Create one day cookie
         this.overlay.classList.add("is-hidden");
         engrid_ENGrid.setBodyData("has-lightbox", false);
         if (this.options.submitOnClose) {
+            this.renderConversionField("upsellFail", this._frequency.frequency, this._amount.amount, "monthly", this._suggestAmount, this._frequency.frequency, this._amount.amount);
             this._form.submitForm();
         }
         else {
@@ -13476,6 +13482,26 @@ class UpsellLightbox {
                 otherInput.classList.add("is-invalid");
             }
         }
+    }
+    renderConversionField(event, // The event that triggered the conversion
+    freq, // The frequency of the donation (onetime, monthly, annual)
+    amt, // The original amount of the donation (before the upsell)
+    sugFreq, // The suggested frequency of the upsell (monthly)
+    sugAmt, // The suggested amount of the upsell
+    subFreq, // The submitted frequency of the upsell (onetime, monthly, annual)
+    subAmt // The submitted amount of the upsell
+    ) {
+        if (this.options.conversionField === "")
+            return;
+        const conversionField = document.querySelector("input[name='" + this.options.conversionField + "']") ||
+            engrid_ENGrid.createHiddenInput(this.options.conversionField);
+        if (!conversionField) {
+            this.logger.error("Could not find or create the conversion field");
+            return;
+        }
+        const conversionValue = `event:${event},freq:${freq},amt:${amt},sugFreq:${sugFreq},sugAmt:${sugAmt},subFreq:${subFreq},subAmt:${subAmt}`;
+        conversionField.value = conversionValue;
+        this.logger.log(`Conversion Field ${event}`, conversionValue);
     }
 }
 
@@ -13685,6 +13711,10 @@ class TranslateFields {
         this.countriesSelect = document.querySelectorAll('select[name="supporter.country"], select[name="transaction.shipcountry"], select[name="supporter.billingCountry"], select[name="transaction.infcountry"]');
         let options = "EngridTranslate" in window ? window.EngridTranslate : {};
         this.options = TranslateOptionsDefaults;
+        // Don't run this for US-only forms.
+        if (document.querySelector(".en__component--formblock.us-only-form .en__field--country")) {
+            return;
+        }
         if (options) {
             for (let key in options) {
                 this.options[key] = this.options[key]
@@ -18746,6 +18776,7 @@ class DigitalWallets {
             engrid_ENGrid.setBodyData("payment-type-option-google-pay", "false");
             engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "false");
             engrid_ENGrid.setBodyData("payment-type-option-venmo", "false");
+            engrid_ENGrid.setBodyData("payment-type-option-daf", "false");
             return;
         }
         // Add giveBySelect classes to the separate wallet containers
@@ -18761,6 +18792,11 @@ class DigitalWallets {
             paypalTouchButtons.classList.add("giveBySelect-paypaltouch");
             paypalTouchButtons.classList.add("showif-paypaltouch-selected");
             // paypalTouchButtons.style.display = "none";
+        }
+        const donorAdvisedFundButtonContainer = document.getElementById("en__digitalWallet__chariot__container");
+        if (donorAdvisedFundButtonContainer) {
+            donorAdvisedFundButtonContainer.classList.add("giveBySelect-daf");
+            donorAdvisedFundButtonContainer.classList.add("showif-daf-selected");
         }
         /**
          * Check for presence of elements that indicated Stripe digital wallets
@@ -18796,6 +18832,20 @@ class DigitalWallets {
                 this.checkForWalletsBeingAdded(paypalContainer, "paypalTouch");
             }
         }
+        /**
+         * Check for presence of elements that indicate DAF is present, and add functionality for it.
+         * If it hasn't loaded yet, set up a Mutation Observer to check for when it does.
+         */
+        if (document.querySelector("#en__digitalWallet__chariot__container > *")) {
+            this.addDAF();
+        }
+        else {
+            engrid_ENGrid.setBodyData("payment-type-option-daf", "false");
+            const donorAdvisedFundButtonContainer = document.getElementById("en__digitalWallet__chariot__container");
+            if (donorAdvisedFundButtonContainer) {
+                this.checkForWalletsBeingAdded(donorAdvisedFundButtonContainer, "daf");
+            }
+        }
     }
     addStripeDigitalWallets() {
         this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
@@ -18806,6 +18856,10 @@ class DigitalWallets {
         this.addOptionToPaymentTypeField("paypaltouch", "Paypal / Venmo");
         engrid_ENGrid.setBodyData("payment-type-option-paypal-one-touch", "true");
         engrid_ENGrid.setBodyData("payment-type-option-venmo", "true");
+    }
+    addDAF() {
+        this.addOptionToPaymentTypeField("daf", "Donor Advised Fund");
+        engrid_ENGrid.setBodyData("payment-type-option-daf", "true");
     }
     addOptionToPaymentTypeField(value, label) {
         const paymentTypeField = document.querySelector('[name="transaction.paymenttype"]');
@@ -18827,6 +18881,9 @@ class DigitalWallets {
                     }
                     else if (walletType === "paypalTouch") {
                         this.addPaypalTouchDigitalWallets();
+                    }
+                    else if (walletType === "daf") {
+                        this.addDAF();
                     }
                     //Disconnect observer to prevent multiple additions
                     observer.disconnect();
@@ -20394,11 +20451,238 @@ class EcardToTarget {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/interfaces/embedded-ecard-options.js
+const EmbeddedEcardOptionsDefaults = {
+    pageUrl: "",
+    headerText: "Send an Ecard notification of your gift",
+    checkboxText: "Yes, I would like to send an ecard to announce my gift.",
+    anchor: ".en__field--donationAmt",
+    placement: "afterend",
+};
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/embedded-ecard.js
+/**
+ * This class handles adding a checkbox to a form that, when checked, will display an embedded ecard form.
+ * The embedded ecard form is hosted on a separate page and is displayed in an iframe.
+ * The form data is saved in session storage and is submitted when the thank you page is loaded.
+ * Options can set on the page via window.EngridEmbeddedEcard.
+ */
+
+
+class EmbeddedEcard {
+    constructor() {
+        this.logger = new EngridLogger("Embedded Ecard", "#D95D39", "#0E1428", "📧");
+        this.options = EmbeddedEcardOptionsDefaults;
+        this._form = EnForm.getInstance();
+        // For the page hosting the embedded ecard
+        if (this.onHostPage()) {
+            this.options = Object.assign(Object.assign({}, EmbeddedEcardOptionsDefaults), window.EngridEmbeddedEcard);
+            const pageUrl = new URL(this.options.pageUrl);
+            pageUrl.searchParams.append("data-engrid-embedded-ecard", "true");
+            this.options.pageUrl = pageUrl.href;
+            this.logger.log("Running Embedded Ecard component", this.options);
+            this.embedEcard();
+            this.addEventListeners();
+        }
+        // For the thank you page - after the host page form has been submitted
+        // Only runs if eCard was selected on the main page
+        if (this.onPostActionPage()) {
+            engrid_ENGrid.setBodyData("embedded-ecard-sent", "true");
+            this.submitEcard();
+        }
+        // For the page that is embedded
+        if (this.onEmbeddedEcardPage()) {
+            this.setupEmbeddedPage();
+        }
+    }
+    onHostPage() {
+        return (window.hasOwnProperty("EngridEmbeddedEcard") &&
+            typeof window.EngridEmbeddedEcard === "object" &&
+            window.EngridEmbeddedEcard.hasOwnProperty("pageUrl") &&
+            window.EngridEmbeddedEcard.pageUrl !== "");
+    }
+    onEmbeddedEcardPage() {
+        return engrid_ENGrid.getPageType() === "ECARD" && engrid_ENGrid.hasBodyData("embedded");
+    }
+    onPostActionPage() {
+        return (sessionStorage.getItem("engrid-embedded-ecard") !== null &&
+            !this.onHostPage() &&
+            !this.onEmbeddedEcardPage());
+    }
+    embedEcard() {
+        var _a;
+        const container = document.createElement("div");
+        container.classList.add("engrid--embedded-ecard");
+        const heading = document.createElement("h3");
+        heading.textContent = this.options.headerText;
+        heading.classList.add("engrid--embedded-ecard-heading");
+        container.appendChild(heading);
+        const checkbox = document.createElement("div");
+        checkbox.classList.add("pseudo-en-field", "en__field", "en__field--checkbox", "en__field--000000", "en__field--embedded-ecard");
+        checkbox.innerHTML = `
+      <div class="en__field__element en__field__element--checkbox">
+        <div class="en__field__item">
+          <input class="en__field__input en__field__input--checkbox" id="en__field_embedded-ecard" name="engrid.embedded-ecard" type="checkbox" value="Y">
+          <label class="en__field__label en__field__label--item" for="en__field_embedded-ecard">${this.options.checkboxText}</label>
+        </div>
+      </div>`;
+        container.appendChild(checkbox);
+        container.appendChild(this.createIframe(this.options.pageUrl));
+        (_a = document
+            .querySelector(this.options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(this.options.placement, container);
+    }
+    createIframe(url) {
+        const iframe = document.createElement("iframe");
+        iframe.src = url;
+        iframe.setAttribute("src", url);
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("frameborder", "0");
+        iframe.classList.add("engrid-iframe", "engrid-iframe--embedded-ecard");
+        iframe.style.display = "none";
+        return iframe;
+    }
+    addEventListeners() {
+        const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
+        const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
+        sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
+            const checkbox = e.target;
+            if (checkbox === null || checkbox === void 0 ? void 0 : checkbox.checked) {
+                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
+            }
+            else {
+                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
+            }
+        });
+        this._form.onSubmit.subscribe(() => {
+            if (!this._form.submit ||
+                !sendEcardCheckbox ||
+                !(sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked)) {
+                return;
+            }
+            this.sendPostMessage(iframe, "save_form_data");
+        });
+    }
+    setupEmbeddedPage() {
+        window.addEventListener("message", (e) => {
+            if (e.origin !== location.origin || !e.data.action)
+                return;
+            this.logger.log("Received post message", e.data);
+            let ecardVariant = document.querySelector("[name='friend.ecard']");
+            let ecardSendDate = document.querySelector("[name='ecard.schedule']");
+            let ecardMessage = document.querySelector("[name='transaction.comments']");
+            let recipientName = document.querySelector(".en__ecardrecipients__name > input");
+            let recipientEmail = document.querySelector(".en__ecardrecipients__email > input");
+            switch (e.data.action) {
+                case "save_form_data":
+                    //add "chain" param to window.location.href if it doesnt have it
+                    const pageUrl = new URL(window.location.href);
+                    if (!pageUrl.searchParams.has("chain")) {
+                        pageUrl.searchParams.append("chain", "");
+                    }
+                    sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
+                        pageUrl: pageUrl.href,
+                        formData: {
+                            ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
+                            ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
+                            ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
+                            recipientName: (recipientName === null || recipientName === void 0 ? void 0 : recipientName.value) || "",
+                            recipientEmail: (recipientEmail === null || recipientEmail === void 0 ? void 0 : recipientEmail.value) || "",
+                        },
+                    }));
+                    break;
+                case "submit_form":
+                    let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
+                    if (ecardVariant) {
+                        ecardVariant.value = embeddedEcardData.formData["ecardVariant"];
+                    }
+                    if (ecardSendDate) {
+                        ecardSendDate.value = embeddedEcardData.formData["ecardSendDate"];
+                    }
+                    if (ecardMessage) {
+                        ecardMessage.value = embeddedEcardData.formData["ecardMessage"];
+                    }
+                    recipientName.value = embeddedEcardData.formData["recipientName"];
+                    recipientEmail.value = embeddedEcardData.formData["recipientEmail"];
+                    const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
+                    addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+                    const form = EnForm.getInstance();
+                    form.submitForm();
+                    sessionStorage.removeItem("engrid-embedded-ecard");
+                    break;
+                case "set_recipient":
+                    recipientName.value = e.data.name;
+                    recipientEmail.value = e.data.email;
+                    break;
+            }
+        });
+        this.sendPostMessage("parent", "ecard_form_ready");
+    }
+    submitEcard() {
+        var _a;
+        const embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
+        this.logger.log("Submitting ecard", embeddedEcardData);
+        const iframe = this.createIframe(embeddedEcardData.pageUrl);
+        (_a = document.querySelector(".body-main")) === null || _a === void 0 ? void 0 : _a.appendChild(iframe);
+        window.addEventListener("message", (e) => {
+            if (e.origin !== location.origin || !e.data.action)
+                return;
+            if (e.data.action === "ecard_form_ready") {
+                this.sendPostMessage(iframe, "submit_form");
+            }
+        });
+    }
+    sendPostMessage(target, action, data = {}) {
+        var _a;
+        const message = Object.assign({ action }, data);
+        if (target === "parent") {
+            window.parent.postMessage(message, location.origin);
+        }
+        else {
+            (_a = target.contentWindow) === null || _a === void 0 ? void 0 : _a.postMessage(message, location.origin);
+        }
+    }
+}
+
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/us-only-form.js
+/*
+ * This class disables the country field and fixes the country to "United States"
+ */
+
+class UsOnlyForm {
+    constructor() {
+        if (!this.shouldRun())
+            return;
+        if (!document.querySelector(".en__field--country .en__field__notice")) {
+            engrid_ENGrid.addHtml('<div class="en__field__notice"><em>Note: This action is limited to U.S. addresses.</em></div>', ".us-only-form .en__field--country .en__field__element", "after");
+        }
+        const countrySelect = engrid_ENGrid.getField("supporter.country");
+        countrySelect.setAttribute("disabled", "disabled");
+        let countryValue = "United States";
+        if ([...countrySelect.options].some((o) => o.value === "US")) {
+            countryValue = "US";
+        }
+        else if ([...countrySelect.options].some((o) => o.value === "USA")) {
+            countryValue = "USA";
+        }
+        engrid_ENGrid.setFieldValue("supporter.country", countryValue);
+        engrid_ENGrid.createHiddenInput("supporter.country", countryValue);
+        countrySelect.addEventListener("change", () => {
+            countrySelect.value = countryValue;
+        });
+    }
+    shouldRun() {
+        return !!document.querySelector(".en__component--formblock.us-only-form .en__field--country");
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.4";
+const AppVersion = "0.18.8";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
+
 
 
 
