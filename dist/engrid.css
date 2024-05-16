@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 16, 2024 @ 12:24:09 ET
+ *  Date: Thursday, May 16, 2024 @ 15:57:29 ET
  *  By: bryancasler
  *  ENGrid styles: v0.18.8
  *  ENGrid scripts: v0.18.8
@@ -8508,6 +8508,9 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=oceana] .give-by-select{
     --give-by-select__button_count:1;
   }
+}
+[data-engrid-theme=oceana][data-engrid-transaction-recurring=n][data-engrid-payment-type-option-apple-pay=true][data-engrid-payment-type-option-paypal-one-touch=true] .give-by-select .en__field__item.card:first-child:nth-last-child(5){
+  flex-basis:100%;
 }
 [data-engrid-theme=oceana] .give-by-select .en__field__element--radio{
   align-items:stretch;

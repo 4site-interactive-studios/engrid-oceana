@@ -813,12 +813,12 @@
 
   //When we have "give by select" options that should split over 2 lines (Card, Paypal, Digital Wallets and ACH all on page)
   //First line will be the column option 100% width, then next 3 on 1 line below equal width.
-  //May 16th, 2024: Commented out because: https://app.productive.io/2650-4site-interactive-studios-inc/projects/91238/tasks/task/8046198?filter=MjUxMjky&taskActivityId=119472601
-  // &[data-engrid-payment-type-option-apple-pay="true"][data-engrid-payment-type-option-paypal-one-touch="true"] {
-  //   .give-by-select .en__field__item.card:first-child:nth-last-child(5) {
-  //     flex-basis: 100%;
-  //   }
-  // }
+  //May 16th, 2024: Modified because: https://app.productive.io/2650-4site-interactive-studios-inc/tasks/8046198
+  &[data-engrid-transaction-recurring="n"][data-engrid-payment-type-option-apple-pay="true"][data-engrid-payment-type-option-paypal-one-touch="true"] {
+    .give-by-select .en__field__item.card:first-child:nth-last-child(5) {
+      flex-basis: 100%;
+    }
+  }
 
   .give-by-select .en__field__element--radio {
     align-items: stretch;
