@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, May 16, 2024 @ 15:57:29 ET
- *  By: bryancasler
+ *  Date: Tuesday, June 4, 2024 @ 24:06:24 ET
+ *  By: fernando
  *  ENGrid styles: v0.18.8
- *  ENGrid scripts: v0.18.8
+ *  ENGrid scripts: v0.18.12
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11888,6 +11888,7 @@ class App extends engrid_ENGrid {
         new WelcomeBack();
         new EcardToTarget();
         new UsOnlyForm();
+        new ThankYouPageConditionalContent();
         new EmbeddedEcard();
         //Debug panel
         let showDebugPanel = this.options.Debug;
@@ -13514,6 +13515,7 @@ class ShowHideRadioCheckboxes {
         this.classes = classes;
         this.createDataAttributes();
         this.hideAll();
+        this.storeSessionState();
         for (let i = 0; i < this.elements.length; i++) {
             let element = this.elements[i];
             if (element.checked) {
@@ -13522,6 +13524,7 @@ class ShowHideRadioCheckboxes {
             element.addEventListener("change", (e) => {
                 this.hideAll();
                 this.show(element);
+                this.storeSessionState();
             });
         }
     }
@@ -13614,6 +13617,55 @@ class ShowHideRadioCheckboxes {
                 }
             });
         }
+    }
+    getSessionState() {
+        var _a;
+        try {
+            const plainState = (_a = window.sessionStorage.getItem(`engrid_ShowHideRadioCheckboxesState`)) !== null && _a !== void 0 ? _a : "";
+            return JSON.parse(plainState);
+        }
+        catch (err) {
+            return [];
+        }
+    }
+    storeSessionState() {
+        const state = this.getSessionState();
+        [...this.elements].forEach((element) => {
+            var _a, _b;
+            if (!(element instanceof HTMLInputElement))
+                return;
+            if (element.type == "radio" && element.checked) {
+                //remove other items that have the same "class" property
+                state.forEach((item, index) => {
+                    if (item.class == this.classes) {
+                        state.splice(index, 1);
+                    }
+                });
+                //add the current item, with the currently active value
+                state.push({
+                    page: engrid_ENGrid.getPageID(),
+                    class: this.classes,
+                    value: element.value,
+                });
+                this.logger.log("storing radio state", state[state.length - 1]);
+            }
+            if (element.type == "checkbox") {
+                //remove other items that have the same "class" property
+                state.forEach((item, index) => {
+                    if (item.class == this.classes) {
+                        state.splice(index, 1);
+                    }
+                });
+                //add the current item, with the first checked value or "N" if none are checked
+                state.push({
+                    page: engrid_ENGrid.getPageID(),
+                    class: this.classes,
+                    value: (_b = (_a = [...this.elements].find((el) => el.checked)) === null || _a === void 0 ? void 0 : _a.value) !== null && _b !== void 0 ? _b : "N", // First checked value or "N" if none
+                });
+                this.logger.log("storing checkbox state", state[state.length - 1]);
+            }
+        });
+        window.sessionStorage.setItem(`engrid_ShowHideRadioCheckboxesState`, JSON.stringify(state));
     }
 }
 
@@ -15155,9 +15207,10 @@ class RememberMe {
         }
     }
     insertClearRememberMeLink() {
-        if (!document.getElementById("clear-autofill-data")) {
+        let clearRememberMeField = document.getElementById("clear-autofill-data");
+        if (!clearRememberMeField) {
             const clearAutofillLabel = "clear autofill";
-            const clearRememberMeField = document.createElement("a");
+            clearRememberMeField = document.createElement("a");
             clearRememberMeField.setAttribute("id", "clear-autofill-data");
             clearRememberMeField.classList.add("label-tooltip");
             clearRememberMeField.setAttribute("style", "cursor: pointer;");
@@ -15170,27 +15223,27 @@ class RememberMe {
                 else {
                     targetField.prepend(clearRememberMeField);
                 }
-                clearRememberMeField.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    this.clearFields([
-                        "supporter.country" /*, 'supporter.emailAddress'*/,
-                    ]);
-                    if (this.useRemote()) {
-                        this.clearCookieOnRemote();
-                    }
-                    else {
-                        this.clearCookie();
-                    }
-                    let clearAutofillLink = document.getElementById("clear-autofill-data");
-                    if (clearAutofillLink) {
-                        clearAutofillLink.style.display = "none";
-                    }
-                    this.rememberMeOptIn = false;
-                    this._events.dispatchClear();
-                });
             }
         }
+        clearRememberMeField.addEventListener("click", (e) => {
+            e.preventDefault();
+            this.clearFields(["supporter.country" /*, 'supporter.emailAddress'*/]);
+            if (this.useRemote()) {
+                this.clearCookieOnRemote();
+            }
+            else {
+                this.clearCookie();
+            }
+            let clearAutofillLink = document.getElementById("clear-autofill-data");
+            if (clearAutofillLink) {
+                clearAutofillLink.style.display = "none";
+            }
+            this.rememberMeOptIn = false;
+            this._events.dispatchClear();
+            window.dispatchEvent(new CustomEvent("RememberMe_Cleared"));
+        });
         this._events.dispatchLoad(true);
+        window.dispatchEvent(new CustomEvent("RememberMe_Loaded", { detail: { withData: true } }));
     }
     getElementByFirstSelector(selectorsString) {
         // iterate through the selectors until we find one that exists
@@ -15256,6 +15309,7 @@ class RememberMe {
             rememberMeOptInField.checked = true;
         }
         this._events.dispatchLoad(false);
+        window.dispatchEvent(new CustomEvent("RememberMe_Loaded", { detail: { withData: false } }));
     }
     useRemote() {
         return (!!this.remoteUrl &&
@@ -19562,9 +19616,9 @@ class FastFormFill {
         }
     }
     run() {
-        const fastPersonalDetailsFormBlock = document.querySelector(".en__component--formblock.fast-personal-details");
-        if (fastPersonalDetailsFormBlock) {
-            if (FastFormFill.allMandatoryInputsAreFilled(fastPersonalDetailsFormBlock)) {
+        const fastPersonalDetailsFormBlocks = document.querySelectorAll(".en__component--formblock.fast-personal-details");
+        if (fastPersonalDetailsFormBlocks.length > 0) {
+            if ([...fastPersonalDetailsFormBlocks].every((formBlock) => FastFormFill.allMandatoryInputsAreFilled(formBlock))) {
                 this.logger.log("Personal details - All mandatory inputs are filled");
                 engrid_ENGrid.setBodyData("hide-fast-personal-details", "true");
             }
@@ -19573,9 +19627,9 @@ class FastFormFill {
                 engrid_ENGrid.setBodyData("hide-fast-personal-details", "false");
             }
         }
-        const fastAddressDetailsFormBlock = document.querySelector(".en__component--formblock.fast-address-details");
-        if (fastAddressDetailsFormBlock) {
-            if (FastFormFill.allMandatoryInputsAreFilled(fastAddressDetailsFormBlock)) {
+        const fastAddressDetailsFormBlocks = document.querySelectorAll(".en__component--formblock.fast-address-details");
+        if (fastAddressDetailsFormBlocks.length > 0) {
+            if ([...fastAddressDetailsFormBlocks].every((formBlock) => FastFormFill.allMandatoryInputsAreFilled(formBlock))) {
                 this.logger.log("Address details - All mandatory inputs are filled");
                 engrid_ENGrid.setBodyData("hide-fast-address-details", "true");
             }
@@ -20676,11 +20730,60 @@ class UsOnlyForm {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/thank-you-page-conditional-content.js
+
+class ThankYouPageConditionalContent {
+    constructor() {
+        this.logger = new EngridLogger("ThankYouPageConditionalContent");
+        if (!this.shouldRun())
+            return;
+        this.applyShowHideRadioCheckboxesState();
+    }
+    getShowHideRadioCheckboxesState() {
+        var _a;
+        try {
+            const plainState = (_a = window.sessionStorage.getItem(`engrid_ShowHideRadioCheckboxesState`)) !== null && _a !== void 0 ? _a : "";
+            return JSON.parse(plainState);
+        }
+        catch (err) {
+            return [];
+        }
+    }
+    applyShowHideRadioCheckboxesState() {
+        const state = this.getShowHideRadioCheckboxesState();
+        if (state) {
+            state.forEach((item) => {
+                this.logger.log("Processing TY page conditional content item:", item);
+                if (engrid_ENGrid.getPageID() === item.page) {
+                    document
+                        .querySelectorAll(`[class*="${item.class}"]`)
+                        .forEach((el) => {
+                        el.classList.add("hide");
+                    });
+                    document
+                        .querySelectorAll(`.${item.class}${item.value}`)
+                        .forEach((el) => {
+                        el.classList.remove("hide");
+                    });
+                }
+            });
+        }
+        this.deleteShowHideRadioCheckboxesState();
+    }
+    deleteShowHideRadioCheckboxesState() {
+        window.sessionStorage.removeItem(`engrid_ShowHideRadioCheckboxesState`);
+    }
+    shouldRun() {
+        return engrid_ENGrid.getGiftProcess();
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.8";
+const AppVersion = "0.18.12";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
