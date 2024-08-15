@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, August 15, 2024 @ 16:45:50 ET
+ *  Date: Thursday, August 15, 2024 @ 17:32:44 ET
  *  By: fernando
- *  ENGrid styles: v0.18.18
- *  ENGrid scripts: v0.18.18
+ *  ENGrid styles: v0.18.19
+ *  ENGrid scripts: v0.18.19
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -20635,6 +20635,7 @@ class EmbeddedEcard {
         this.logger = new EngridLogger("Embedded Ecard", "#D95D39", "#0E1428", "📧");
         this.options = EmbeddedEcardOptionsDefaults;
         this._form = EnForm.getInstance();
+        this.isSubmitting = false;
         // For the page hosting the embedded ecard
         if (this.onHostPage()) {
             // Clean up session variables if the page is reloaded, and it isn't a submission failure
@@ -20735,6 +20736,57 @@ class EmbeddedEcard {
             }
         });
     }
+    setEmbeddedEcardSessionData() {
+        let ecardVariant = document.querySelector("[name='friend.ecard']");
+        let ecardSendDate = document.querySelector("[name='ecard.schedule']");
+        let ecardMessage = document.querySelector("[name='transaction.comments']");
+        //add "chain" param to window.location.href if it doesnt have it
+        const pageUrl = new URL(window.location.href);
+        if (!pageUrl.searchParams.has("chain")) {
+            pageUrl.searchParams.append("chain", "");
+        }
+        const embeddedEcardData = {
+            pageUrl: pageUrl.href,
+            formData: {
+                ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
+                ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
+                ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
+                recipients: this.getEcardRecipients(),
+            },
+        };
+        sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify(embeddedEcardData));
+    }
+    getEcardRecipients() {
+        const recipients = [];
+        const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
+        //Single recipient form where the "add recipient" button is hidden, and we use the recipient name and email fields
+        const isSingleRecipientForm = !addRecipientButton || addRecipientButton.offsetHeight === 0;
+        if (isSingleRecipientForm) {
+            // When it is a single recipient form, we only need to get the recipient name and email from the input fields
+            let recipientName = document.querySelector(".en__ecardrecipients__name > input");
+            let recipientEmail = document.querySelector(".en__ecardrecipients__email > input");
+            if (recipientName && recipientEmail) {
+                recipients.push({
+                    name: recipientName.value,
+                    email: recipientEmail.value,
+                });
+            }
+            return recipients;
+        }
+        // For multiple recipient forms, we need to get the recipient name and email from each recipient in the recipient list
+        const recipientList = document.querySelector(".en__ecardrecipients__list");
+        recipientList === null || recipientList === void 0 ? void 0 : recipientList.querySelectorAll(".en__ecardrecipients__recipient").forEach((el) => {
+            const recipientName = el.querySelector(".ecardrecipient__name");
+            const recipientEmail = el.querySelector(".ecardrecipient__email");
+            if (recipientName && recipientEmail) {
+                recipients.push({
+                    name: recipientName.value,
+                    email: recipientEmail.value,
+                });
+            }
+        });
+        return recipients;
+    }
     setupEmbeddedPage() {
         let ecardVariant = document.querySelector("[name='friend.ecard']");
         let ecardSendDate = document.querySelector("[name='ecard.schedule']");
@@ -20749,23 +20801,25 @@ class EmbeddedEcard {
             recipientEmail,
         ].forEach((el) => {
             el.addEventListener("input", () => {
-                //add "chain" param to window.location.href if it doesnt have it
-                const pageUrl = new URL(window.location.href);
-                if (!pageUrl.searchParams.has("chain")) {
-                    pageUrl.searchParams.append("chain", "");
-                }
-                sessionStorage.setItem("engrid-embedded-ecard", JSON.stringify({
-                    pageUrl: pageUrl.href,
-                    formData: {
-                        ecardVariant: (ecardVariant === null || ecardVariant === void 0 ? void 0 : ecardVariant.value) || "",
-                        ecardSendDate: (ecardSendDate === null || ecardSendDate === void 0 ? void 0 : ecardSendDate.value) || "",
-                        ecardMessage: (ecardMessage === null || ecardMessage === void 0 ? void 0 : ecardMessage.value) || "",
-                        recipientName: (recipientName === null || recipientName === void 0 ? void 0 : recipientName.value) || "",
-                        recipientEmail: (recipientEmail === null || recipientEmail === void 0 ? void 0 : recipientEmail.value) || "",
-                    },
-                }));
+                if (this.isSubmitting)
+                    return;
+                this.setEmbeddedEcardSessionData();
             });
         });
+        // MutationObserver to detect changes in the recipient list and update the session data
+        const observer = new MutationObserver((mutationsList) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === "childList") {
+                    if (this.isSubmitting)
+                        return;
+                    this.setEmbeddedEcardSessionData();
+                }
+            }
+        });
+        const recipientList = document.querySelector(".en__ecardrecipients__list");
+        if (recipientList) {
+            observer.observe(recipientList, { childList: true });
+        }
         document.querySelectorAll(".en__ecarditems__thumb").forEach((el) => {
             // Making sure the session value is changed when this is clicked
             el.addEventListener("click", () => {
@@ -20778,6 +20832,7 @@ class EmbeddedEcard {
             this.logger.log("Received post message", e.data);
             switch (e.data.action) {
                 case "submit_form":
+                    this.isSubmitting = true;
                     let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
                     if (ecardVariant) {
                         ecardVariant.value = embeddedEcardData.formData["ecardVariant"];
@@ -20788,10 +20843,12 @@ class EmbeddedEcard {
                     if (ecardMessage) {
                         ecardMessage.value = embeddedEcardData.formData["ecardMessage"];
                     }
-                    recipientName.value = embeddedEcardData.formData["recipientName"];
-                    recipientEmail.value = embeddedEcardData.formData["recipientEmail"];
                     const addRecipientButton = document.querySelector(".en__ecarditems__addrecipient");
-                    addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+                    embeddedEcardData.formData.recipients.forEach((recipient) => {
+                        recipientName.value = recipient.name;
+                        recipientEmail.value = recipient.email;
+                        addRecipientButton === null || addRecipientButton === void 0 ? void 0 : addRecipientButton.click();
+                    });
                     const form = EnForm.getInstance();
                     form.submitForm();
                     sessionStorage.removeItem("engrid-embedded-ecard");
@@ -20914,7 +20971,7 @@ class ThankYouPageConditionalContent {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/version.js
-const AppVersion = "0.18.18";
+const AppVersion = "0.18.19";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-common/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
