@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, September 3, 2024 @ 22:41:29 ET
+ *  Date: Wednesday, October 2, 2024 @ 17:12:06 ET
  *  By: fernando
- *  ENGrid styles: v0.19.2
- *  ENGrid scripts: v0.19.2
+ *  ENGrid styles: v0.19.8
+ *  ENGrid scripts: v0.19.8
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -11908,6 +11908,7 @@ class App extends engrid_ENGrid {
         new UsOnlyForm();
         new ThankYouPageConditionalContent();
         new EmbeddedEcard();
+        new CheckboxLabel();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -11924,7 +11925,7 @@ class App extends engrid_ENGrid {
         if (engrid_ENGrid.getUrlParameter("development") === "branding") {
             new BrandingHtml().show();
         }
-        engrid_ENGrid.setBodyData("data-engrid-js-loading", "finished");
+        engrid_ENGrid.setBodyData("js-loading", "finished");
         window.EngridVersion = AppVersion;
         this.logger.success(`VERSION: ${AppVersion}`);
         // Window Load
@@ -12594,6 +12595,14 @@ class DataAttributes {
         if (engrid_ENGrid.getPageNumber() === engrid_ENGrid.getPageCount()) {
             engrid_ENGrid.setBodyData("last-page", "");
         }
+        // "Temporary solutions are forever, you know..."
+        // - Fernando Santos
+        // "I know, but what if we just..."
+        // - Bryan Casler
+        // Add data attribute if browser does not support :has selector
+        if (!CSS.supports("selector(:has(*))")) {
+            engrid_ENGrid.setBodyData("css-has-selector", "false");
+        }
     }
 }
 
@@ -12607,23 +12616,40 @@ class iFrame {
         if (this.inIframe()) {
             // Add the data-engrid-embedded attribute when inside an iFrame if it wasn't already added by a script in the Page Template
             engrid_ENGrid.setBodyData("embedded", "");
+            // Check if the parent page URL matches the criteria for a thank you page donation
+            const getParentUrl = () => {
+                try {
+                    return window.parent.location.href;
+                }
+                catch (e) {
+                    // If we can't access parent location due to same-origin policy, fall back to referrer
+                    return document.referrer;
+                }
+            };
+            const parentUrl = getParentUrl();
+            const thankYouPageRegex = /\/page\/\d+\/[^\/]+\/(\d+)(\?|$)/;
+            const match = parentUrl.match(thankYouPageRegex);
+            if (match) {
+                const pageNumber = parseInt(match[1], 10);
+                if (pageNumber > 1) {
+                    engrid_ENGrid.setBodyData("embedded", "thank-you-page-donation");
+                    this.hideFormComponents();
+                    this.logger.log("iFrame Event - Set embedded attribute to thank-you-page-donation");
+                }
+            }
             // Fire the resize event
             this.logger.log("iFrame Event - Begin Resizing");
-            window.addEventListener("load", (event) => {
-                // Scroll to top of iFrame
-                this.logger.log("iFrame Event - window.onload");
-                this.sendIframeHeight();
-                window.parent.postMessage({
-                    scroll: this.shouldScroll(),
-                }, "*");
-                // On click fire the resize event
-                document.addEventListener("click", (e) => {
-                    this.logger.log("iFrame Event - click");
-                    setTimeout(() => {
-                        this.sendIframeHeight();
-                    }, 100);
+            // Run onLoaded function
+            console.log("document.readyState", document.readyState);
+            // Document Load
+            if (document.readyState !== "loading") {
+                this.onLoaded();
+            }
+            else {
+                document.addEventListener("DOMContentLoaded", () => {
+                    this.onLoaded();
                 });
-            });
+            }
             window.setTimeout(() => {
                 this.sendIframeHeight();
             }, 300);
@@ -12640,8 +12666,7 @@ class iFrame {
             if (this.isChained() && engrid_ENGrid.getPaymentType()) {
                 this.logger.log("iFrame Event - Chained iFrame");
                 this.sendIframeFormStatus("chained");
-                this.hideFormComponents();
-                this.addChainedBanner();
+                // this.addChainedBanner();
             }
             // Remove the skip link markup when inside an iFrame
             const skipLink = document.querySelector(".skip-link");
@@ -12704,6 +12729,23 @@ class iFrame {
             });
         }
     }
+    onLoaded() {
+        // Scroll to top of iFrame
+        this.logger.log("iFrame Event - window.onload");
+        this.sendIframeHeight();
+        window.parent.postMessage({
+            scroll: this.shouldScroll(),
+        }, "*");
+        // On click fire the resize event
+        document.addEventListener("click", (e) => {
+            this.logger.log("iFrame Event - click");
+            setTimeout(() => {
+                this.sendIframeHeight();
+            }, 100);
+        });
+        // Watch for errors and send the height
+        engrid_ENGrid.watchForError(this.sendIframeHeight.bind(this));
+    }
     sendIframeHeight() {
         let height = document.body.offsetHeight;
         this.logger.log("iFrame Event - Sending iFrame height of: " + height + "px"); // check the message is being sent correctly
@@ -12752,20 +12794,31 @@ class iFrame {
             return true;
         }
     }
+    // This method checks if the URL has a parameter named "chain" and returns true if it exists, otherwise false.
     isChained() {
         return !!engrid_ENGrid.getUrlParameter("chain");
     }
     hideFormComponents() {
         this.logger.log("iFrame Event - Hiding Form Components");
-        const en__component = document.querySelectorAll(".body-main > div");
-        en__component.forEach((component, index) => {
-            if (component.classList.contains("hide") === false &&
-                component.classList.contains("hide-iframe") === false &&
-                component.classList.contains("radio-to-buttons_donationAmt") ===
-                    false &&
-                index < en__component.length - 1) {
-                component.classList.add("hide-iframe");
-                component.classList.add("hide-chained");
+        const excludeClasses = [
+            "giveBySelect-Card",
+            "en__field--ccnumber",
+            "give-by-select",
+            "give-by-select-header",
+            "en__submit",
+            "en__captcha",
+            "force-visibility",
+            "hide",
+            "hide-iframe",
+            "radio-to-buttons_donationAmt",
+        ];
+        const excludeIds = ["en__digitalWallet"];
+        const components = Array.from(document.querySelectorAll(".body-main > div:not(:last-child)"));
+        components.forEach((component) => {
+            const shouldExclude = excludeClasses.some((cls) => component.classList.contains(cls) ||
+                component.querySelector(`:scope > .${cls}`)) || excludeIds.some((id) => component.querySelector(`#${id}`));
+            if (!shouldExclude) {
+                component.classList.add("hide-iframe", "hide-chained");
             }
         });
         this.sendIframeHeight();
@@ -12779,26 +12832,30 @@ class iFrame {
         });
         this.sendIframeHeight();
     }
-    addChainedBanner() {
-        var _a, _b;
-        this.logger.log("iFrame Event - Adding Chained Banner");
-        const banner = document.createElement("div");
-        const lastComponent = document.querySelector(".body-main > div:last-of-type");
-        banner.classList.add("en__component");
-        banner.classList.add("en__component--banner");
-        banner.classList.add("en__component--banner--chained");
-        banner.innerHTML = `<div class="en__component__content"><div class="en__component__content__inner"><div class="en__component__content__text"><p>
-      Giving as <strong>${engrid_ENGrid.getFieldValue("supporter.firstName")} ${engrid_ENGrid.getFieldValue("supporter.lastName")}</strong> 
-      with <strong>${engrid_ENGrid.getFieldValue("transaction.paymenttype").toUpperCase()}</strong>
-      (<a href="#" class="en__component__content__link">change</a>)</p></div></div></div>`;
-        (_a = lastComponent === null || lastComponent === void 0 ? void 0 : lastComponent.parentNode) === null || _a === void 0 ? void 0 : _a.insertBefore(banner, lastComponent);
-        (_b = banner
-            .querySelector(".en__component__content__link")) === null || _b === void 0 ? void 0 : _b.addEventListener("click", (e) => {
-            e.preventDefault();
-            this.showFormComponents();
-            banner.remove();
-        });
-    }
+    // private addChainedBanner() {
+    //   this.logger.log("iFrame Event - Adding Chained Banner");
+    //   const banner = document.createElement("div");
+    //   const lastComponent = document.querySelector(
+    //     ".body-main > div:last-of-type"
+    //   ) as HTMLDivElement;
+    //   banner.classList.add("en__component");
+    //   banner.classList.add("en__component--banner");
+    //   banner.classList.add("en__component--banner--chained");
+    //   banner.innerHTML = `<div class="en__component__content"><div class="en__component__content__inner"><div class="en__component__content__text"><p>
+    //     ${ENGrid.getFieldValue("supporter.firstName") ? `Giving as <strong>${ENGrid.getFieldValue("supporter.firstName")} ${ENGrid.getFieldValue("supporter.lastName")}</strong>` : "<strong>Testing as </strong>"}
+    //     with <strong>${ENGrid.getFieldValue(
+    //       "transaction.paymenttype"
+    //     ).toUpperCase()}</strong>
+    //     (<a href="#" class="en__component__content__link">change</a>)</p></div></div></div>`;
+    //   lastComponent?.parentNode?.insertBefore(banner, lastComponent);
+    //   banner
+    //     .querySelector(".en__component__content__link")
+    //     ?.addEventListener("click", (e) => {
+    //       e.preventDefault();
+    //       this.showFormComponents();
+    //       banner.remove();
+    //     });
+    // }
     debounceWithImmediate(func, timeout = 1000) {
         let timer;
         let firstEvent = true;
@@ -14370,16 +14427,18 @@ class AutoCountrySelect {
                     type: "region",
                 });
                 // We are setting the country by Name because the ISO code is not always the same. They have 2 and 3 letter codes.
-                this.setCountryByName(countriesNames.of(this.country));
+                this.setCountryByName(countriesNames.of(this.country), this.country);
             }
         }
     }
-    setCountryByName(countryName) {
+    setCountryByName(countryName, countryCode) {
         if (this.countrySelect) {
             let countrySelectOptions = this.countrySelect.options;
             for (let i = 0; i < countrySelectOptions.length; i++) {
                 if (countrySelectOptions[i].innerHTML.toLowerCase() ==
-                    countryName.toLowerCase()) {
+                    countryName.toLowerCase() ||
+                    countrySelectOptions[i].value.toLowerCase() ==
+                        countryCode.toLowerCase()) {
                     this.countrySelect.selectedIndex = i;
                     break;
                 }
@@ -20977,11 +21036,44 @@ class ThankYouPageConditionalContent {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/checkbox-label.js
+// Component to allow the user to set custom labels for the checkboxes,
+// you can customize the checkbox label on a per-page basis, which is not possible with Engaging Networks
+// The .checkbox-label element should be placed right before the checkbox form block
+
+class CheckboxLabel {
+    constructor() {
+        this.logger = new EngridLogger("CheckboxLabel", "#00CC95", "#2C3E50", "✅");
+        this.checkBoxesLabels = document.querySelectorAll(".checkbox-label");
+        if (!this.shoudRun())
+            return;
+        this.logger.log(`Found ${this.checkBoxesLabels.length} custom labels`);
+        this.run();
+    }
+    shoudRun() {
+        return this.checkBoxesLabels.length > 0;
+    }
+    run() {
+        this.checkBoxesLabels.forEach((checkboxLabel) => {
+            var _a;
+            const labelText = (_a = checkboxLabel.textContent) === null || _a === void 0 ? void 0 : _a.trim();
+            const checkboxContainer = checkboxLabel.nextElementSibling;
+            const checkboxLabelElement = checkboxContainer.querySelector("label");
+            if (!checkboxLabelElement || !labelText)
+                return;
+            checkboxLabelElement.textContent = labelText;
+            checkboxLabel.remove();
+            this.logger.log(`Set checkbox label to "${labelText}"`);
+        });
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.19.2";
+const AppVersion = "0.19.8";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
