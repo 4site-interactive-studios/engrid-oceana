@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, January 7, 2025 @ 11:09:12 ET
- *  By: fernando
+ *  Date: Monday, January 13, 2025 @ 11:53:43 ET
+ *  By: michael
  *  ENGrid styles: v0.20.0
  *  ENGrid scripts: v0.20.4
  *
@@ -5821,14 +5821,23 @@ body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-merge-tags-
 
 .engrid-mobile-cta-container{
   bottom:1rem;
+  color:#fff;
   left:2rem;
   position:fixed;
+  transition:bottom .4s ease-out;
   width:calc(100% - 4rem);
   z-index:9999;
 }
 .engrid-mobile-cta-container .primary{
-  display:inline-block;
+  align-items:center;
+  display:flex;
+  justify-content:center;
   margin:0;
+}
+.engrid-mobile-cta-container .primary svg{
+  height:24px;
+  margin-left:10px;
+  width:24px;
 }
 
 @media screen and (min-width:768px){
@@ -5836,6 +5845,10 @@ body:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-merge-tags-
     display:none !important;
   }
 }
+.engrid-mobile-cta-container.hide-cta{
+  bottom:-100px;
+}
+
 [data-engrid-theme]{
   --exit-intent__overlay_background-color:#00000080;
   --exit-intent__overlay_padding:0 20px;
@@ -8617,6 +8630,11 @@ body[data-engrid-debug]:before{
   line-height:1.1;
   margin:10px 0 12px;
   text-align:center;
+}
+[data-engrid-theme=oceana] .engrid-mobile-cta-container .primary{
+  font-size:20px;
+  font-weight:700;
+  text-transform:uppercase;
 }
 
 #en__digitalWallet__paypalTouch,#en__digitalWallet__paypalTouch__container,#en__digitalWallet__stripeButtons,#en__digitalWallet__stripeButtons__container{
