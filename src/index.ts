@@ -24,6 +24,16 @@ const options: Options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7",
   },
+  MobileCTA: [
+    {
+      pageType: "DONATION",
+      label: "Donate",
+    },
+    {
+      pageType: "ADVOCACY",
+      label: "Sign",
+    }
+  ],
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
   onLoad: () => customScript(App),
   onResize: () => console.log("Starter Theme Window Resized"),
