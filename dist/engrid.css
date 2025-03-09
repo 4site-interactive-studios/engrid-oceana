@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 9, 2025 @ 16:13:14 ET
+ *  Date: Sunday, March 9, 2025 @ 17:44:19 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -8198,6 +8198,21 @@ body[data-engrid-debug]:before{
   --give-by-select__button_border-color_hover:#999;
 }
 [data-engrid-theme=oceana]#en__pagebuilder .body-bannerOverlay,[data-engrid-theme=oceana]#en__pagebuilder .body-footer,[data-engrid-theme=oceana]#en__pagebuilder .body-footerOutside,[data-engrid-theme=oceana]#en__pagebuilder .body-header,[data-engrid-theme=oceana]#en__pagebuilder .body-headerOutside,[data-engrid-theme=oceana]#en__pagebuilder .content-preFooter,[data-engrid-theme=oceana]#en__pagebuilder .page-alert,[data-engrid-theme=oceana]#en__pagebuilder .page-backgroundImageOverlay{
+  clip:rect(0 0 0 0);
+  border:0;
+  clip-path:inset(100%);
+  height:1px;
+  margin:-1px;
+  overflow:hidden;
+  padding:0;
+  position:absolute;
+  white-space:nowrap;
+  width:1px;
+}
+[data-engrid-theme=oceana]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-theme-version="2024"] [class*=showiftheme-]:not(.showiftheme-2024),[data-engrid-theme=oceana]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-theme-version="202503"] [class*=showiftheme-]:not(.showiftheme-202503){
+  display:none !important;
+}
+[data-engrid-theme=oceana] [src*=w55c].hide{
   clip:rect(0 0 0 0);
   border:0;
   clip-path:inset(100%);
