@@ -455,9 +455,14 @@
   /** - ENGRID COMPONENTS - **/
 
   /** Content Header Padding **/
-  .content-header.pseudo-subgrid > div {
+  &[data-engrid-theme-version="2024"] .content-header.pseudo-subgrid > div {
     grid-column: pc;
     padding: 0 3rem;
+  }
+
+  &[data-engrid-theme-version="202503"] .content-header,
+  &[data-engrid-theme-version="202503"] .content-header.pseudo-subgrid > div {
+    grid-column: bc;
   }
 
   /** Body Banner Spacing **/
@@ -476,14 +481,22 @@
   }
 
   /** Footer Padding **/
-  .content-footer > div {
+  &[data-engrid-theme-version="2024"] .content-footer > div {
     grid-column: pc;
     padding: 0 3rem;
   }
 
-  /** Footer Padding **/
-  .content-footer {
-    padding: 3.75rem 0;
+  &[data-engrid-theme-version="2024"] .content-footer {
+      padding: 3.75rem 0;
+  }
+
+  &[data-engrid-theme-version="202503"] .content-footer,
+  &[data-engrid-theme-version="202503"] .content-footer > div {
+    grid-column: bc;
+  }
+
+  &[data-engrid-theme-version="202503"] .content-footer > div {
+    padding: 1.5rem 3rem;
   }
 
   /** Footer Wrapper **/
@@ -502,6 +515,9 @@
     .content-header {
       background: rgba(255, 255, 255, 0.6) !important;
       padding: 1.5rem;
+    }
+
+    &[data-engrid-theme-version="2024"] .content-header {
       margin-bottom: 3.75rem;
     }
   }

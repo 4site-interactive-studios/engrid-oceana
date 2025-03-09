@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 9, 2025 @ 17:57:06 ET
+ *  Date: Sunday, March 9, 2025 @ 18:13:37 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -8335,9 +8335,12 @@ body[data-engrid-debug]:before{
   background-color:var(--theme-error-red-faded);
   border-color:var(--input_border-color);
 }
-[data-engrid-theme=oceana] .content-header.pseudo-subgrid>div{
+[data-engrid-theme=oceana][data-engrid-theme-version="2024"] .content-header.pseudo-subgrid>div{
   grid-column:pc;
   padding:0 3rem;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-header,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-header.pseudo-subgrid>div{
+  grid-column:bc;
 }
 [data-engrid-theme=oceana] .body-banner{
   padding-bottom:1em;
@@ -8348,12 +8351,18 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana] .body-bottom{
   padding-bottom:3rem;
 }
-[data-engrid-theme=oceana] .content-footer>div{
+[data-engrid-theme=oceana][data-engrid-theme-version="2024"] .content-footer>div{
   grid-column:pc;
   padding:0 3rem;
 }
-[data-engrid-theme=oceana] .content-footer{
+[data-engrid-theme=oceana][data-engrid-theme-version="2024"] .content-footer{
   padding:3.75rem 0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer>div{
+  grid-column:bc;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer>div{
+  padding:1.5rem 3rem;
 }
 [data-engrid-theme=oceana] .footer-wrapper{
   align-items:center;
@@ -8366,8 +8375,10 @@ body[data-engrid-debug]:before{
 @media (min-width:769px){
   [data-engrid-theme=oceana] .content-header{
     background:#fff9 !important;
-    margin-bottom:3.75rem;
     padding:1.5rem;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="2024"] .content-header{
+    margin-bottom:3.75rem;
   }
 }
 @media (max-width:768px){
