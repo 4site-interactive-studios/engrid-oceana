@@ -74,7 +74,15 @@
   --button_border-radius: 0px;
 
   // HEADER COLOR
-  --engrid__content-header_background-color: rgba(255, 255, 255, 0.6);
+  &[data-engrid-theme-version="2024"] {
+    --engrid__content-header_background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &[data-engrid-theme-version="202503"] {
+    --engrid__content-header_background-color: #ffffff;
+    --engrid__body_box-shadow: none;
+  }
+
 
   // TYPOGRAPHY BUTTON:HOVER
   // --button_color_hover: var(--button_color);
@@ -513,11 +521,11 @@
   /** Header: Background **/
   @media (min-width: 769px) {
     .content-header {
-      background: rgba(255, 255, 255, 0.6) !important;
       padding: 1.5rem;
     }
 
     &[data-engrid-theme-version="2024"] .content-header {
+      background: rgba(255, 255, 255, 0.6) !important;
       margin-bottom: 3.75rem;
     }
   }
