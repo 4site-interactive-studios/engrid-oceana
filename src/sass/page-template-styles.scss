@@ -3,7 +3,22 @@
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 
 [data-engrid-theme="oceana"] {
-  --engrid__page_background-color: #d8f2fb;
+  // HEADER COLOR
+  &[data-engrid-theme-version="2024"] {
+    --engrid__page_background-color: #d8f2fb;
+  }
+ 
+  &[data-engrid-theme-version="202503"] {
+    // Adds styling behind the page during aggressive overscrolling
+    &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
+      z-index: -99;
+      content: "";
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      background: linear-gradient(180deg, rgb(255, 255, 255) 50%, rgb(34, 33, 74) 50%);
+    }
+  }
 
   // TYPOGRAPHY DEFAULT
   --default_font-family: "Lato", sans-serif;
@@ -672,9 +687,16 @@
 
   /** Footer: Background **/
   .content-footer {
-    background: #1f2024;
     color: white;
     font-size: 14px;
+  }
+
+  &[data-engrid-theme-version="2024"] .content-footer {
+    background: #1f2024;
+  }
+
+  &[data-engrid-theme-version="202503"] .content-footer {
+    background: #22214a;
   }
 
   /** Footer: Nav and Styling **/
@@ -883,6 +905,111 @@
       line-height: 1.1;
     }
   }
+
+  @media screen and (min-width: 879px) {
+    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+      .page-backgroundImage {
+        grid-column: rpc/pc;
+
+        &:before,
+        figure.media-with-attribution {
+          left: $one_col_body-column_max-width;
+          right: 0;
+          width: calc(100% - $one_col_body-column_max-width);
+          background-position: center !important;
+        }
+      }
+    }
+
+    &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+      .page-backgroundImage {
+        grid-column: pc/lpc;
+
+        &:before,
+        figure.media-with-attribution {
+          left: 0;
+          right: $one_col_body-column_max-width;
+          width: calc(100% - $one_col_body-column_max-width);
+          background-position: center !important;
+        }
+      }
+    }
+  }
+
+  &[data-engrid-page-background="image"]
+    .page-backgroundImage
+    figure.media-with-attribution {
+    figattribution {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      --media-attribution__background-color: #ffffff;
+      --media-attribution__color: #ffffff;
+      --media-attribution__font-family: serif;
+      --media-attribution__font-size: 16px;
+      --media-attribution__padding: 0;
+      line-height: 16px;
+
+      &:before {
+        content: "";
+        background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/media-attribution.png?v=1682946792000");
+        background-size: 5px 12px;
+        background-repeat: no-repeat;
+        background-position: center;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        left: -1px;
+      }
+    }
+  }
+
+  --click-to-expand__copy-area_height: 193px;
+  --click-to-expand__cta-image_height: 22px;
+  --click-to-expand__cta-image_width: 100%;
+
+  &:not(#en__pagebuilder) .click-to-expand:not(.expanded) {
+    margin-bottom: 1em;
+
+    .click-to-expand-cta {
+      background: none !important;
+      right: auto !important;
+      padding-bottom: 1em;
+      // width: 100% !important;
+      // height: 20px !important;
+
+      &:before {
+        content: var(--click-to-expand__cta-image_url);
+        position: absolute;
+        transform: rotate(-90deg);
+        left: 3px;
+      }
+
+      &:after {
+        content: "Read More";
+        position: relative;
+        left: 20px;
+        font-weight: bold;
+        top: 2px;
+      }
+    }
+
+    .click-to-expand-text-wrapper {
+      mask-image: linear-gradient(
+        to bottom,
+        #000 50%,
+        #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px)
+      );
+    }
+  }
+
+  .click-to-expand.expanded .click-to-expand-text-wrapper > *:last-child {
+    margin-bottom: 0;
+  }
+
 }
 
 .engrid-mobile-cta-container .primary {
