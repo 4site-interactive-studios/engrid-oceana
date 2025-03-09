@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "../engrid-scripts"
+			"path": "../engrid"
 		}
 	],
 	"settings": {}
