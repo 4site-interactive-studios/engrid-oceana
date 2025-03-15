@@ -1,0 +1,121 @@
+[data-engrid-theme="oceana"][data-engrid-theme-version="202503"] {   
+    --engrid__content-header_background-color: var(--engrid__body_background-color);
+    --engrid__body_background-color: #d3eafb;
+    --engrid__content-footer_background-color:#22214a;
+    --engrid__body_box-shadow: none;
+    --recurring-frequency__button_count: 2;
+    --donation-amount__button_count: 3;
+    --give-by-select__button_count: 1;
+
+    --engrid__body_padding: 0px 4rem;
+    
+
+    --default_color: #22214A;
+
+    // TYPOGRAPHY H1
+    --h1_font-family: 'ff-good-headline-web-pro-con', sans-serif;
+    // --h1_color: #22214A;
+    --h1_font-size: 72px;
+    --h1_font-weight: 400;
+    --h1_line-height: 100%;
+    --h1_text-transform: uppercase;
+
+
+
+
+
+    
+    --input_border-radius: 0px;
+
+      // TYPOGRAPHY BUTTON
+//   --button_font-family: var(--default_font-family);
+  --button_color: var(--color_white);
+//   --button_font-size: var(--root_font-size);
+//   --button_font-weight: initial;
+//   --button_line-height: initial;
+  --button_background-color: #058CEB;
+  --button_border-width: 2px;
+  --button_border-color: var(--default_color);
+  --button_border-radius: 0px;
+
+
+
+  .eaSubmitButton,
+  .en__submit .button,
+  .en__submit button,
+  .pseduo__en__submit_button{
+    border-color: var(--button_background-color);
+  }
+   
+
+    // Adds styling behind the page during aggressive overscrolling
+    &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
+        z-index: -99;
+        content: "";
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        background: linear-gradient(180deg, rgb(211, 234, 251) 50%, rgb(34, 33, 74) 50%);
+    }
+
+    h1 strong{
+        --h1_font-weight: 700;
+    }
+    
+    .body-title h1{
+        text-wrap: balance;
+     }   
+
+    .content-header,
+    .content-header.pseudo-subgrid > div {
+        grid-column: bc;
+    }
+
+
+    .content-footer,
+    .content-footer > div {
+        grid-column: bc;
+    }
+
+    .content-footer > div {
+        padding: 1.5rem 3rem;
+    }
+
+    .content-footer {
+        color: #ffffff; // Why can't this be "--default_color: #ffffff;"? It doesn't work.
+    }
+
+    @media screen and (min-width: $leftleft1col_body-column_max-width) {
+        &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+          .page-backgroundImage {
+            grid-column: rpc/pc;
+    
+            &:before,
+            figure.media-with-attribution {
+              left: $leftleft1col_body-column_max-width;
+              right: 0;
+              width: calc(100% - $leftleft1col_body-column_max-width);
+              background-position: center !important;
+              border-left: 2px solid var(--default_color);
+            }
+          }
+        }
+    }
+
+    @media screen and (min-width: $rightright1col_body-column_max-width) {
+        &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+          .page-backgroundImage {
+            grid-column: pc/lpc;
+    
+            &:before,
+            figure.media-with-attribution {
+              left: 0;
+              right: $rightright1col_body-column_max-width;
+              width: calc(100% - $rightright1col_body-column_max-width);
+              background-position: center !important;
+              border-right: 2px solid var(--default_color);
+            }
+          }
+        }
+      }
+}

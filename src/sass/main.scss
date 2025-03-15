@@ -7,7 +7,20 @@
 
 /* CLIENT THEME FONTS AND STYLES */
 @import "./page-template-fonts";
-@import "./page-template-styles";
+
+// Only show elements if the page is viewed on a page with the same theme version
+[data-engrid-theme="oceana"]:not(#en__pagebuilder):not([data-engrid-debug]) {
+  @each $version in "2024", "202503" {
+    &[data-engrid-theme-version="#{$version}"] {
+      [class*="showiftheme-"]:not(.showiftheme-#{$version}) {
+        display: none !important;
+      }
+    }
+  }
+}
+
+@import "./page-template-styles-2024";
+@import "./page-template-styles-202503";
 
 /* ENGRID PAGE TEMPLATES MAKES THE BODY INVISIBLE SO THE USER NEVER SEE'S AN UNSTYLED PAGE*/
 /* THIS MAKES THE BODY VISIBLE AFTER IT'S DOWNLOADED AND PARSED BY THE BROWSER */

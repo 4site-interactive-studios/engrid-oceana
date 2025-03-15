@@ -2,23 +2,9 @@
 // Uncomment to use and reference engrid-scrips SASS files for more CSS Custom Properties.
 // All CSS Custom Properties should be scoped to the theme using CSS Data Attributes.
 
-[data-engrid-theme="oceana"] {
+[data-engrid-theme="oceana"][data-engrid-theme-version="2024"] {
   // HEADER COLOR
-  &[data-engrid-theme-version="2024"] {
-    --engrid__page_background-color: #d8f2fb;
-  }
- 
-  &[data-engrid-theme-version="202503"] {
-    // Adds styling behind the page during aggressive overscrolling
-    &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
-      z-index: -99;
-      content: "";
-      width: 100vw;
-      height: 100vh;
-      position: fixed;
-      background: linear-gradient(180deg, rgb(255, 255, 255) 50%, rgb(34, 33, 74) 50%);
-    }
-  }
+  --engrid__page_background-color: #d8f2fb;
 
   // TYPOGRAPHY DEFAULT
   --default_font-family: "Lato", sans-serif;
@@ -89,15 +75,7 @@
   --button_border-radius: 0px;
 
   // HEADER COLOR
-  &[data-engrid-theme-version="2024"] {
-    --engrid__content-header_background-color: rgba(255, 255, 255, 0.6);
-  }
-
-  &[data-engrid-theme-version="202503"] {
-    --engrid__content-header_background-color: #ffffff;
-    --engrid__body_box-shadow: none;
-  }
-
+  --engrid__content-header_background-color: rgba(255, 255, 255, 0.6);
 
   // TYPOGRAPHY BUTTON:HOVER
   // --button_color_hover: var(--button_color);
@@ -160,16 +138,7 @@
     }
   }
 
-  // Only show elements if the page is viewed on a page with the same theme version
-  &:not(#en__pagebuilder):not([data-engrid-debug]) {
-    @each $version in "2024", "202503" {
-      &[data-engrid-theme-version="#{$version}"] {
-        [class*="showiftheme-"]:not(.showiftheme-#{$version}) {
-          display: none !important;
-        }
-      }
-    }
-  }
+
 
   /* Hides  Ad Tracking Pixels */
   [src*="w55c"].hide {
@@ -185,12 +154,6 @@
     clip-path: inset(100%);
     clip: rect(0 0 0 0);
     overflow: hidden;
-  }
-
-  &[data-engrid-theme-version="202503"]{
-    --recurring-frequency__button_count: 2;
-    --donation-amount__button_count: 3;
-    --give-by-select__button_count: 1;
   }
   
   // ECARD STYLES
@@ -232,102 +195,6 @@
 
   --give-by-select__button_background-color_hover: #fff;
   --give-by-select__button_border-color_hover: #999;
-}
-
-[data-engrid-subtheme="sailorsfortheseas"] {
-  // CTA COLORS
-  --theme-cta: #00205b;
-  --theme-cta-hover: #00205b;
-  --submit__button_background-color: var(--theme-cta);
-  --button_background-color: var(--theme-cta);
-  --button_border-color: var(--theme-cta);
-
-  // SPACING AROUND BANNER IMAGE
-  --engrid__body-banner_padding: var(--engrid__body-main_padding);
-
-  /** FOOTER STYLES **/
-
-  /** Footer: Background **/
-  .content-footer {
-    background: #1f2024;
-    color: white;
-    font-size: 14px;
-  }
-
-  /** Footer: Nav and Styling **/
-  .content-footer nav ul {
-    display: inline-block;
-    vertical-align: top;
-    margin: 0 3em 0 0;
-    padding: 0;
-  }
-
-  /** Footer: Links **/
-  .content-footer a {
-    color: #0686e5;
-    text-decoration: none;
-  }
-}
-
-/* Add your custom theme styles here */
-[data-engrid-theme="oceana"] {
-  @mixin until-mobile-l {
-    // STYLES
-  }
-
-  @mixin from-mobile-l {
-    // STYLES
-  }
-
-  @mixin simplified-header {
-    // STYLES
-  }
-
-  // Example Breakpoints Stylings (See engrid-scripts > _engrid-breakpoints.scss for more breakpoints)
-  &[data-engrid-layout] {
-    @media (max-width: 425px) {
-      @include until-mobile-l;
-    }
-
-    @media (min-width: 426px) {
-      @include from-mobile-l;
-    }
-  }
-
-  // Example of Shared Layout Stylings
-  &[data-engrid-layout="centerleft1col"] {
-    @media screen and (max-width: $centerleft1col_content-column_min-width) {
-      @include simplified-header;
-    }
-    .content-footer {
-      margin-top: 3.125rem;
-    }
-  }
-
-  &[data-engrid-layout="centercenter1col"] {
-    @media screen and (max-width: $centerleft1col_content-column_min-width) {
-      @include simplified-header;
-    }
-    .content-footer {
-      margin-top: 3.125rem;
-    }
-  }
-
-  &[data-engrid-layout="centerright1col"] {
-    @media screen and (max-width: $centerright1col_content-column_min-width) {
-      @include simplified-header;
-    }
-
-    .content-footer {
-      margin-top: 3.125rem;
-    }
-  }
-
-  &[data-engrid-layout="leftleft1col"] {
-    @media screen and (max-width: $centerright1col_content-column_min-width) {
-      @include simplified-header;
-    }
-  }
 
   // Two column layouts on desktop get horizontal spacing between each column
   &[data-engrid-layout="centercenter2col"] {
@@ -371,70 +238,8 @@
     }
   }
 
-  /* Digital Wallets styling */
-  //
-  //#en__pagebuilder .merge-with-give-by-select {
-  //  background-color: #ff00001a !important;
-  //}
-  //
-  ///* If Give by Select has a Digital Wallet, hide it until we add our data-attribute */
-  //.give-by-select:not([show-wallets]) #en__digitalWallet .digital-divider {
-  //  display: none;
-  //}
-  //
-  //#en__digitalWallet {
-  //  margin-bottom: 0 !important;
-  //  padding-top: 15px !important;
-  //}
-  //
-  //.en__digitalWallet__button {
-  //  margin-top: 0 !important;
-  //}
-  //
-  //.en__digitalWallet__container {
-  //  margin-bottom: 0px !important;
-  //}
-  //
-  //.digital-divider {
-  //  width: 100%;
-  //  align-items: center;
-  //  color: #9b9b94;
-  //  display: flex;
-  //  padding-left: var(--fields_spacing-inline);
-  //  padding-right: var(--fields_spacing-inline);
-  //  margin-bottom: calc(var(--fields_spacing-block) - 4px);
-  //}
-  //
-  //.divider-left,
-  //.divider-right {
-  //  background: #dfdfd7;
-  //  content: "";
-  //  flex: 1 1;
-  //  height: 1px;
-  //}
-  //
-  //.divider-center {
-  //  margin: 0 0.5rem;
-  //}
-}
-
-/** HEADER STYLES **/
-// Mobile Style - Adds padding to the logo
-@media (max-width: 768px) {
-  .content-header #header-logo img {
-    padding: 2em 0;
-  }
-}
-
-// Mobile Style - Remove background color for header
-@media (max-width: 768px) {
-  // --engrid__page_background-color: transparent;
-}
-
-[data-engrid-theme="oceana"] {
-
   /** Donation Page: Radio to Button Styling **/
-  &[data-engrid-theme-version="2024"].radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
     input[type="radio"]
     + label {
@@ -478,14 +283,9 @@
   /** - ENGRID COMPONENTS - **/
 
   /** Content Header Padding **/
-  &[data-engrid-theme-version="2024"] .content-header.pseudo-subgrid > div {
+  .content-header.pseudo-subgrid > div {
     grid-column: pc;
     padding: 0 3rem;
-  }
-
-  &[data-engrid-theme-version="202503"] .content-header,
-  &[data-engrid-theme-version="202503"] .content-header.pseudo-subgrid > div {
-    grid-column: bc;
   }
 
   /** Body Banner Spacing **/
@@ -504,22 +304,13 @@
   }
 
   /** Footer Padding **/
-  &[data-engrid-theme-version="2024"] .content-footer > div {
+  .content-footer > div {
     grid-column: pc;
     padding: 0 3rem;
   }
 
-  &[data-engrid-theme-version="2024"] .content-footer {
+  .content-footer {
       padding: 3.75rem 0;
-  }
-
-  &[data-engrid-theme-version="202503"] .content-footer,
-  &[data-engrid-theme-version="202503"] .content-footer > div {
-    grid-column: bc;
-  }
-
-  &[data-engrid-theme-version="202503"] .content-footer > div {
-    padding: 1.5rem 3rem;
   }
 
   /** Footer Wrapper **/
@@ -539,7 +330,7 @@
       padding: 1.5rem;
     }
 
-    &[data-engrid-theme-version="2024"] .content-header {
+    .content-header {
       background: rgba(255, 255, 255, 0.6) !important;
       margin-bottom: 3.75rem;
     }
@@ -669,7 +460,7 @@
   }
 
   /** Donation Amount Radio Buttons **/
-  &[data-engrid-theme-version="2024"].radio-to-buttons_donationAmt
+  &.radio-to-buttons_donationAmt
     .en__field--donationAmt.en__field--radio
     > .en__field__element
     .en__field__item {
@@ -691,12 +482,8 @@
     font-size: 14px;
   }
 
-  &[data-engrid-theme-version="2024"] .content-footer {
+  .content-footer {
     background: #1f2024;
-  }
-
-  &[data-engrid-theme-version="202503"] .content-footer {
-    background: #22214a;
   }
 
   /** Footer: Nav and Styling **/
@@ -906,7 +693,7 @@
     }
   }
 
-  @media screen and (min-width: 879px) {
+  @media screen and (min-width: $leftleft1col_content-column_min-width) {
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
       .page-backgroundImage {
         grid-column: rpc/pc;
@@ -1010,84 +797,104 @@
     margin-bottom: 0;
   }
 
-}
 
-.engrid-mobile-cta-container .primary {
-  font-size: 20px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-#en__digitalWallet__stripeButtons__container,
-#en__digitalWallet__paypalTouch__container,
-#en__digitalWallet__paypalTouch,
-#en__digitalWallet__stripeButtons {
-  max-width: 100%;
-  width: 100%;
-  @media screen and (min-width: 600px) {
-    width: 501px !important;
+  .engrid-mobile-cta-container .primary {
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
   }
-}
-
-[data-engrid-country="United States"] {
-  .en__field--paycurrency {
-    display: none;
+  
+  #en__digitalWallet__stripeButtons__container,
+  #en__digitalWallet__paypalTouch__container,
+  #en__digitalWallet__paypalTouch,
+  #en__digitalWallet__stripeButtons {
+    max-width: 100%;
+    width: 100%;
+    @media screen and (min-width: 600px) {
+      width: 501px !important;
+    }
   }
-}
-.show-currency-list {
-  .en__field--paycurrency {
-    display: block !important;
+  
+  [data-engrid-country="United States"] {
+    .en__field--paycurrency {
+      display: none;
+    }
   }
-}
-
-.new-gift-summary {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  margin: 10px auto;
-  padding: 12px 16px;
-}
-
-//#en__digitalWallet {
-//  display: none;
-//}
-
-// #en__digitalWallet #en__digitalWallet__paypalTouch {
-//   overflow: hidden;
-// }
-
-// #en__digitalWallet #en__digitalWallet__paypalTouch.paypal {
-//   height: 45px;
-// }
-
-// #en__digitalWallet #en__digitalWallet__paypalTouch.venmo >  #en__digitalWallet__paypalTouch__container {
-//   position: relative;
-//   top: -59px;
-//   height: 45px;
-// }
-
-// Hide the Phone 2 field if...
-// You are not in Page Builder, and
-// You are not in Debug Mode, and
-// The page has the country field data attribute, and
-// The country field value is not "United States", and
-// The Phone 2 field is not mandatory, and
-// The Phone 2 field is not in an error state.
-body[data-engrid-country]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
-  .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
-    display: none;
+  .show-currency-list {
+    .en__field--paycurrency {
+      display: block !important;
+    }
   }
-}
-
-body[data-engrid-debug][data-engrid-country]:not(#en__pagebuilder):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
-  .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
-    background-color: rgba(255, 0, 0, 0.102) !important;
+  
+  .new-gift-summary {
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin: 10px auto;
+    padding: 12px 16px;
   }
+  
+  body[data-engrid-country]:not(#en__pagebuilder):not([data-engrid-debug]):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
+    .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
+      display: none;
+    }
+  }
+  
+  body[data-engrid-debug][data-engrid-country]:not(#en__pagebuilder):not([data-engrid-always-show-phone2]):not([data-engrid-country="United States"]) {
+    .en__field--phoneNumber2:not(.en__mandatory):not(.en__field--validationFailed) {
+      background-color: rgba(255, 0, 0, 0.102) !important;
+    }
+  }
+  
+  .en__field__input--vgs {
+    margin-bottom: 0 !important;
+    border-color: var(--input_border-color);
+  }
+  
+  .en__field--ccvv .en__field__input--vgs {
+    margin-top: 0 !important;
+  }  
+
+  /** HEADER STYLES **/
+  // Mobile Style - Adds padding to the logo
+  @media (max-width: 768px) {
+    .content-header #header-logo img {
+      padding: 2em 0;
+    }
+  }
+
 }
 
-.en__field__input--vgs {
-  margin-bottom: 0 !important;
-  border-color: var(--input_border-color);
-}
-.en__field--ccvv .en__field__input--vgs {
-  margin-top: 0 !important;
+[data-engrid-subtheme="sailorsfortheseas"] {
+  // CTA COLORS
+  --theme-cta: #00205b;
+  --theme-cta-hover: #00205b;
+  --submit__button_background-color: var(--theme-cta);
+  --button_background-color: var(--theme-cta);
+  --button_border-color: var(--theme-cta);
+
+  // SPACING AROUND BANNER IMAGE
+  --engrid__body-banner_padding: var(--engrid__body-main_padding);
+
+  /** FOOTER STYLES **/
+
+  /** Footer: Background **/
+  .content-footer {
+    background: #1f2024;
+    color: white;
+    font-size: 14px;
+  }
+
+  /** Footer: Nav and Styling **/
+  .content-footer nav ul {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 3em 0 0;
+    padding: 0;
+  }
+
+  /** Footer: Links **/
+  .content-footer a {
+    color: #0686e5;
+    text-decoration: none;
+  }
 }
