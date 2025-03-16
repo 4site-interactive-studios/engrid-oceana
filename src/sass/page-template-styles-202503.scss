@@ -8,6 +8,7 @@
   --recurring-frequency__button_count: 2;
   --donation-amount__button_count: 3;
   --give-by-select__button_count: 1;
+  --give-monthly-donation-amount-appended-label: "/mo";
 
   --engrid__body_padding: 0px 4rem;
 
@@ -55,7 +56,7 @@
     top: -10px;
   }
 
-  &.radio-to-buttons_donationAmt .en__field--donationAmt {
+  .radio-to-buttons_donationAmt .en__field--donationAmt {
     .en__field__input--radio:focus + .en__field__label {
       outline: none;
     }
@@ -65,8 +66,14 @@
       --fields_spacing-block: 5px;
     }
 
-    .en__field__item input[type="radio"]:checked + label span {
-      color: var(--engrid__body_background-color);
+    .en__field__item input[type="radio"]:checked + label {
+      span {
+        color: var(--engrid__body_background-color);
+      }
+
+      &:after {
+        color: #ffffff;
+      }
     }
 
     .en__field__item.en__field__item--other {
@@ -90,6 +97,16 @@
 
     &.en__field--withOther--active .en__field__item--other:before {
       color: #fff;
+    }
+
+    div:not(.en__field__item--other) .en__field__label--item:after {
+      font-family: "Lato";
+      font-weight: 500;
+      font-size: 26px;
+      color: var(--default_color);
+      opacity: 1;
+      position: relative;
+      top: 6px;
     }
   }
 
@@ -239,12 +256,12 @@
 
   .inline-donation-message {
     position: relative;
-    border-bottom: 2px solid black;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
+    border-bottom: 2px solid transparent; // black
+    border-left: 2px solid transparent; // black
+    border-right: 2px solid transparent; // black
     text-align: center;
     padding: 7px 15px;
-    background: #efeabe;
+    // background: #efeabe;
 
     p {
       margin: 0;
@@ -252,17 +269,17 @@
     }
 
     &:before {
-      border: 2px solid #000;
+      border: 2px solid var(--default_color);
       border-right: none;
       border-bottom: none;
       content: "";
-      left: 73%;
+      left: calc(75% - 9px); // 73%
       position: absolute;
-      top: -12px;
+      top: -11.75px;
       transform: rotate(45deg);
       width: 20px;
       height: 20px;
-      background-color: #efeabe;
+      background-color: var(--engrid__body_background-color); // #efeabe
     }
   }
 

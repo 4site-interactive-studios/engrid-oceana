@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 00:13:47 ET
+ *  Date: Sunday, March 16, 2025 @ 00:48:40 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9034,13 +9034,16 @@ body[data-engrid-debug]:before{
 }
 
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]{
-  --engrid__content-header_background-color:var(--engrid__body_background-color);
+  --engrid__content-header_background-color:var(
+    --engrid__body_background-color
+  );
   --engrid__body_background-color:#d3eafb;
   --engrid__content-footer_background-color:#22214a;
   --engrid__body_box-shadow:none;
   --recurring-frequency__button_count:2;
   --donation-amount__button_count:3;
   --give-by-select__button_count:1;
+  --give-monthly-donation-amount-appended-label:"/mo";
   --engrid__body_padding:0px 4rem;
   --default_font-family:"Lato", sans-serif;
   --default_font-size:18px;
@@ -9080,34 +9083,46 @@ body[data-engrid-debug]:before{
   position:relative;
   top:-10px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__input--radio:focus+.en__field__label{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__input--radio:focus+.en__field__label{
   outline:none;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__element--radio{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__element--radio{
   --fields_spacing-inline:4px;
   --fields_spacing-block:5px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item input[type=radio]:checked+label span{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item input[type=radio]:checked+label span{
   color:var(--engrid__body_background-color);
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item input[type=radio]:checked+label:after{
+  color:#fff;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other{
   flex-basis:100%;
   position:relative;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other:before{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other:before{
   content:attr(data-currency-symbol);
   font-size:26px;
   left:20px;
   position:absolute;
   top:15px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other input{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt .en__field__item.en__field__item--other input{
   font-size:40px;
   line-height:var(--donation-amount__button_line-height);
   padding:14px 12px 14px 33px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"].radio-to-buttons_donationAmt .en__field--donationAmt.en__field--withOther--active .en__field__item--other:before{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt.en__field--withOther--active .en__field__item--other:before{
   color:#fff;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_donationAmt .en__field--donationAmt div:not(.en__field__item--other) .en__field__label--item:after{
+  color:var(--default_color);
+  font-family:Lato;
+  font-size:26px;
+  font-weight:500;
+  opacity:1;
+  position:relative;
+  top:6px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .eaSubmitButton,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__submit .button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__submit button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .pseduo__en__submit_button{
   border-color:var(--button_background-color);
@@ -9206,32 +9221,28 @@ body[data-engrid-debug]:before{
   filter:invert(1);
   transform:scale(.7) translateY(10px);
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-transaction-recurring=y] .monthly-donation-suggestion{
-  display:none;
-}
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .monthly-donation-suggestion{
-  background:#efeabe;
-  border-bottom:2px solid #000;
-  border-left:2px solid #000;
-  border-right:2px solid #000;
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .inline-donation-message{
+  border-bottom:2px solid #0000;
+  border-left:2px solid #0000;
+  border-right:2px solid #0000;
   padding:7px 15px;
   position:relative;
   text-align:center;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .monthly-donation-suggestion p{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .inline-donation-message p{
   font-size:16px;
   margin:0;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .monthly-donation-suggestion:before{
-  background-color:#efeabe;
-  border:2px solid #000;
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .inline-donation-message:before{
+  background-color:var(--engrid__body_background-color);
+  border:2px solid var(--default_color);
   border-bottom:none;
   border-right:none;
   content:"";
   height:20px;
-  left:73%;
+  left:calc(75% - 9px);
   position:absolute;
-  top:-12px;
+  top:-11.75px;
   transform:rotate(45deg);
   width:20px;
 }
