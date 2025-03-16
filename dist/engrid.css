@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 00:48:40 ET
+ *  Date: Sunday, March 16, 2025 @ 01:20:51 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9054,6 +9054,8 @@ body[data-engrid-debug]:before{
   --h1_font-weight:400;
   --h1_line-height:100%;
   --h1_text-transform:uppercase;
+  --h2_font-size:42px;
+  --h2_font-weight:700;
   --input_border-radius:0px;
   --input_border-color:var(--default_color);
   --button_color:var(--color_white);
@@ -9070,12 +9072,27 @@ body[data-engrid-debug]:before{
   --donation-amount__button_color_hover:var(--default_color);
   --donation-amount__button_background-color_hover:#fff;
   --donation-amount__button_background-color_checked:var(--default_color);
+  --give-by-select__button_color:var(--default_color);
+  --give-by-select__button_background-color:#fff;
+  --give-by-select__button_border-color:var(--default_color);
+  --give-by-select__button_color_hover:var(--default_color);
+  --give-by-select__button_background-color_hover:#fff;
+  --give-by-select__button_color_checked:#fff;
+  --give-by-select__button_background-color_checked:var(--default_color);
   --submit__button_font-size:40px;
+  --submit__button_border-color:var(--submit__button_background-color);
+  --submit__button_background-color_hover:var(--default_color);
+  --submit__button_border-color_hover:var(--default_color);
+  --submit__button_padding-top:0.75ch;
+  --submit__button_padding-bottom:0.75ch;
   --click-to-expand__copy-area_height:200px;
   --click-to-expand__cta-image_height:23px;
   --click-to-expand__cta-image_width:100%;
   --recurring-frequency__button_font-size:1.5rem;
   --recurring-frequency__button_padding:70px 0px 14px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-embedded]){
+  overscroll-behavior-x:none;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .engrid-currency-symbol{
   font-size:26px;
@@ -9123,9 +9140,6 @@ body[data-engrid-debug]:before{
   opacity:1;
   position:relative;
   top:6px;
-}
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .eaSubmitButton,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__submit .button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__submit button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .pseduo__en__submit_button{
-  border-color:var(--button_background-color);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-embedded])[data-engrid-js-loading=finished]:before{
   background:linear-gradient(180deg, #d3eafb 50%, #22214a 0);
@@ -9250,10 +9264,9 @@ body[data-engrid-debug]:before{
   background-color:initial;
   border:none;
   box-shadow:none;
-  font-size:1.5rem;
+  font-weight:700;
   margin:18px auto 0 !important;
   text-align:center;
-  text-transform:uppercase;
   width:auto;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .give-by-select .en__field__label--item img{
@@ -9276,6 +9289,18 @@ body[data-engrid-debug]:before{
   opacity:.75;
   -webkit-text-decoration:italic;
           text-decoration:italic;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] button .live-variable-currency{
+  font-size:26px;
+  font-weight:500;
+  position:relative;
+  top:-15px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] button .live-variable-frequency{
+  font-size:26px;
+  font-style:italic;
+  font-weight:500;
+  position:relative;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer>div{
   grid-column:bc;

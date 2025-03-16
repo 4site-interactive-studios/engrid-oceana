@@ -27,6 +27,10 @@
   --h1_line-height: 100%;
   --h1_text-transform: uppercase;
 
+  --h2_font-size: 42px;
+  --h2_font-weight: 700;
+  // --h2_line-height: 100%;
+
   --input_border-radius: 0px;
   --input_border-color: var(--default_color);
 
@@ -48,6 +52,29 @@
   --donation-amount__button_color_hover: var(--default_color);
   --donation-amount__button_background-color_hover: #ffffff;
   --donation-amount__button_background-color_checked: var(--default_color);
+
+  --give-by-select__button_color: var(--default_color);
+  --give-by-select__button_background-color: #ffffff;
+  --give-by-select__button_border-color: var(--default_color);
+
+  --give-by-select__button_color_hover: var(--default_color);
+  --give-by-select__button_background-color_hover: #ffffff;
+  // --give-by-select__button_border-color_hover:var(--button_border-color_hover);
+
+  --give-by-select__button_color_checked: #ffffff;
+  --give-by-select__button_background-color_checked: var(--default_color);
+  // --give-by-select__button_border-color_checked:var(--button_border-color_hover);
+
+  --submit__button_font-size: 40px;
+  --submit__button_border-color: var(--submit__button_background-color);
+  --submit__button_background-color_hover: var(--default_color);
+  --submit__button_border-color_hover: var(--default_color);
+  --submit__button_padding-top: 0.75ch;
+  --submit__button_padding-bottom: 0.75ch;
+
+  &:not([data-engrid-embedded]) {
+    overscroll-behavior-x: none; // Don't allow left/right overscrolling
+  }
 
   .engrid-currency-symbol {
     font-size: 26px;
@@ -109,15 +136,6 @@
       top: 6px;
     }
   }
-
-  .eaSubmitButton,
-  .en__submit .button,
-  .en__submit button,
-  .pseduo__en__submit_button {
-    border-color: var(--button_background-color);
-  }
-
-  --submit__button_font-size: 40px;
 
   // Adds styling behind the page during aggressive overscrolling
   &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
@@ -286,8 +304,9 @@
   .en__field--paycurrency select {
     border: none;
     text-align: center;
-    text-transform: uppercase;
-    font-size: 1.5rem;
+    // text-transform: uppercase;
+    // font-size: 1.5rem;
+    font-weight: 700;
     width: auto;
     margin: 18px auto 0 !important;
     box-shadow: none;
@@ -316,6 +335,23 @@
     text-decoration: italic;
     opacity: 0.75;
     margin-bottom: var(--fields_spacing-block);
+  }
+
+  button .live-variable-currency {
+    font-size: 26px;
+    position: relative;
+    top: -15px;
+    font-weight: 500;
+  }
+
+  button .live-variable-frequency {
+    font-size: 26px;
+    position: relative;
+    font-weight: 500;
+    // top: -4px;
+    // text-transform: capitalize;
+    font-style: italic;
+    // left: 0.75ch;
   }
 
   .content-footer,
