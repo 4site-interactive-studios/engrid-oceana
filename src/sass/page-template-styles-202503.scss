@@ -31,6 +31,9 @@
   --h2_font-weight: 700;
   // --h2_line-height: 100%;
 
+  --input_font-size: 20px;
+  --input_font-weight: 400px;
+  --input_border-width: 2px;
   --input_border-radius: 0px;
   --input_border-color: var(--default_color);
 
@@ -44,6 +47,14 @@
   --button_border-width: 2px;
   --button_border-color: var(--default_color);
   --button_border-radius: 0px;
+  --button_background-color_hover: var(--default_color);
+
+  --recurring-frequency__button_color: var(--default_color);
+  --recurring-frequency__button_color_hover: var(--default_color);
+  --recurring-frequency__button_background-color: #ffffff;
+  --recurring-frequency__button_border-color: var(--default_color);
+  --recurring-frequency__button_background-color_hover: #ffffff;
+  --recurring-frequency__button_background-color_checked: var(--default_color);
 
   --donation-amount__button_font-size: 40px;
   --donation-amount__button_padding: 0.6ch;
@@ -205,6 +216,10 @@
     }
   }
 
+  .content-header {
+    padding: var(--engrid__body-title_padding);
+  }
+
   .content-header,
   .content-header.pseudo-subgrid > div {
     grid-column: bc;
@@ -218,29 +233,36 @@
     margin-top: calc(60px - 1em);
     margin-bottom: 0;
 
+    input:focus + label {
+      outline: none;
+    }
+
     & > .en__field__element .en__field__item {
       &:first-of-type {
         padding-right: 0;
 
-        label {
-          position: relative;
-        }
-
         label:after {
-          background-image: url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/one-time-icon.png?v=1683026671000);
+          background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-donate-onetime-turtle.png");
+          background-position: top;
           background-repeat: no-repeat;
+          bottom: 0;
           content: "";
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          top: 0;
           left: 0;
-          background-position: top 13px center;
-          background-size: 42px;
+          position: absolute;
+          top: 40px;
+          transition: transform 0.25s ease-in-out;
+          width: 50%;
+          background-size: 116px 74px;
+          transform: scale(0.7) translateY(10px);
         }
 
-        input:not(:checked):not(:hover) + label:after {
-          filter: invert(1);
+        // input:checked + label:after,
+        // input:hover + label:after {
+        //   transform: scale(0.7) translateY(10px);
+        // }
+
+        input:checked + label:after {
+          filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
 
@@ -248,14 +270,14 @@
         padding-left: 0;
 
         label:after {
-          background-image: url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/monthly-icon.png?v=1683026670000);
+          background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-donate-monthly-fish.png");
           background-position: top;
           background-repeat: no-repeat;
           bottom: 0;
           content: "";
           left: calc(50% + 5px);
           position: absolute;
-          top: 45px;
+          top: 40px;
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 116px 74px;
@@ -263,8 +285,11 @@
 
         input:checked + label:after,
         input:hover + label:after {
-          filter: invert(1);
           transform: scale(0.7) translateY(10px);
+        }
+
+        input:checked + label:after {
+          filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
 
@@ -293,7 +318,7 @@
       content: "";
       left: calc(75% - 9px); // 73%
       position: absolute;
-      top: -11.75px;
+      top: -11.5px;
       transform: rotate(45deg);
       width: 20px;
       height: 20px;
@@ -313,10 +338,62 @@
     background-color: transparent;
   }
 
-  .give-by-select .en__field__label--item img {
-    height: 28px;
-    margin: 0;
+  // .give-by-select .en__field__label--item img {
+  //   height: 28px;
+  //   margin: 0;
+  //   width: auto;
+  // }
+
+  .en__field--give-by-select.en__field--radio
+    input[type="radio"]:focus
+    + label {
+    outline: none;
+  }
+
+  .en__field--give-by-select.en__field--radio input[type="radio"] + label {
+    height: 58px;
+  }
+
+  .en__field--give-by-select .en__field__label--item img {
     width: auto;
+    margin: 0;
+    height: 28px;
+  }
+
+  .en__field--give-by-select input:checked + label > img.paypal,
+  .en__field--give-by-select input:hover + label > img.paypal,
+  .en__field--give-by-select input:checked + label > img.google-pay-type,
+  .en__field--give-by-select input:hover + label > img.google-pay-type,
+  .en__field--give-by-select input:checked + label > img.apple-pay-logo,
+  .en__field--give-by-select input:hover + label > img.apple-pay-logo,
+  .en__field--give-by-select input:checked + label > img.paypal-venmo,
+  .en__field--give-by-select input:hover + label > img.paypal-venmo {
+    filter: brightness(0) invert(1);
+  }
+
+  .en__field--give-by-select input:checked + label > img.paypal-venmo,
+  .en__field--give-by-select input:checked + label > img.paypal {
+    filter: invert(1) grayscale(1) contrast(100) brightness(1);
+  }
+
+  // Removed .en__field--give-by-select input:hover + label > img.daf-logo
+  .en__field--give-by-select input:checked + label > img.daf-logo {
+    filter: brightness(3) invert(0);
+  }
+
+  .en__field--give-by-select .en__field__label--item img.google-pay-logo {
+    position: relative;
+    top: -3px;
+  }
+
+  .en__field--give-by-select .en__field__label--item img.google-pay-type {
+    margin-left: 6px;
+    margin-right: 20px;
+  }
+
+  .en__field--give-by-select .en__field__label--item img.paypal-venmo {
+    height: 25px;
+    margin: 0 5px;
   }
 
   .tc-has-country-flags {
@@ -337,6 +414,27 @@
     margin-bottom: var(--fields_spacing-block);
   }
 
+  .gift-summary {
+    border-width: 2px 0;
+    border-style: solid;
+    border-color: var(--default_color);
+    margin: 30px auto 20px;
+    padding: 30px 20px;
+
+    > img {
+      width: 82px;
+      height: 64px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    p {
+      margin-bottom: 0;
+      text-align: center;
+    }
+  }
+
   button .live-variable-currency {
     font-size: 26px;
     position: relative;
@@ -354,17 +452,84 @@
     // left: 0.75ch;
   }
 
-  .content-footer,
-  .content-footer > div {
-    grid-column: bc;
-  }
+  .body-bottom {
+    & > div {
+      max-width: 366px;
+      margin: 1em auto;
+    }
 
-  .content-footer > div {
-    padding: 1.5rem 3rem;
+    p {
+      text-align: center;
+    }
+
+    .footer-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+    }
   }
 
   .content-footer {
+    grid-column: bc;
+    --engrid__content-footer_padding: 0 6rem;
+    padding-bottom: 1.5rem;
     color: #ffffff; // Why can't this be "--default_color: #ffffff;"? It doesn't work.
+
+    padding-top: 171px;
+    background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-transition.png"),
+      url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-image.png");
+    background-size: 100%, 55%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-position: top left, bottom left;
+
+    #footer-logo {
+      margin-left: 0;
+    }
+
+    #footer-address {
+      margin-top: 3.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    #footer-availability {
+      font-size: 18px;
+      font-weight: 300;
+    }
+
+    #footer-menu,
+    #footer-copyright,
+    #footer-4site {
+      margin-bottom: 2.5rem;
+      color: #d2eafb;
+    }
+
+    #footer-menu a {
+      color: #d2eafb;
+      margin-right: calc(1ch + 2px);
+
+      &:not(:last-child) {
+        &:after {
+          background-color: #d3eafb;
+          content: "";
+          height: 17px;
+          margin-top: 6px;
+          position: absolute;
+          width: 2px;
+          margin-left: calc(0.5ch + 2px);
+        }
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    #footer-4site span {
+      margin-left: 0.5ch;
+      margin-right: 0.5ch;
+    }
   }
 
   @media screen and (min-width: $leftleft1col_body-column_max-width) {

@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 01:27:14 ET
+ *  Date: Sunday, March 16, 2025 @ 14:15:53 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9056,6 +9056,9 @@ body[data-engrid-debug]:before{
   --h1_text-transform:uppercase;
   --h2_font-size:42px;
   --h2_font-weight:700;
+  --input_font-size:20px;
+  --input_font-weight:400px;
+  --input_border-width:2px;
   --input_border-radius:0px;
   --input_border-color:var(--default_color);
   --button_color:var(--color_white);
@@ -9065,6 +9068,13 @@ body[data-engrid-debug]:before{
   --button_border-width:2px;
   --button_border-color:var(--default_color);
   --button_border-radius:0px;
+  --button_background-color_hover:var(--default_color);
+  --recurring-frequency__button_color:var(--default_color);
+  --recurring-frequency__button_color_hover:var(--default_color);
+  --recurring-frequency__button_background-color:#fff;
+  --recurring-frequency__button_border-color:var(--default_color);
+  --recurring-frequency__button_background-color_hover:#fff;
+  --recurring-frequency__button_background-color_checked:var(--default_color);
   --donation-amount__button_font-size:40px;
   --donation-amount__button_padding:0.6ch;
   --donation-amount__button_color:var(--default_color);
@@ -9184,6 +9194,9 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .click-to-expand.expanded .click-to-expand-text-wrapper>:last-child{
   margin-bottom:0;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-header{
+  padding:var(--engrid__body-title_padding);
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-header,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-header.pseudo-subgrid>div{
   grid-column:bc;
 }
@@ -9191,35 +9204,37 @@ body[data-engrid-debug]:before{
   margin-bottom:0;
   margin-top:calc(60px - 1em);
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio input:focus+label{
+  outline:none;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item{
   padding-bottom:0;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type{
   padding-right:0;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type label{
-  position:relative;
-}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type label:after{
-  background-image:url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/one-time-icon.png?v=1683026671000);
-  background-position:top 13px center;
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-donate-onetime-turtle.png);
+  background-position:top;
   background-repeat:no-repeat;
-  background-size:42px;
+  background-size:116px 74px;
+  bottom:0;
   content:"";
-  height:100%;
   left:0;
   position:absolute;
-  top:0;
-  width:100%;
+  top:40px;
+  transform:scale(.7) translateY(10px);
+  transition:transform .25s ease-in-out;
+  width:50%;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type input:not(:checked):not(:hover)+label:after{
-  filter:invert(1);
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type input:checked+label:after{
+  filter:invert(1) grayscale(1) contrast(100) brightness(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type{
   padding-left:0;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type label:after{
-  background-image:url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/monthly-icon.png?v=1683026670000);
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-donate-monthly-fish.png);
   background-position:top;
   background-repeat:no-repeat;
   background-size:116px 74px;
@@ -9227,13 +9242,15 @@ body[data-engrid-debug]:before{
   content:"";
   left:calc(50% + 5px);
   position:absolute;
-  top:45px;
+  top:40px;
   transition:transform .25s ease-in-out;
   width:50%;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type input:checked+label:after,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type input:hover+label:after{
-  filter:invert(1);
   transform:scale(.7) translateY(10px);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type input:checked+label:after{
+  filter:invert(1) grayscale(1) contrast(100) brightness(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .inline-donation-message{
   border-bottom:2px solid #0000;
@@ -9256,7 +9273,7 @@ body[data-engrid-debug]:before{
   height:20px;
   left:calc(75% - 9px);
   position:absolute;
-  top:-11.75px;
+  top:-11.5px;
   transform:rotate(45deg);
   width:20px;
 }
@@ -9269,10 +9286,37 @@ body[data-engrid-debug]:before{
   text-align:center;
   width:auto;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .give-by-select .en__field__label--item img{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select.en__field--radio input[type=radio]:focus+label{
+  outline:none;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select.en__field--radio input[type=radio]+label{
+  height:58px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select .en__field__label--item img{
   height:28px;
   margin:0;
   width:auto;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.apple-pay-logo,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.google-pay-type,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal-venmo,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:hover+label>img.apple-pay-logo,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:hover+label>img.google-pay-type,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:hover+label>img.paypal,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:hover+label>img.paypal-venmo{
+  filter:brightness(0) invert(1);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal-venmo{
+  filter:invert(1) grayscale(1) contrast(100) brightness(1);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.daf-logo{
+  filter:brightness(3) invert(0);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select .en__field__label--item img.google-pay-logo{
+  position:relative;
+  top:-3px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select .en__field__label--item img.google-pay-type{
+  margin-left:6px;
+  margin-right:20px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select .en__field__label--item img.paypal-venmo{
+  height:25px;
+  margin:0 5px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tc-has-country-flags{
   margin-bottom:var(--fields_spacing-block);
@@ -9290,6 +9334,24 @@ body[data-engrid-debug]:before{
   -webkit-text-decoration:italic;
           text-decoration:italic;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .gift-summary{
+  border-color:var(--default_color);
+  border-style:solid;
+  border-width:2px 0;
+  margin:30px auto 20px;
+  padding:30px 20px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .gift-summary>img{
+  display:block;
+  height:64px;
+  margin-left:auto;
+  margin-right:auto;
+  width:82px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .gift-summary p{
+  margin-bottom:0;
+  text-align:center;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] button .live-variable-currency{
   font-size:26px;
   font-weight:500;
@@ -9302,14 +9364,66 @@ body[data-engrid-debug]:before{
   font-weight:500;
   position:relative;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer>div{
-  grid-column:bc;
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom>div{
+  margin:1em auto;
+  max-width:366px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer>div{
-  padding:1.5rem 3rem;
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom p{
+  text-align:center;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom .footer-wrapper{
+  align-items:center;
+  display:flex;
+  gap:2rem;
+  justify-content:center;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer{
+  --engrid__content-footer_padding:0 6rem;
+  background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-transition.png), url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-image.png);
+  background-position:50%;
+  background-position:0 0, 0 100%;
+  background-repeat:no-repeat;
+  background-size:100%, 55%;
   color:#fff;
+  grid-column:bc;
+  padding-bottom:1.5rem;
+  padding-top:171px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-logo{
+  margin-left:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-address{
+  margin-bottom:3.5rem;
+  margin-top:3.5rem;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-availability{
+  font-size:18px;
+  font-weight:300;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-4site,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-copyright,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-menu{
+  color:#d2eafb;
+  margin-bottom:2.5rem;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-menu a{
+  color:#d2eafb;
+  margin-right:calc(1ch + 2px);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-menu a:not(:last-child):after{
+  background-color:#d3eafb;
+  content:"";
+  height:17px;
+  margin-left:calc(.5ch + 2px);
+  margin-top:6px;
+  position:absolute;
+  width:2px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-menu a:hover{
+  -webkit-text-decoration:underline;
+  text-decoration:underline;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-4site span{
+  margin-left:.5ch;
+  margin-right:.5ch;
 }
 @media screen and (min-width:680px){
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
