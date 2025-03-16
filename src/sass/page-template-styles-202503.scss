@@ -10,7 +10,14 @@
     --engrid__body_padding: 0px 4rem;
     
 
+    --default_font-family: "Lato", sans-serif;
+    --default_font-size: 18px;
     --default_color: #22214A;
+    // --default_font-size: var(--root_font-size);
+    --default_font-weight: 400;
+    // --default_line-height: initial;
+
+
 
     // TYPOGRAPHY H1
     --h1_font-family: 'ff-good-headline-web-pro-con', sans-serif;
@@ -18,7 +25,7 @@
     --h1_font-size: 72px;
     --h1_font-weight: 400;
     --h1_line-height: 100%;
-    --h1_text-transform: uppercase;
+      --h1_text-transform: uppercase;
 
 
 
@@ -26,26 +33,83 @@
 
     
     --input_border-radius: 0px;
+    --input_border-color: var(--default_color);
 
       // TYPOGRAPHY BUTTON
 //   --button_font-family: var(--default_font-family);
   --button_color: var(--color_white);
-//   --button_font-size: var(--root_font-size);
-//   --button_font-weight: initial;
+  --button_font-size: 26px;
+  --button_font-weight: 700; /* Suppoed to be 900, but we don't have that font in Lato */
 //   --button_line-height: initial;
   --button_background-color: #058CEB;
   --button_border-width: 2px;
   --button_border-color: var(--default_color);
   --button_border-radius: 0px;
+  
 
+  --donation-amount__button_font-size: 40px;
+  --donation-amount__button_padding: 0.6ch;
+  --donation-amount__button_color: var(--default_color);
+  --donation-amount__button_background-color: #ffffff;
+  --donation-amount__button_color_hover: var(--default_color);
+  --donation-amount__button_background-color_hover: #ffffff;
+  --donation-amount__button_background-color_checked: var(--default_color);
+  
 
+  .engrid-currency-symbol{
+    font-size: 26px;
+    font-weight: 500;
+    position: relative;
+    top: -10px;
+  }
 
+  &.radio-to-buttons_donationAmt .en__field--donationAmt{
+
+    .en__field__input--radio:focus+.en__field__label {
+        outline: none;
+      }
+
+    .en__field__element--radio{
+        --fields_spacing-inline: 4px;
+        --fields_spacing-block: 5px;
+      }
+
+      .en__field__item input[type=radio]:checked+label span{
+        color: var(--engrid__body_background-color);
+      }
+
+      .en__field__item.en__field__item--other {
+        flex-basis: 100%;
+        position: relative;
+
+        &:before {
+            content: attr(data-currency-symbol);
+            font-size: 26px;
+            left: 20px;
+            position: absolute;
+            top: 15px;
+        }
+
+        input {
+            font-size: 40px;
+            line-height: var(--donation-amount__button_line-height);
+            padding: 14px 12px 14px 33px;
+        }
+    }
+
+    &.en__field--withOther--active .en__field__item--other:before {
+        color: #fff;
+    }
+  } 
+  
   .eaSubmitButton,
   .en__submit .button,
   .en__submit button,
   .pseduo__en__submit_button{
     border-color: var(--button_background-color);
   }
+
+  --submit__button_font-size: 40px;
    
 
     // Adds styling behind the page during aggressive overscrolling
@@ -64,11 +128,189 @@
     
     .body-title h1{
         text-wrap: balance;
-     }   
+     }  
+     
+     --click-to-expand__copy-area_height: 200px;
+     --click-to-expand__cta-image_height: 23px;
+     --click-to-expand__cta-image_width: 100%;
+   
+     &:not(#en__pagebuilder) .click-to-expand:not(.expanded) {
+       margin-bottom: 1em;
+   
+       .click-to-expand-cta {
+         background: none !important;
+         right: auto !important;
+         padding-bottom: 1.75em;
+         // width: 100% !important;
+         // height: 20px !important;
+   
+         &:before {
+           content: var(--click-to-expand__cta-image_url);
+           position: absolute;
+           transform: rotate(-90deg);
+           left: 3px;
+         }
+   
+         &:after {
+           content: "Read More";
+           position: relative;
+           left: 20px;
+           font-weight: 400;
+         }
+       }
+   
+       .click-to-expand-text-wrapper {
+         mask-image: linear-gradient(
+           to bottom,
+           #000 50%,
+           #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px)
+         );
+       }
+     }
+   
+     .click-to-expand.expanded {
+        margin-bottom: 1.4rem;
+
+        .click-to-expand-text-wrapper > *:last-child {
+            margin-bottom: 0;
+          }    
+     }
+     
+ 
 
     .content-header,
     .content-header.pseudo-subgrid > div {
         grid-column: bc;
+    }
+
+
+
+/* RECURRING FREQUENCY BUTTONS */
+--recurring-frequency__button_font-size: 1.5rem;
+--recurring-frequency__button_padding: 70px 0px 14px;
+
+.radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio {
+  margin-top: calc(60px - 1em);
+  margin-bottom: 0;
+
+  & > .en__field__element .en__field__item {
+    &:first-of-type {
+      padding-right: 0;
+
+      label {
+        position: relative;
+      }
+
+      label:after {
+        background-image: url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/one-time-icon.png?v=1683026671000);
+        background-repeat: no-repeat;
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-position: top 13px center;
+        background-size: 42px;
+      }
+
+      input:not(:checked):not(:hover) + label:after {
+        filter: invert(1);
+      }
+    }
+
+    &:last-of-type {
+      padding-left: 0;
+
+      label:after {
+        background-image: url(https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/monthly-icon.png?v=1683026670000);
+        background-position: top;
+        background-repeat: no-repeat;
+        bottom: 0;
+        content: "";
+        left: calc(50% + 5px);
+        position: absolute;
+        top: 45px;
+        transition: transform 0.25s ease-in-out;
+        width: 50%;
+        background-size: 116px 74px;
+      }
+
+      input:checked + label:after,
+      input:hover + label:after {
+        filter: invert(1);
+        transform: scale(0.7) translateY(10px);
+      }
+    }
+
+    padding-bottom: 0;
+  }
+}
+
+.inline-donation-message {
+  position: relative;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  text-align: center;
+  padding: 7px 15px;
+  background: #efeabe;
+
+  p {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  &:before {
+    border: 2px solid #000;
+    border-right: none;
+    border-bottom: none;
+    content: "";
+    left: 73%;
+    position: absolute;
+    top: -12px;
+    transform: rotate(45deg);
+    width: 20px;
+    height: 20px;
+    background-color: #efeabe;
+  }
+}
+
+.en__field--paycurrency select {
+  border: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  width: auto;
+  margin: 18px auto 0 !important;
+  box-shadow: none;
+  background-color: transparent;
+}
+
+
+
+    .give-by-select .en__field__label--item img {
+        height: 28px;
+        margin: 0;
+        width: auto;
+    }
+
+    .tc-has-country-flags{
+        margin-bottom: var(--fields_spacing-block);
+        margin-top: calc(var(--fields_spacing-inline)* .5);
+
+        input[type="tel"]{
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
+    }
+
+    .en__field__notice{
+        font-size: 16px;
+        font-weight: 400;
+        text-decoration: italic;
+        opacity: 0.75;
+        margin-bottom: var(--fields_spacing-block);
     }
 
 
