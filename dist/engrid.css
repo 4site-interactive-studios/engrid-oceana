@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 14:15:53 ET
+ *  Date: Sunday, March 16, 2025 @ 14:19:16 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9147,6 +9147,7 @@ body[data-engrid-debug]:before{
   font-family:Lato;
   font-size:26px;
   font-weight:500;
+  margin-left:0;
   opacity:1;
   position:relative;
   top:6px;
