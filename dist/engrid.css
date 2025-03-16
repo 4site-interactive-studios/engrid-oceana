@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 01:20:51 ET
+ *  Date: Sunday, March 16, 2025 @ 01:27:14 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9332,6 +9332,36 @@ body[data-engrid-debug]:before{
     right:680px;
     width:calc(100% - 680px);
   }
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN]{
+  background-color:var(--engrid__body_background-color);
+  border-radius:0;
+  color:#000;
+  font-size:18px;
+  font-weight:700;
+  max-width:400px !important;
+  padding:15px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN] .tippy-content{
+  padding:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN][data-placement^=top]>.tippy-arrow:before{
+  border-top-color:var(--engrid__body_background-color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN][data-placement^=bottom]>.tippy-arrow:before{
+  border-bottom-color:var(--engrid__body_background-color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN][data-placement^=left]>.tippy-arrow:before{
+  border-left-color:var(--engrid__body_background-color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN][data-placement^=right]>.tippy-arrow:before{
+  border-right-color:var(--engrid__body_background-color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN][data-placement^=left]>.tippy-arrow{
+  bottom:-15px;
+  right:-8px;
+  top:auto !important;
+  transform:rotate(-90deg) !important;
 }
 body{
   opacity:1;

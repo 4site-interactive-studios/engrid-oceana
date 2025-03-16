@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 16, 2025 @ 01:20:51 ET
+ *  Date: Sunday, March 16, 2025 @ 01:27:14 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -21837,7 +21837,10 @@ const AppVersion = "0.20.10";
 // Version
 
 
+// EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 52 modules
+var tippy_esm = __webpack_require__(3861);
 ;// CONCATENATED MODULE: ./src/scripts/main.js
+
 const customScript = function (App) {
   console.log("ENGrid client scripts are executing");
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
@@ -21870,6 +21873,20 @@ const customScript = function (App) {
         }
       });
     });
+  }
+
+  const attriubtion = document.querySelector(".media-with-attribution figattribution");
+
+  if (attriubtion) {
+    const tippyInstance = attriubtion._tippy;
+
+    if (tippyInstance) {
+      tippyInstance.setProps({
+        allowHTML: true,
+        theme: "RAN",
+        placement: "right-end"
+      });
+    }
   }
   /**
    * This function checks the value of the mobile phone input field and toggles
@@ -22093,7 +22110,29 @@ const customScript = function (App) {
   //       }
   //     });
   //   });
+  // Transaction fee tooltip
 
+
+  function addTransactionFeeTooltip() {
+    const transactionFeeEl = document.querySelector(".transaction-fee-opt-in .en__field__element--checkbox");
+    if (!transactionFeeEl) return;
+    const transactionFeeTooltip = document.createElement("div");
+    transactionFeeTooltip.classList.add("transaction-fee-tooltip");
+    transactionFeeTooltip.innerHTML = "i";
+    transactionFeeEl.appendChild(transactionFeeTooltip);
+    (0,tippy_esm/* default */.ZP)(transactionFeeTooltip, {
+      content: "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to RAN.",
+      allowHTML: true,
+      theme: "white",
+      placement: "top",
+      trigger: "mouseenter click",
+      interactive: true,
+      arrow: "<div class='custom-tooltip-arrow'></div>",
+      offset: [0, 20]
+    });
+  }
+
+  addTransactionFeeTooltip();
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM

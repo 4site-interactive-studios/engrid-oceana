@@ -400,4 +400,41 @@
       }
     }
   }
+
+  .tippy-box[data-theme~="RAN"] {
+    background-color: var(--engrid__body_background-color);
+    color: #000;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    max-width: 400px !important;
+    border-radius: 0;
+
+    .tippy-content {
+      padding: 0;
+    }
+
+    &[data-placement^="top"] > .tippy-arrow::before {
+      border-top-color: var(--engrid__body_background-color);
+    }
+
+    &[data-placement^="bottom"] > .tippy-arrow::before {
+      border-bottom-color: var(--engrid__body_background-color);
+    }
+
+    &[data-placement^="left"] > .tippy-arrow::before {
+      border-left-color: var(--engrid__body_background-color);
+    }
+
+    &[data-placement^="right"] > .tippy-arrow::before {
+      border-right-color: var(--engrid__body_background-color);
+    }
+
+    &[data-placement^="left"] > .tippy-arrow {
+      bottom: -15px;
+      right: -8px;
+      top: auto !important;
+      transform: rotate(-90deg) !important;
+    }
+  }
 }
