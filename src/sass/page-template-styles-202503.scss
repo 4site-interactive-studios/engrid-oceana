@@ -485,6 +485,11 @@
     background-repeat: no-repeat;
     background-position: top left, bottom left;
 
+    /* The footer with this menu is shorter, so we need to adjust the padding to fit the coral image */
+    &:has(.menu-container) {
+      padding-top: 223px;
+    }
+
     #footer-logo {
       margin-left: 0;
     }
@@ -618,5 +623,74 @@
     clip-path: inset(100%);
     clip: rect(0 0 0 0);
     overflow: hidden;
+  }
+
+  /* Advocacy Page Footer */
+  .content-footer {
+    .menu-container {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows: min-content min-content;
+      gap: 2rem 1rem;
+      grid-auto-flow: row;
+      grid-template-areas:
+        "menu-1 menu-2 menu-3 menu-4"
+        "social-media social-media social-media social-media";
+    }
+
+    .headline h3 {
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    /* Legacy Markup Supprot */
+    /* Hide the horizontal rule that was used on Legacy Pages */
+    hr {
+      display: none;
+    }
+
+    ul {
+      margin-bottom: 0;
+    }
+
+    .menu-container a {
+      color: #ffffff;
+    }
+
+    .menu-1 {
+      justify-self: start;
+      align-self: start;
+      grid-area: menu-1;
+    }
+
+    .menu-2 {
+      justify-self: start;
+      align-self: start;
+      grid-area: menu-2;
+    }
+
+    .menu-3 {
+      justify-self: start;
+      align-self: start;
+      grid-area: menu-3;
+    }
+
+    .menu-4 {
+      justify-self: start;
+      align-self: start;
+      grid-area: menu-4;
+    }
+
+    .social-media {
+      justify-self: center;
+      align-self: center;
+      grid-area: social-media;
+      margin-top: 0;
+
+      li {
+        text-align: center;
+      }
+    }
   }
 }

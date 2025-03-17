@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 17, 2025 @ 11:29:58 ET
+ *  Date: Monday, March 17, 2025 @ 13:15:56 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9390,6 +9390,9 @@ body[data-engrid-debug]:before{
   padding-bottom:1.5rem;
   padding-top:171px;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer:has(.menu-container){
+  padding-top:223px;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-logo{
   margin-left:0;
 }
@@ -9489,6 +9492,57 @@ body[data-engrid-debug]:before{
   position:absolute;
   white-space:nowrap;
   width:1px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-container{
+  display:grid;
+  gap:2rem 1rem;
+  grid-auto-flow:row;
+  grid-template-areas:"menu-1 menu-2 menu-3 menu-4" "social-media social-media social-media social-media";
+  grid-template-columns:auto auto auto auto;
+  grid-template-rows:min-content min-content;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .headline h3{
+  color:#fff;
+  margin-bottom:0;
+  margin-top:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer hr{
+  display:none;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer ul{
+  margin-bottom:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-container a{
+  color:#fff;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-1{
+  align-self:start;
+  grid-area:menu-1;
+  justify-self:start;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-2{
+  align-self:start;
+  grid-area:menu-2;
+  justify-self:start;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-3{
+  align-self:start;
+  grid-area:menu-3;
+  justify-self:start;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-4{
+  align-self:start;
+  grid-area:menu-4;
+  justify-self:start;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .social-media{
+  align-self:center;
+  grid-area:social-media;
+  justify-self:center;
+  margin-top:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .social-media li{
+  text-align:center;
 }
 body{
   opacity:1;
