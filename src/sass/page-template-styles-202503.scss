@@ -171,6 +171,12 @@
     text-wrap: balance;
   }
 
+  /* Limit the height of the body banner image */
+  .body-banner img {
+    max-height: 500px;
+    object-fit: cover;
+  }
+
   --click-to-expand__copy-area_height: 200px;
   --click-to-expand__cta-image_height: 23px;
   --click-to-expand__cta-image_width: 100%;
@@ -486,9 +492,9 @@
     background-position: top left, bottom left;
 
     /* The footer with this menu is shorter, so we need to adjust the padding to fit the coral image */
-    &:has(.menu-container) {
-      padding-top: 223px;
-    }
+    // &:has(.menu-container) {
+    //   padding-top: 240px;
+    // }
 
     #footer-logo {
       margin-left: 0;
@@ -538,40 +544,6 @@
     }
   }
 
-  @media screen and (min-width: $leftleft1col_body-column_max-width) {
-    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
-      .page-backgroundImage {
-        grid-column: rpc/pc;
-
-        &:before,
-        figure.media-with-attribution {
-          left: $leftleft1col_body-column_max-width;
-          right: 0;
-          width: calc(100% - $leftleft1col_body-column_max-width);
-          background-position: center !important;
-          border-left: 2px solid var(--default_color);
-        }
-      }
-    }
-  }
-
-  @media screen and (min-width: $rightright1col_body-column_max-width) {
-    &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
-      .page-backgroundImage {
-        grid-column: pc/lpc;
-
-        &:before,
-        figure.media-with-attribution {
-          left: 0;
-          right: $rightright1col_body-column_max-width;
-          width: calc(100% - $rightright1col_body-column_max-width);
-          background-position: center !important;
-          border-right: 2px solid var(--default_color);
-        }
-      }
-    }
-  }
-
   .tippy-box[data-theme~="RAN"] {
     background-color: var(--engrid__body_background-color);
     color: #000;
@@ -609,7 +581,7 @@
     }
   }
 
-  /* Hides  Ad Tracking Pixels */
+  /* Hides Ad Tracking Pixels */
   [src*="w55c"].hide {
     // display: none;
     position: absolute;
@@ -630,7 +602,7 @@
     .menu-container {
       display: grid;
       grid-template-columns: auto auto auto auto;
-      grid-template-rows: min-content min-content;
+      // grid-template-rows: min-content min-content;
       gap: 2rem 1rem;
       grid-auto-flow: row;
       grid-template-areas:
@@ -651,6 +623,7 @@
     }
 
     ul {
+      margin-top: 0;
       margin-bottom: 0;
     }
 
@@ -690,6 +663,87 @@
 
       li {
         text-align: center;
+      }
+    }
+  }
+
+  @media screen and (min-width: $leftleft1col_body-column_max-width) {
+    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+      .page-backgroundImage {
+        grid-column: rpc/pc;
+
+        &:before,
+        figure.media-with-attribution {
+          left: $leftleft1col_body-column_max-width;
+          right: 0;
+          width: calc(100% - $leftleft1col_body-column_max-width);
+          background-position: center !important;
+          border-left: 2px solid var(--default_color);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $leftleft1col_body-column_max-width) {
+    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+      /* Advocacy Page Footer */
+      .content-footer .menu-container {
+        gap: 1rem;
+        grid-template-columns: auto;
+        // grid-template-rows: min-content min-content min-content;
+        grid-template-areas:
+          "menu-1 menu-2"
+          "menu-3 menu-4"
+          "social-media social-media";
+      }
+    }
+  }
+
+  @media screen and (min-width: $rightright1col_body-column_max-width) {
+    &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+      .page-backgroundImage {
+        grid-column: pc/lpc;
+
+        &:before,
+        figure.media-with-attribution {
+          left: 0;
+          right: $rightright1col_body-column_max-width;
+          width: calc(100% - $rightright1col_body-column_max-width);
+          background-position: center !important;
+          border-right: 2px solid var(--default_color);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $rightright1col_body-column_max-width) {
+    &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+      /* Advocacy Page Footer */
+      .content-footer .menu-container {
+        gap: 1rem;
+        grid-template-columns: auto;
+        // grid-template-rows: min-content min-content min-content;
+        grid-template-areas:
+          "menu-1 menu-2"
+          "menu-3 menu-4"
+          "social-media social-media";
+      }
+    }
+  }
+
+  /* Advocacy Page Footer - Force a single column layout on small screens */
+  @media screen and (max-width: 500px) {
+    &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"],
+    &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+      /* Advocacy Page Footer */
+      .content-footer .menu-container {
+        // grid-template-rows: min-content min-content min-content min-content min-content;
+        grid-template-areas:
+          "menu-1"
+          "menu-2"
+          "menu-3"
+          "menu-4"
+          "social-media";
       }
     }
   }

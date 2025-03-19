@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 17, 2025 @ 13:15:56 ET
+ *  Date: Wednesday, March 19, 2025 @ 04:48:09 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -4760,6 +4760,9 @@ button.en__eventOccurrence__select>label{
   margin-bottom:var(--fields_spacing-block);
   margin-top:calc(var(--fields_spacing-inline)*.5);
 }
+.en__singleMessage{
+  background:none;
+}
 .loader-wrapper{
   display:flex;
   justify-content:center;
@@ -9166,6 +9169,10 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-title h1{
   text-wrap:balance;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-banner img{
+  max-height:500px;
+  object-fit:cover;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   margin-bottom:1em;
 }
@@ -9390,9 +9397,6 @@ body[data-engrid-debug]:before{
   padding-bottom:1.5rem;
   padding-top:171px;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer:has(.menu-container){
-  padding-top:223px;
-}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-logo{
   margin-left:0;
 }
@@ -9428,28 +9432,6 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-4site span{
   margin-left:.5ch;
   margin-right:.5ch;
-}
-@media screen and (min-width:680px){
-  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
-    grid-column:rpc /  pc;
-  }
-  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage:before{
-    background-position:50% !important;
-    border-left:2px solid var(--default_color);
-    left:680px;
-    right:0;
-    width:calc(100% - 680px);
-  }
-  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage{
-    grid-column:pc /  lpc;
-  }
-  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage:before{
-    background-position:50% !important;
-    border-right:2px solid var(--default_color);
-    left:0;
-    right:680px;
-    width:calc(100% - 680px);
-  }
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=RAN]{
   background-color:var(--engrid__body_background-color);
@@ -9499,7 +9481,6 @@ body[data-engrid-debug]:before{
   grid-auto-flow:row;
   grid-template-areas:"menu-1 menu-2 menu-3 menu-4" "social-media social-media social-media social-media";
   grid-template-columns:auto auto auto auto;
-  grid-template-rows:min-content min-content;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .headline h3{
   color:#fff;
@@ -9511,6 +9492,7 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer ul{
   margin-bottom:0;
+  margin-top:0;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .menu-container a{
   color:#fff;
@@ -9543,6 +9525,49 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .social-media li{
   text-align:center;
+}
+@media screen and (min-width:680px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
+    grid-column:rpc /  pc;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage:before{
+    background-position:50% !important;
+    border-left:2px solid var(--default_color);
+    left:680px;
+    right:0;
+    width:calc(100% - 680px);
+  }
+}
+@media screen and (max-width:680px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .content-footer .menu-container{
+    gap:1rem;
+    grid-template-areas:"menu-1 menu-2" "menu-3 menu-4" "social-media social-media";
+    grid-template-columns:auto;
+  }
+}
+@media screen and (min-width:680px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage{
+    grid-column:pc /  lpc;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .page-backgroundImage:before{
+    background-position:50% !important;
+    border-right:2px solid var(--default_color);
+    left:0;
+    right:680px;
+    width:calc(100% - 680px);
+  }
+}
+@media screen and (max-width:680px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .content-footer .menu-container{
+    gap:1rem;
+    grid-template-areas:"menu-1 menu-2" "menu-3 menu-4" "social-media social-media";
+    grid-template-columns:auto;
+  }
+}
+@media screen and (max-width:500px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .content-footer .menu-container,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=rightright1col] .content-footer .menu-container{
+    grid-template-areas:"menu-1" "menu-2" "menu-3" "menu-4" "social-media";
+  }
 }
 body{
   opacity:1;
