@@ -1,0 +1,10 @@
+&[data-engrid-page-type="event"] {
+  @media screen and (min-width: 599px) {
+    .en__registrants__registrantDetails {
+      .en__field--registrant[class*="--firstName"],
+      .en__field--registrant[class*="--lastName"] {
+        flex: 1 0 50%;
+      }
+    }
+  }
+}

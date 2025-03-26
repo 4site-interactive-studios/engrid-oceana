@@ -50,7 +50,6 @@
   );
   --theme-typography-h1-font-weight: 700;
   --theme-typography-h1-line-height: initial;
-  --theme-typography-h2-text-transform: uppercase;
 
   // TYPOGRAPHY H2
   --theme-typography-h2-font-family: var(--theme-typography-h1-font-family);
@@ -1196,37 +1195,6 @@
           width: calc(100% - $one_col_body-column_max-width);
           background-position: center !important;
         }
-      }
-    }
-  }
-
-  &[data-engrid-page-background="image"]
-    .page-backgroundImage
-    figure.media-with-attribution {
-    figattribution {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      --media-attribution__background-color: #ffffff;
-      --media-attribution__color: #ffffff;
-      --media-attribution__font-family: serif;
-      --media-attribution__font-size: 16px;
-      --media-attribution__padding: 0;
-      line-height: 16px;
-
-      &:before {
-        content: "";
-        background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/media-attribution.png?v=1682946792000");
-        background-size: 5px 12px;
-        background-repeat: no-repeat;
-        background-position: center;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        left: -1px;
       }
     }
   }

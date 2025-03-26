@@ -83,6 +83,9 @@
   --submit__button_padding-top: 0.75ch;
   --submit__button_padding-bottom: 0.75ch;
 
+  @import "./2025/supporter-hub";
+  @import "./2025/event";
+
   &:not([data-engrid-embedded]) {
     overscroll-behavior-x: none; // Don't allow left/right overscrolling
   }
@@ -744,6 +747,69 @@
           "menu-3"
           "menu-4"
           "social-media";
+      }
+    }
+  }
+  select,
+  select.en__field__input--select,
+  select.en__field__input--splitselect,
+  select.en__field__input--tripleselect {
+    background-image: url('data:image/svg+xml,<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9L13 18L22 9" stroke="%2322214A" stroke-width="2"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right -15px center;
+    background-size: 1.5rem;
+  }
+  /**  HEADER STYLES **/
+  /** Header: Background **/
+  @media (min-width: 769px) {
+    .content-header {
+      padding: 2.5rem 0;
+    }
+    .en__component--copyblock:has(#header-logo),
+    .en__component--codeblock:has(#header-logo) {
+      padding: 0 64px;
+      margin: 0;
+    }
+  }
+
+  // Header: Mobile Style - Adds padding to the logo
+  @media (max-width: 768px) {
+    .content-header #header-logo img {
+      padding: 2em 0;
+    }
+  }
+  .en__component {
+    position: relative;
+    z-index: 1;
+  }
+  &[data-engrid-page-background="image"] {
+    .page-backgroundImage figure.media-with-attribution {
+      figattribution {
+        z-index: 100;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        --media-attribution__background-color: #ffffff;
+        --media-attribution__color: #ffffff;
+        --media-attribution__font-family: serif;
+        --media-attribution__font-size: 16px;
+        --media-attribution__padding: 0;
+        line-height: 16px;
+
+        &:before {
+          content: "";
+          background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/media-attribution.png?v=1682946792000");
+          background-size: 5px 12px;
+          background-repeat: no-repeat;
+          background-position: center;
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          left: -1px;
+        }
       }
     }
   }

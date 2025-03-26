@@ -1,0 +1,72 @@
+&[data-engrid-page-type="supporterhub"] {
+  // TYPOGRAPHY H1
+  --h1_font-size: 52px;
+  --h1_text-transform: initial;
+
+  --submit__button_font-size: 24px;
+
+  h1 {
+    margin-bottom: 3rem;
+  }
+
+  .en__captcha,
+  .en__field {
+    margin: 0 auto !important;
+    width: 100%;
+  }
+
+  .en__component--hublogin {
+    margin-bottom: 2rem;
+  }
+
+  .body-main {
+    border: none;
+  }
+
+  .en__supporterHubLogin__header {
+    display: none;
+  }
+
+  .en__component--hubgadget > img {
+    height: 56px;
+    width: auto;
+  }
+
+  .en__component--hubgadget img {
+    display: block;
+    margin: auto;
+  }
+
+  .en__component--hubgadget {
+    cursor: pointer;
+    box-shadow: none;
+    padding: 1.5rem 1rem;
+    border: var(--button_border-width) solid var(--button_border-color);
+    color: var(--button_color);
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .en__component--hubgadget:hover,
+  .en__component--hubgadget:active {
+    border-color: var(--button_border-color_hover);
+    color: var(--button_color_hover);
+  }
+
+  .body-main {
+    padding-bottom: 2rem;
+  }
+
+  .en__pagination {
+    display: flex;
+    justify-content: center;
+  }
+
+  .en__pagination button {
+    border: none;
+  }
+
+  .en__hubTxnGiving__transactions__total {
+    text-align: left;
+  }
+}

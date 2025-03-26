@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 19, 2025 @ 04:48:53 ET
- *  By: 4Site
+ *  Date: Wednesday, March 26, 2025 @ 15:24:20 ET
+ *  By: fernando
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
  *
@@ -25164,7 +25164,15 @@ const customScript = function (App) {
     });
   }
 
-  addTransactionFeeTooltip();
+  addTransactionFeeTooltip(); // If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout
+
+  const checkForTwoColumnLayout = document.querySelector('body[data-engrid-layout="centercenter2col"]');
+  const checkForBodyTopContent = document.querySelector(".body-top > *");
+  const checkForBodyMainContent = document.querySelector(".body-main > *");
+
+  if (checkForTwoColumnLayout && (!checkForBodyTopContent || !checkForBodyMainContent)) {
+    document.querySelector("body").setAttribute("data-engrid-layout", "centercenter1col");
+  }
 };
 ;// CONCATENATED MODULE: ./src/index.ts
 // import { Options, App } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
@@ -25192,6 +25200,9 @@ const options = {
     phone_record_field: "supporter.NOT_TAGGED_5",
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7"
+  },
+  Placeholders: {
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Custom Amount"
   },
   MobileCTA: [{
     pageType: "DONATION",

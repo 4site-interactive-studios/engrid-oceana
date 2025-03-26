@@ -24,6 +24,10 @@ const options: Options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7",
   },
+  Placeholders: {
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other":
+      "Custom Amount",
+  },
   MobileCTA: [
     {
       pageType: "DONATION",

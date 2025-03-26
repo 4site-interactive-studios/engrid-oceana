@@ -324,4 +324,20 @@ export const customScript = function (App) {
   }
 
   addTransactionFeeTooltip();
+
+  // If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout
+
+  const checkForTwoColumnLayout = document.querySelector(
+    'body[data-engrid-layout="centercenter2col"]'
+  );
+  const checkForBodyTopContent = document.querySelector(".body-top > *");
+  const checkForBodyMainContent = document.querySelector(".body-main > *");
+  if (
+    checkForTwoColumnLayout &&
+    (!checkForBodyTopContent || !checkForBodyMainContent)
+  ) {
+    document
+      .querySelector("body")
+      .setAttribute("data-engrid-layout", "centercenter1col");
+  }
 };
