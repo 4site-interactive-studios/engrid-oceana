@@ -801,7 +801,7 @@
 
         &:before {
           content: "";
-          background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/media-attribution.png?v=1682946792000");
+          background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10042/oceana-media-attribution.png");
           background-size: 5px 12px;
           background-repeat: no-repeat;
           background-position: center;
@@ -809,22 +809,25 @@
           height: 100%;
           width: 100%;
           left: -1px;
+          outline: 1px solid #22214a;
+          border: 1px solid #22214a;
+          border-radius: 100%;
         }
       }
     }
   }
 
-  #en__field_transaction_paycurrency:disabled {
-    opacity: 1;
-  }
-
-  #en__field_transaction_paycurrency:not([data-option-count="1"]) {
+  select#en__field_transaction_paycurrency:not([data-option-count="1"]) {
     background-position: calc(100% + 2.4ch);
     padding-right: 3ch;
   }
 
-  #en__field_transaction_paycurrency[data-option-count="1"] {
+  select#en__field_transaction_paycurrency[data-option-count="1"] {
     background: none;
     padding-right: 1.2ch;
+  }
+
+  select#en__field_transaction_paycurrency:disabled {
+    opacity: 1;
   }
 }
