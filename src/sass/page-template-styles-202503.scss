@@ -130,9 +130,21 @@
       }
 
       input {
-        font-size: 40px;
+        font-size: var(--donation-amount__button_font-size);
         line-height: var(--donation-amount__button_line-height);
+        font-weight: var(--donation-amount__button_font-weight);
         padding: 14px 12px 14px 33px;
+
+        // &::placeholder {
+        //   font-family: var(--input_font-family);
+        //   font-size: var(--input_font-size);
+        //   font-weight: var(--input_font-weight);
+        //   line-height: var(--input_line-height);
+        // }
+
+        @media (max-width: 530px) {
+          --donation-amount__button_font-size: 28px;
+        }
       }
     }
 
@@ -361,13 +373,19 @@
   }
 
   .en__field--give-by-select.en__field--radio input[type="radio"] + label {
-    height: 58px;
+    gap: 1rem;
   }
 
   .en__field--give-by-select .en__field__label--item img {
     width: auto;
     margin: 0;
-    height: 28px;
+    max-height: 28px;
+
+    &[src*="venmo.png"] {
+      height: 22px;
+      position: relative;
+      top: -2px;
+    }
   }
 
   .en__field--give-by-select input:checked + label > img.paypal,
@@ -829,5 +847,27 @@
 
   select#en__field_transaction_paycurrency:disabled {
     opacity: 1;
+
+    &:hover {
+      cursor: default !important;
+    }
+  }
+
+  @media (max-width: 600px) {
+    & {
+      --engrid__body_padding: 0px 2rem;
+      --h2_line-height: 100%;
+    }
+  }
+
+  @media (max-width: 530px) {
+    & {
+      --donation-amount__button_count: 2;
+      --donation-amount__button_font-size: 30px;
+    }
+
+    .engrid-currency-symbol {
+      top: -8px;
+    }
   }
 }
