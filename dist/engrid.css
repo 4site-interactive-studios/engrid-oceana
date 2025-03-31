@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 31, 2025 @ 16:14:24 ET
+ *  Date: Monday, March 31, 2025 @ 17:37:02 ET
  *  By: bryancasler
  *  ENGrid styles: v0.19.8
  *  ENGrid scripts: v0.19.8
@@ -9130,6 +9130,9 @@ body[data-engrid-debug]:before{
     flex:1 0 50%;
   }
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bannerOverlay,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-footer,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-footerOutside,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-header,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-headerOutside,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footerSpacer,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-preFooter,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .page-alert,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .page-backgroundImageOverlay{
+  display:none;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-embedded]){
   overscroll-behavior-x:none;
 }
@@ -9431,7 +9434,7 @@ body[data-engrid-debug]:before{
   color:#fff;
   grid-column:bc;
   padding-bottom:1.5rem;
-  padding-top:171px;
+  padding-top:184px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer #footer-logo{
   margin-left:0;
