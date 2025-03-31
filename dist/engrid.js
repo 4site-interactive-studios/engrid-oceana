@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 30, 2025 @ 22:48:44 ET
+ *  Date: Sunday, March 30, 2025 @ 23:14:14 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -25204,7 +25204,31 @@ const customScript = function (App) {
 
   if (checkForTwoColumnLayout && (!checkForBodyTopContent || !checkForBodyMainContent)) {
     document.querySelector("body").setAttribute("data-engrid-layout", "centercenter1col");
+  } //  On select#en__field_transaction_paycurrency add the data-option-count="#" attribute with # being the number of options in the select element
+
+
+  function handleCurrencySelect() {
+    const payCurrencySelect = document.querySelector("#en__field_transaction_paycurrency");
+
+    if (payCurrencySelect) {
+      const updateOptionCount = () => {
+        const optionCount = payCurrencySelect.options.length;
+        payCurrencySelect.setAttribute("data-option-count", optionCount);
+        payCurrencySelect.disabled = optionCount === 1;
+      }; // Initial count
+
+
+      updateOptionCount(); // Watch for changes in the select element
+
+      const observer = new MutationObserver(updateOptionCount);
+      observer.observe(payCurrencySelect, {
+        childList: true,
+        subtree: true
+      });
+    }
   }
+
+  handleCurrencySelect();
 };
 ;// CONCATENATED MODULE: ./src/index.ts
 // import { Options, App } from "@4site/engrid-scripts"; // Uses ENGrid via NPM

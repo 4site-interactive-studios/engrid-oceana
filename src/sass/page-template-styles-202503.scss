@@ -489,8 +489,8 @@
     padding-top: 171px;
     background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-transition.png"),
       url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-image.png");
-    background-size: 100%, 55%;
-    background-position: center;
+    background-size: 100%, 51%;
+    background-position: 0 0, 0px calc(100% - 50px); // Center with a 50px offset
     background-repeat: no-repeat;
     background-position: top left, bottom left;
 
@@ -756,7 +756,7 @@
   select.en__field__input--tripleselect {
     background-image: url('data:image/svg+xml,<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 9L13 18L22 9" stroke="%2322214A" stroke-width="2"/></svg>');
     background-repeat: no-repeat;
-    background-position: right -15px center;
+    background-position: right -23px center;
     background-size: 1.5rem;
   }
   /**  HEADER STYLES **/
@@ -812,5 +812,19 @@
         }
       }
     }
+  }
+
+  #en__field_transaction_paycurrency:disabled {
+    opacity: 1;
+  }
+
+  #en__field_transaction_paycurrency:not([data-option-count="1"]) {
+    background-position: calc(100% + 2.4ch);
+    padding-right: 3ch;
+  }
+
+  #en__field_transaction_paycurrency[data-option-count="1"] {
+    background: none;
+    padding-right: 1.2ch;
   }
 }

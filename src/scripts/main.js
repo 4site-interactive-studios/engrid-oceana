@@ -372,4 +372,30 @@ export const customScript = function (App) {
       .querySelector("body")
       .setAttribute("data-engrid-layout", "centercenter1col");
   }
+
+  //  On select#en__field_transaction_paycurrency add the data-option-count="#" attribute with # being the number of options in the select element
+  function handleCurrencySelect() {
+    const payCurrencySelect = document.querySelector(
+      "#en__field_transaction_paycurrency"
+    );
+    if (payCurrencySelect) {
+      const updateOptionCount = () => {
+        const optionCount = payCurrencySelect.options.length;
+        payCurrencySelect.setAttribute("data-option-count", optionCount);
+        payCurrencySelect.disabled = optionCount === 1;
+      };
+
+      // Initial count
+      updateOptionCount();
+
+      // Watch for changes in the select element
+      const observer = new MutationObserver(updateOptionCount);
+      observer.observe(payCurrencySelect, {
+        childList: true,
+        subtree: true,
+      });
+    }
+  }
+
+  handleCurrencySelect();
 };
