@@ -510,7 +510,7 @@
     background-size: 100%, 51%;
     background-position: 0 0, 0px calc(100% - 50px); // Center with a 50px offset
     background-repeat: no-repeat;
-    background-position: top left, bottom left;
+    // background-position: top left, bottom left;
 
     /* The footer with this menu is shorter, so we need to adjust the padding to fit the coral image */
     // &:has(.menu-container) {
@@ -858,12 +858,20 @@
       --engrid__body_padding: 0px 2rem;
       --h2_line-height: 100%;
     }
+
+    .content-footer {
+      --engrid__content-footer_padding: 0 4rem;
+    }
   }
 
   @media (max-width: 530px) {
     & {
       --donation-amount__button_count: 2;
       --donation-amount__button_font-size: 30px;
+
+      .content-footer {
+        --engrid__content-footer_padding: 0 2rem;
+      }
     }
 
     .engrid-currency-symbol {

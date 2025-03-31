@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 31, 2025 @ 00:39:51 ET
+ *  Date: Monday, March 31, 2025 @ 00:46:18 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9427,7 +9427,6 @@ body[data-engrid-debug]:before{
   --engrid__content-footer_padding:0 6rem;
   background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-transition.png), url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-image.png);
   background-position:0 0, 0 calc(100% - 50px);
-  background-position:0 0, 0 100%;
   background-repeat:no-repeat;
   background-size:100%, 51%;
   color:#fff;
@@ -9679,11 +9678,17 @@ body[data-engrid-debug]:before{
     --engrid__body_padding:0px 2rem;
     --h2_line-height:100%;
   }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer{
+    --engrid__content-footer_padding:0 4rem;
+  }
 }
 @media (max-width:530px){
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"]{
     --donation-amount__button_count:2;
     --donation-amount__button_font-size:30px;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer{
+    --engrid__content-footer_padding:0 2rem;
   }
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .engrid-currency-symbol{
     top:-8px;
