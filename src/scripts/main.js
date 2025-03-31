@@ -46,6 +46,30 @@ export const customScript = function (App) {
   if (window.location.search.includes("assets=redesign")) {
     document.body.setAttribute("data-engrid-layout", "leftleft1col");
     document.body.setAttribute("data-engrid-theme-version", "202503");
+    document.body.setAttribute("data-engrid-legacy-theme-version", "2024");
+
+    // Remove .give-by-select_count_3
+    const giveBySelectCount3 = document.querySelector(
+      ".give-by-select_count_3"
+    );
+    if (giveBySelectCount3) {
+      giveBySelectCount3.remove();
+    }
+
+    // If a class contains "i1-100 i2-50 i3-50 i4-100 i5-33 i6-33 i7-33 i8-100" remove the i2-50 i3-50 i5-33 i6-33 i7-33 classes
+    const elements = document.querySelectorAll(
+      '[class*="i1-100 i2-50 i3-50 i4-100 i5-33 i6-33 i7-33 i8-100"]'
+    );
+    elements.forEach((element) => {
+      element.classList.remove("i2-50", "i3-50", "i5-33", "i6-33", "i7-33");
+    });
+
+    // Find .en__field--donationAmt and on the parent div add .radio-to-buttons_donationAmt class then remove the .radio-to-buttons_donationAmt class from the body
+    const donationAmt = document.querySelector(".en__field--donationAmt");
+    if (donationAmt?.parentElement) {
+      donationAmt.parentElement.classList.add("radio-to-buttons_donationAmt");
+    }
+    document.body.classList.remove("radio-to-buttons_donationAmt");
   }
 
   const attriubtion = document.querySelector(
