@@ -1,7 +1,7 @@
 import tippy from "tippy.js";
 
 export const customScript = function (App) {
-  console.log("ENGrid client scripts are executing");
+  // console.log("ENGrid client scripts are executing");
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
   if (tidepoolButton) {
     const loadingAnimation = () => {
@@ -114,14 +114,14 @@ export const customScript = function (App) {
           opt-in. It is used to toggle the checked state of the checkbox based on the value of the
           mobile phone input field. */
           smsOptInCheckbox.checked = true;
-          console.log(
-            "SMS Opt-in Checkbox checked: Mobile phone input has a value."
-          );
+          // console.log(
+          //   "SMS Opt-in Checkbox checked: Mobile phone input has a value."
+          // );
         } else {
           smsOptInCheckbox.checked = false;
-          console.log(
-            "SMS Opt-in Checkbox unchecked: Mobile phone input is empty."
-          );
+          // console.log(
+          //   "SMS Opt-in Checkbox unchecked: Mobile phone input is empty."
+          // );
         }
       };
 

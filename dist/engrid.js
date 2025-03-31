@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 30, 2025 @ 22:47:54 ET
+ *  Date: Sunday, March 30, 2025 @ 22:48:44 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -24874,7 +24874,7 @@ tippy_esm_tippy.setDefaultProps({
 ;// CONCATENATED MODULE: ./src/scripts/main.js
 
 const customScript = function (App) {
-  console.log("ENGrid client scripts are executing");
+  // console.log("ENGrid client scripts are executing");
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
 
   if (tidepoolButton) {
@@ -24970,11 +24970,13 @@ const customScript = function (App) {
           /* `smsOptInCheckbox` is a variable that stores a reference to the checkbox element for SMS
           opt-in. It is used to toggle the checked state of the checkbox based on the value of the
           mobile phone input field. */
-          smsOptInCheckbox.checked = true;
-          console.log("SMS Opt-in Checkbox checked: Mobile phone input has a value.");
+          smsOptInCheckbox.checked = true; // console.log(
+          //   "SMS Opt-in Checkbox checked: Mobile phone input has a value."
+          // );
         } else {
-          smsOptInCheckbox.checked = false;
-          console.log("SMS Opt-in Checkbox unchecked: Mobile phone input is empty.");
+          smsOptInCheckbox.checked = false; // console.log(
+          //   "SMS Opt-in Checkbox unchecked: Mobile phone input is empty."
+          // );
         }
       }; // Call the function on page load
 
