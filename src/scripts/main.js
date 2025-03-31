@@ -39,6 +39,15 @@ export const customScript = function (App) {
     });
   }
 
+  // If the URL contains assets=redesign then add two body data attributes if they're not already present
+  // This is a temporary solution to ensure the page layout is correct while we migrate to the new theme
+  // and to ensure the correct theme is loaded.
+  // This will be removed once the migration is complete.
+  if (window.location.search.includes("assets=redesign")) {
+    document.body.setAttribute("data-engrid-layout", "leftleft1col");
+    document.body.setAttribute("data-engrid-theme-version=", "202503");
+  }
+
   const attriubtion = document.querySelector(
     ".media-with-attribution figattribution"
   );
@@ -326,7 +335,6 @@ export const customScript = function (App) {
   addTransactionFeeTooltip();
 
   // If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout
-
   const checkForTwoColumnLayout = document.querySelector(
     'body[data-engrid-layout="centercenter2col"]'
   );

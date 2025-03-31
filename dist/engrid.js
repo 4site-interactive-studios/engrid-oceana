@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 26, 2025 @ 15:24:20 ET
- *  By: fernando
+ *  Date: Sunday, March 30, 2025 @ 22:27:46 ET
+ *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
  *
@@ -24905,6 +24905,15 @@ const customScript = function (App) {
         }
       });
     });
+  } // If the URL contains assets=redesign then add two body data attributes if they're not already present
+  // This is a temporary solution to ensure the page layout is correct while we migrate to the new theme
+  // and to ensure the correct theme is loaded.
+  // This will be removed once the migration is complete.
+
+
+  if (window.location.search.includes("assets=redesign")) {
+    document.body.setAttribute("data-engrid-layout", "leftleft1col");
+    document.body.setAttribute("data-engrid-theme-version=", "202503");
   }
 
   const attriubtion = document.querySelector(".media-with-attribution figattribution");
