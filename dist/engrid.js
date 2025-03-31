@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, March 30, 2025 @ 22:27:46 ET
+ *  Date: Sunday, March 30, 2025 @ 22:32:06 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -24913,7 +24913,7 @@ const customScript = function (App) {
 
   if (window.location.search.includes("assets=redesign")) {
     document.body.setAttribute("data-engrid-layout", "leftleft1col");
-    document.body.setAttribute("data-engrid-theme-version=", "202503");
+    document.body.setAttribute("data-engrid-theme-version", "202503");
   }
 
   const attriubtion = document.querySelector(".media-with-attribution figattribution");

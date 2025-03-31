@@ -45,7 +45,7 @@ export const customScript = function (App) {
   // This will be removed once the migration is complete.
   if (window.location.search.includes("assets=redesign")) {
     document.body.setAttribute("data-engrid-layout", "leftleft1col");
-    document.body.setAttribute("data-engrid-theme-version=", "202503");
+    document.body.setAttribute("data-engrid-theme-version", "202503");
   }
 
   const attriubtion = document.querySelector(
