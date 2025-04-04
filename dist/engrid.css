@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 3, 2025 @ 23:46:45 ET
+ *  Date: Friday, April 4, 2025 @ 00:00:53 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -9730,6 +9730,62 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-right:before,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter figure.media-with-attribution,[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage.attribution-rightcenter:before{
   background-position:100% !important;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .transaction-fee-opt-in{
+  justify-self:center;
+  margin-top:10px;
+  max-width:450px;
+  width:100%;
+  z-index:2;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .transaction-fee-opt-in .en__field__element--checkbox{
+  flex-wrap:nowrap;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .transaction-fee-opt-in .transaction-fee-tooltip{
+  border:2px solid #000;
+  border-radius:50%;
+  cursor:pointer;
+  flex:0 0 auto;
+  font-size:16px;
+  font-weight:500;
+  height:28px;
+  text-align:center;
+  width:28px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .transaction-fee-opt-in .en__field__input--checkbox:focus+.en__field__label{
+  outline:none;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white]{
+  background-color:#fff;
+  border:2px solid #000;
+  border-radius:0;
+  color:#000;
+  font-size:16px;
+  font-weight:600;
+  max-width:300px !important;
+  padding:10px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white] .tippy-content{
+  padding:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white] .custom-tooltip-arrow{
+  background:#fff;
+  border-bottom:2px solid #000;
+  border-right:2px solid #000;
+  height:20px;
+  width:20px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white][data-placement=top] .tippy-svg-arrow{
+  bottom:-10px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white][data-placement=top] .custom-tooltip-arrow{
+  transform:rotate(45deg) translateY(2px);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white][data-placement=bottom] .tippy-svg-arrow{
+  top:-10px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .tippy-box[data-theme~=white][data-placement=bottom] .custom-tooltip-arrow{
+  transform:rotate(-135deg) translateY(2px);
 }
 body{
   opacity:1;

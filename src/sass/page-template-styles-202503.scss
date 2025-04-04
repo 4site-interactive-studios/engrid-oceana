@@ -989,4 +989,81 @@
     figure.media-with-attribution {
     background-position: right !important; // Pinned to Top Center
   }
+
+  // Transaction fee custom styling with tooltip
+  .transaction-fee-opt-in {
+    // --checkbox_background-color: var(--engrid__body_background-color);
+    // --checkbox_background-color_hover: var(--engrid__body_background-color);
+    // --checkbox_background-color_checked: var(--engrid__body_background-color);
+    // --checkbox_font-weight: 600;
+    // --checkbox_font-size: 16px;
+    // --checkbox_line-height: 20px;
+    z-index: 2;
+
+    max-width: 450px;
+    width: 100%;
+    justify-self: center;
+    margin-top: 10px;
+
+    .en__field__element--checkbox {
+      flex-wrap: nowrap;
+    }
+
+    .transaction-fee-tooltip {
+      border-radius: 50%;
+      border: 2px solid #000;
+      height: 28px;
+      width: 28px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 500;
+      flex: 0 0 auto;
+      font-size: 16px;
+    }
+
+    .en__field__input--checkbox:focus + .en__field__label {
+      outline: none;
+    }
+  }
+
+  .tippy-box[data-theme~="white"] {
+    background-color: #ffffff;
+    color: #000;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    max-width: 300px !important;
+    border-radius: 0;
+    border: 2px solid #000;
+
+    .tippy-content {
+      padding: 0;
+    }
+
+    .custom-tooltip-arrow {
+      background: #fff;
+      border-bottom: 2px solid #000;
+      border-right: 2px solid #000;
+      height: 20px;
+      width: 20px;
+    }
+
+    &[data-placement="top"] {
+      .tippy-svg-arrow {
+        bottom: -10px;
+      }
+      .custom-tooltip-arrow {
+        transform: rotate(45deg) translateY(2px);
+      }
+    }
+
+    &[data-placement="bottom"] {
+      .tippy-svg-arrow {
+        top: -10px;
+      }
+      .custom-tooltip-arrow {
+        transform: rotate(-135deg) translateY(2px);
+      }
+    }
+  }
 }

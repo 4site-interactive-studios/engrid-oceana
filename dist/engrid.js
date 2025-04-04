@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 3, 2025 @ 23:46:45 ET
+ *  Date: Friday, April 4, 2025 @ 00:00:53 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -25185,7 +25185,7 @@ const customScript = function (App) {
     transactionFeeTooltip.innerHTML = "i";
     transactionFeeEl.appendChild(transactionFeeTooltip);
     tippy_esm(transactionFeeTooltip, {
-      content: "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to RAN.",
+      content: "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to Oceana.",
       allowHTML: true,
       theme: "white",
       placement: "top",

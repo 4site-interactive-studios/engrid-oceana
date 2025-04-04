@@ -345,7 +345,7 @@ export const customScript = function (App) {
 
     tippy(transactionFeeTooltip, {
       content:
-        "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to RAN.",
+        "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to Oceana.",
       allowHTML: true,
       theme: "white",
       placement: "top",
