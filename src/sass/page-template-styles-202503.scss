@@ -698,7 +698,7 @@
           left: $leftleft1col_body-column_max-width;
           right: 0;
           width: calc(100% - $leftleft1col_body-column_max-width);
-          background-position: center !important;
+          background-position: center;
           border-left: 2px solid var(--default_color);
         }
       }
@@ -730,7 +730,7 @@
           left: 0;
           right: $rightright1col_body-column_max-width;
           width: calc(100% - $rightright1col_body-column_max-width);
-          background-position: center !important;
+          background-position: center;
           border-right: 2px solid var(--default_color);
         }
       }
@@ -877,5 +877,90 @@
     .engrid-currency-symbol {
       top: -8px;
     }
+  }
+
+  // Attribution Image Positioning
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topleft
+    figure.media-with-attribution {
+    background-position: top left !important; // Pinned to Top Left
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topright
+    figure.media-with-attribution {
+    background-position: top right !important; // Pinned to Top Right
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomright
+    figure.media-with-attribution {
+    background-position: bottom right !important; // Pinned to Bottom Right
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomleft
+    figure.media-with-attribution {
+    background-position: bottom left !important; // Pinned to Bottom Left
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-top:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-top
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topcenter
+    figure.media-with-attribution {
+    background-position: top !important; // Pinned to Top Center
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomcenter
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottom:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottom
+    figure.media-with-attribution {
+    background-position: bottom !important; // Pinned to Bottom Center
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-left:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-left
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-leftcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-leftcenter
+    figure.media-with-attribution {
+    background-position: left !important; // Pinned to Top Center
+  }
+
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-right:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-right
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-rightcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-rightcenter
+    figure.media-with-attribution {
+    background-position: right !important; // Pinned to Top Center
   }
 }

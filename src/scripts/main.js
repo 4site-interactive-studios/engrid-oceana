@@ -398,4 +398,37 @@ export const customScript = function (App) {
   }
 
   handleCurrencySelect();
+
+  function moveAttributionClass() {
+    const allowedClasses = [
+      "attribution-bottom",
+      "attribution-bottomcenter",
+      "attribution-bottomright",
+      "attribution-bottomleft",
+      "attribution-top",
+      "attribution-topcenter",
+      "attribution-topright",
+      "attribution-topleft",
+      "attribution-left",
+      "attribution-leftcenter",
+      "attribution-right",
+      "attribution-rightcenter",
+    ];
+
+    document.querySelectorAll("img").forEach((img) => {
+      const matchedClass = allowedClasses.find((cls) =>
+        img.classList.contains(cls)
+      );
+      if (matchedClass) {
+        const parentDiv = img.closest(".en__component--column");
+        if (parentDiv) {
+          img.classList.remove(matchedClass);
+          parentDiv.classList.add(matchedClass);
+        }
+      }
+    });
+  }
+
+  // Call it immediately
+  moveAttributionClass();
 };
