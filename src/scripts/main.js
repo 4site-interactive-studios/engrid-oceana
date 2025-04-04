@@ -1,6 +1,7 @@
 import tippy from "tippy.js";
 
-export const customScript = function (App) {
+export const customScript = function (App, Frequency) {
+  const freq = Frequency.getInstance();
   // console.log("ENGrid client scripts are executing");
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
   if (tidepoolButton) {
@@ -499,32 +500,50 @@ export const customScript = function (App) {
   // mobileMediaAttribution(); // Call the function to set the mobile media attribution tooltip
 
   function enforceSubmitButtonLabel() {
-    const button = document.querySelector('.en__submit button');
-    if (!button || typeof pageJson !== 'object') return;
-  
+    const button = document.querySelector(".en__submit button");
+    if (!button || typeof pageJson !== "object") return;
+
     const { pageType, pageNumber, pageCount } = pageJson;
-  
-    if (pageType !== 'emailtotarget' || pageNumber !== 1) return;
-  
-    const correctLabel = (pageCount === 1 || pageCount === 2) ? 'Submit'
-                       : (pageCount > 2) ? 'Continue'
-                       : null;
-  
+
+    if (pageType !== "emailtotarget" || pageNumber !== 1) return;
+
+    const correctLabel =
+      pageCount === 1 || pageCount === 2
+        ? "Submit"
+        : pageCount > 2
+        ? "Continue"
+        : null;
+
     const updateLabelIfNeeded = () => {
-      if (button.textContent.trim() === 'SUBMIT' && correctLabel) {
+      if (button.textContent.trim() === "SUBMIT" && correctLabel) {
         button.textContent = correctLabel;
       }
     };
-  
+
     updateLabelIfNeeded();
-  
+
     new MutationObserver(updateLabelIfNeeded).observe(button, {
       characterData: true,
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
-  
+
   // Just call it whenever you want – assume DOM is ready
   enforceSubmitButtonLabel();
+
+  // Add One-Time to the live frequency text
+  freq.onFrequencyChange.subscribe(() => {
+    const freqValue = freq.frequency;
+    if (freqValue === "onetime") {
+      window.setTimeout(() => {
+        const liveFrequency = document.querySelectorAll(
+          ".live-variable-frequency"
+        );
+        liveFrequency.forEach((el) => {
+          el.innerHTML = "One-Time";
+        });
+      }, 250);
+    }
+  });
 };

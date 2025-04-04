@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 4, 2025 @ 12:15:02 ET
- *  By: bryancasler
+ *  Date: Friday, April 4, 2025 @ 12:30:18 ET
+ *  By: fernando
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
  *
@@ -4408,6 +4408,9 @@ button.en__eventOccurrence__select>label{
   margin-bottom:var(--fields_spacing-block);
   margin-top:calc(var(--fields_spacing-inline)*.5);
 }
+.en__singleMessage{
+  background:none;
+}
 .loader-wrapper{
   display:flex;
   justify-content:center;
@@ -6010,7 +6013,14 @@ body:not(#en__pagebuilder) .page-backgroundImage{
 body:not(#en__pagebuilder)[data-engrid-no-body-bannerOverlay] .en__component--advrow .body-bannerOverlay,body:not(#en__pagebuilder)[data-engrid-no-body-banner] .en__component--advrow .body-banner,body:not(#en__pagebuilder)[data-engrid-no-body-bottom] .en__component--advrow .body-bottom,body:not(#en__pagebuilder)[data-engrid-no-body-footerOutside] .en__component--advrow .body-footerOutside,body:not(#en__pagebuilder)[data-engrid-no-body-headerOutside] .en__component--advrow .body-headerOutside,body:not(#en__pagebuilder)[data-engrid-no-body-main] .en__component--advrow .body-main,body:not(#en__pagebuilder)[data-engrid-no-body-title] .en__component--advrow .body-title,body:not(#en__pagebuilder)[data-engrid-no-body-top] .en__component--advrow .body-top,body:not(#en__pagebuilder)[data-engrid-no-content-footer] .en__component--advrow .content-footer,body:not(#en__pagebuilder)[data-engrid-no-content-header] .en__component--advrow .content-header,body:not(#en__pagebuilder)[data-engrid-no-content-preFooter] .en__component--advrow .content-preFooter,body:not(#en__pagebuilder)[data-engrid-no-page-alert] .en__component--advrow .page-alert,body:not(#en__pagebuilder)[data-engrid-no-page-backgroundImageOverlay] .en__component--advrow .page-backgroundImageOverlay,body:not(#en__pagebuilder)[data-engrid-no-page-backgroundImage] .en__component--advrow .page-backgroundImage,body:not(#en__pagebuilder)[data-engrid-no-page-customCode] .en__component--advrow .page-customCode{
   display:none;
 }
-[data-engrid-embedded]{
+:not([data-engrid-embedded]):not(#en__pagebuilder) .showif-iframe{
+  display:none !important;
+}
+:not([data-engrid-embedded]):not(#en__pagebuilder) .hideif-iframe{
+  display:block !important;
+}
+
+[data-engrid-embedded]:not(#en__pagebuilder){
   --engrid__embedded_page_background-color:#0000 !important;
   --engrid__page_background-color:var(
     --engrid__embedded_page_background-color
@@ -6085,10 +6095,16 @@ body:not(#en__pagebuilder)[data-engrid-no-body-bannerOverlay] .en__component--ad
   background-image:none;
   min-height:0;
 }
-[data-engrid-embedded] .en__component--advrow,[data-engrid-embedded] .en__component--advrow>*{
+[data-engrid-embedded]:not(#en__pagebuilder) .en__component--advrow,[data-engrid-embedded]:not(#en__pagebuilder) .en__component--advrow>*{
   grid-template-columns:[pc-start lpc-start] minmax(0, 0) [lpc-end cc-start lcc-start] minmax(0, 0) [lcc-end bc-start lbc-start] minmax(0, 50vw) [lbc-end rbc-start] minmax(0, 50vw) [rbc-end bc-end rcc-start] minmax(0, 0) [rcc-end cc-end rpc-start] minmax(0, 0) [rpc-end pc-end] !important;
 }
-[data-engrid-embedded] .hide-iframe,[data-engrid-embedded] .page-backgroundImage,[data-engrid-embedded] .page-backgroundImageOverlay{
+[data-engrid-embedded]:not(#en__pagebuilder) .hide-iframe,[data-engrid-embedded]:not(#en__pagebuilder) .page-backgroundImage,[data-engrid-embedded]:not(#en__pagebuilder) .page-backgroundImageOverlay{
+  display:none !important;
+}
+[data-engrid-embedded]:not(#en__pagebuilder) .showif-iframe{
+  display:block !important;
+}
+[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   display:none !important;
 }
 @media screen and (min-width:768px){
@@ -7619,6 +7635,26 @@ body[data-engrid-debug]:before{
 
 #en__pagebuilder .fast-address-details,#en__pagebuilder .fast-personal-details,#en__pagebuilder [class*=engrid__],#en__pagebuilder [class*=hideif],#en__pagebuilder [class*=showif],[data-engrid-debug] .fast-address-details,[data-engrid-debug] .fast-personal-details,[data-engrid-debug] [class*=engrid__],[data-engrid-debug] [class*=hideif],[data-engrid-debug] [class*=showif]{
   background-color:rgba(0,0,255,.102) !important;
+}
+#en__pagebuilder .showif-iframe:after,[data-engrid-debug] .showif-iframe:after{
+  color:#00f;
+  content:"Show If Iframe";
+  font-size:10px;
+  padding-left:5px;
+  padding-right:5px;
+  position:absolute;
+  right:4px;
+  top:0;
+}
+#en__pagebuilder .hideif-iframe:after,[data-engrid-debug] .hideif-iframe:after{
+  color:#00f;
+  content:"Hide If Iframe";
+  font-size:10px;
+  padding-left:5px;
+  padding-right:5px;
+  position:absolute;
+  right:4px;
+  top:0;
 }
 
 #en__pagebuilder [class*=setattr],[data-engrid-debug] [class*=setattr]{
@@ -9415,6 +9451,7 @@ body[data-engrid-debug]:before{
   font-style:italic;
   font-weight:500;
   position:relative;
+  text-transform:capitalize;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom>div.giving-seals{
   margin:1em auto;
