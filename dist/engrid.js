@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 4, 2025 @ 00:00:53 ET
+ *  Date: Friday, April 4, 2025 @ 09:54:27 ET
  *  By: 4Site
  *  ENGrid styles: v0.20.9
  *  ENGrid scripts: v0.20.10
@@ -24945,8 +24945,10 @@ const customScript = function (App) {
     if (tippyInstance) {
       tippyInstance.setProps({
         allowHTML: true,
-        theme: "RAN",
-        placement: "right-end"
+        theme: "oceana",
+        placement: "left-end",
+        arrow: "<div class='custom-tooltip-arrow'></div>",
+        trigger: "click mouseenter focus"
       });
     }
   }
@@ -25189,7 +25191,7 @@ const customScript = function (App) {
       allowHTML: true,
       theme: "white",
       placement: "top",
-      trigger: "mouseenter click",
+      trigger: "mouseenter click focus",
       interactive: true,
       arrow: "<div class='custom-tooltip-arrow'></div>",
       offset: [0, 20]
@@ -25248,6 +25250,54 @@ const customScript = function (App) {
 
 
   moveAttributionClass();
+  /**
+   * This function moves the "--banner-image-height" custom attribute from the "img" tag inside ".page-backgroundImage"
+   * and adds it to the ".page-backgroundImage" element's style attribute, ensuring not to overwrite any existing styles.
+   */
+
+  function moveBannerImageHeightToBackgroundImage() {
+    const pageBackgroundImage = document.querySelector(".page-backgroundImage");
+    let backgroundImage = null;
+
+    if (pageBackgroundImage) {
+      backgroundImage = pageBackgroundImage.querySelector("img");
+    }
+
+    if (pageBackgroundImage && backgroundImage) {
+      // Get the "--banner-image-height" style from the "img" tag
+      const bannerImageHeightStyle = backgroundImage.getAttribute("style");
+
+      if (bannerImageHeightStyle) {
+        // Remove the "--banner-image-height" style from the "img" tag
+        backgroundImage.setAttribute("style", bannerImageHeightStyle.replace(/(--banner-image-height:[^;]+;?)/g, "").trim()); // Append the "--banner-image-height" style to the ".page-backgroundImage" style
+
+        const pageBackgroundImageStyle = pageBackgroundImage.getAttribute("style");
+        pageBackgroundImage.setAttribute("style", `${pageBackgroundImageStyle ? pageBackgroundImageStyle + " " : ""}${bannerImageHeightStyle}`);
+      }
+    }
+  } // Call the function to move "--banner-image-height" from the "img" tag to ".page-backgroundImage" style
+
+
+  moveBannerImageHeightToBackgroundImage(); // function mobileMediaAttribution() {
+  //   const bgImageTooltip = document.querySelector(
+  //     ".page-backgroundImage figattribution"
+  //   );
+  //   if (bgImageTooltip) {
+  //     const bgImageTooltipText = bgImageTooltip.innerHTML;
+  //     bgImageTooltip.insertAdjacentHTML(
+  //       "afterend",
+  //       `<div id="mobile-bg-tooltip"></div>`
+  //     );
+  //     tippy("#mobile-bg-tooltip", {
+  //       theme: "oceana",
+  //       content: bgImageTooltipText,
+  //       allowHTML: true,
+  //       placement: "left",
+  //       trigger: "click mouseenter focus",
+  //     });
+  //   }
+  // }
+  // mobileMediaAttribution(); // Call the function to set the mobile media attribution tooltip
 };
 ;// CONCATENATED MODULE: ./src/index.ts
 // import { Options, App } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
