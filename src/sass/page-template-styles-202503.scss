@@ -758,7 +758,7 @@
     }
   }
 
-  @media screen and (max-width: calc($rightright1col_content-column_max-width + 0px)) {
+  @media screen and (max-width: $rightright1col_content-column_max-width) {
     &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
       /* Advocacy Page Footer */
       .content-footer .menu-container {
@@ -1173,4 +1173,27 @@
   //   background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1991/media-attribution.png");
   //   background-size: 100%;
   // }
+
+  .live-variable-frequency {
+    display: inline-block;
+  }
+
+  @media (max-width: calc($one_col_content-column_max-width - 1px)){
+    .en__submit button{
+      --submit__button_font-size: 1.5rem;
+      width: auto;
+      margin-left: auto;
+      margin-right: auto;
+      min-width: min(450px, 100%);
+
+      .live-variable-currency{
+        font-size: 1.5rem;
+        top: initial;
+      }
+    }
+  }
+
+  .engrid-mobile-cta-container.hide-cta {
+    bottom: -100vh;
+  }
 }
