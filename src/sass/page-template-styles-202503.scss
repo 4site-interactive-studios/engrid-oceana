@@ -19,6 +19,9 @@
   --default_font-weight: 400;
   // --default_line-height: initial;
 
+  --error__color: #ea0000;
+  --error__color_faded: #fff5f5;
+
   // TYPOGRAPHY H1
   --h1_font-family: "ff-good-headline-web-pro-con", sans-serif;
   // --h1_color: #22214A;
@@ -30,6 +33,9 @@
   --h2_font-size: 42px;
   --h2_font-weight: 700;
   // --h2_line-height: 100%;
+  --h2_text-transform: uppercase;
+
+  --h3_text-transform: uppercase;
 
   --input_font-size: 20px;
   --input_font-weight: 400px;
@@ -85,6 +91,18 @@
 
   @import "./2025/supporter-hub";
   @import "./2025/event";
+
+  .page-alert,
+  .body-headerOutside,
+  .body-header,
+  .body-bannerOverlay,
+  .body-footer,
+  .body-footerOutside,
+  .content-footerSpacer,
+  .content-preFooter,
+  .page-backgroundImageOverlay {
+    display: none;
+  }
 
   &:not([data-engrid-embedded]) {
     overscroll-behavior-x: none; // Don't allow left/right overscrolling
@@ -504,7 +522,7 @@
     padding-bottom: 1.5rem;
     color: #ffffff; // Why can't this be "--default_color: #ffffff;"? It doesn't work.
 
-    padding-top: 171px;
+    padding-top: 184px;
     background-image: url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-transition.png"),
       url("https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-footer-background-image.png");
     background-size: 100%, 51%;
@@ -877,6 +895,14 @@
     .engrid-currency-symbol {
       top: -8px;
     }
+  }
+
+  .tc-country-list {
+    max-height: 118px !important;
+  }
+
+  .pesonal-info {
+    z-index: 3;
   }
 
   // Attribution Image Positioning
