@@ -1179,6 +1179,8 @@
   }
 
   @media (max-width: calc($one_col_content-column_max-width - 1px)){
+
+    
     .en__submit button{
       --submit__button_font-size: 1.5rem;
       width: auto;
@@ -1191,9 +1193,20 @@
         top: initial;
       }
     }
+
+    @media (max-width: 368px){
+      .en__captcha{
+        max-width: calc(100vw - 5rem);
+        transform: scale(0.85);
+        transform-origin: left;
+        margin-bottom: 0;
+        margin-top: 11px;
+      }
+    }
   }
 
   .engrid-mobile-cta-container.hide-cta {
     bottom: -100vh;
   }
+
 }

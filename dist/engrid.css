@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 4, 2025 @ 12:57:25 ET
+ *  Date: Friday, April 4, 2025 @ 14:06:26 ET
  *  By: bryancasler
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -9876,6 +9876,15 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__submit button .live-variable-currency{
     font-size:1.5rem;
     top:auto;
+  }
+}
+@media (max-width:767px) and (max-width:368px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__captcha{
+    margin-bottom:0;
+    margin-top:11px;
+    max-width:calc(100vw - 5rem);
+    transform:scale(.85);
+    transform-origin:left;
   }
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .engrid-mobile-cta-container.hide-cta{
