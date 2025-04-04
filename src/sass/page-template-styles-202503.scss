@@ -1123,7 +1123,7 @@
         background-color: #22214a;
         grid-row: body-banner !important;
 
-        min-height: var(--banner-image-height);
+        max-height: var(--banner-image-height);
 
         &:after {
           content: "";
