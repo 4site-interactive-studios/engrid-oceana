@@ -183,17 +183,19 @@
   }
 
   // Adds styling behind the page during aggressive overscrolling
-  &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
-    z-index: -99;
-    content: "";
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    background: linear-gradient(
-      180deg,
-      rgb(211, 234, 251) 50%,
-      rgb(34, 33, 74) 50%
-    );
+  @media screen and (min-width: $one_col_content-column_max-width) {
+    &:not([data-engrid-embedded])[data-engrid-js-loading="finished"]:before {
+      z-index: -99;
+      content: "";
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      background: linear-gradient(
+        180deg,
+        rgb(211, 234, 251) 50%,
+        rgb(34, 33, 74) 50%
+      );
+    }
   }
 
   h1 strong {
@@ -1117,6 +1119,7 @@
 
     &[data-replace-banner-with-background="if-banner-empty"][data-engrid-body-banner="empty"][data-engrid-page-background="image"] {
       [class*="page-backgroundImage"] {
+        background-color: #22214a;
         grid-row: body-banner !important;
 
         min-height: var(--banner-image-height);
