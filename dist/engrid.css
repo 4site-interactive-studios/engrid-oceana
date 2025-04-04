@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 4, 2025 @ 10:01:57 ET
- *  By: 4Site
- *  ENGrid styles: v0.20.9
- *  ENGrid scripts: v0.20.10
+ *  Date: Friday, April 4, 2025 @ 11:51:23 ET
+ *  By: bryancasler
+ *  ENGrid styles: v0.21.0
+ *  ENGrid scripts: v0.21.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4407,9 +4407,6 @@ button.en__eventOccurrence__select>label{
 .en__contactMessage--typePlainText textarea,.en__contactSubject input{
   margin-bottom:var(--fields_spacing-block);
   margin-top:calc(var(--fields_spacing-inline)*.5);
-}
-.en__singleMessage{
-  background:none;
 }
 .loader-wrapper{
   display:flex;
@@ -9419,7 +9416,7 @@ body[data-engrid-debug]:before{
   font-weight:500;
   position:relative;
 }
-[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom>div{
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .body-bottom>div.giving-seals{
   margin:1em auto;
   max-width:366px;
 }
@@ -9676,6 +9673,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] select#en__field_transaction_paycurrency[data-option-count="1"]{
   background:none;
   padding-right:1.2ch;
+  pointer-events:none;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] select#en__field_transaction_paycurrency:disabled{
   opacity:1;

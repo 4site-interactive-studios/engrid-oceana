@@ -384,7 +384,7 @@ export const customScript = function (App) {
       const updateOptionCount = () => {
         const optionCount = payCurrencySelect.options.length;
         payCurrencySelect.setAttribute("data-option-count", optionCount);
-        payCurrencySelect.disabled = optionCount === 1;
+        // payCurrencySelect.disabled = optionCount === 1;
       };
 
       // Initial count

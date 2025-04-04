@@ -501,7 +501,7 @@
   }
 
   .body-bottom {
-    & > div {
+    & > div.giving-seals {
       max-width: 366px;
       margin: 1em auto;
     }
@@ -864,6 +864,7 @@
   select#en__field_transaction_paycurrency[data-option-count="1"] {
     background: none;
     padding-right: 1.2ch;
+    pointer-events: none;
   }
 
   select#en__field_transaction_paycurrency:disabled {
