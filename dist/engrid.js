@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 4, 2025 @ 11:51:23 ET
+ *  Date: Friday, April 4, 2025 @ 12:15:02 ET
  *  By: bryancasler
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -25239,6 +25239,34 @@ const customScript = function (App) {
   //   }
   // }
   // mobileMediaAttribution(); // Call the function to set the mobile media attribution tooltip
+
+  function enforceSubmitButtonLabel() {
+    const button = document.querySelector('.en__submit button');
+    if (!button || typeof pageJson !== 'object') return;
+    const {
+      pageType,
+      pageNumber,
+      pageCount
+    } = pageJson;
+    if (pageType !== 'emailtotarget' || pageNumber !== 1) return;
+    const correctLabel = pageCount === 1 || pageCount === 2 ? 'Submit' : pageCount > 2 ? 'Continue' : null;
+
+    const updateLabelIfNeeded = () => {
+      if (button.textContent.trim() === 'SUBMIT' && correctLabel) {
+        button.textContent = correctLabel;
+      }
+    };
+
+    updateLabelIfNeeded();
+    new MutationObserver(updateLabelIfNeeded).observe(button, {
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+  } // Just call it whenever you want – assume DOM is ready
+
+
+  enforceSubmitButtonLabel();
 };
 ;// CONCATENATED MODULE: ./src/index.ts
 // import { Options, App } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
