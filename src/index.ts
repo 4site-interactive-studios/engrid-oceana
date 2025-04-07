@@ -1,5 +1,5 @@
-import { Options, App } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+// import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 
@@ -24,6 +24,10 @@ const options: Options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7",
   },
+  Placeholders: {
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other":
+      "Custom Amount",
+  },
   MobileCTA: [
     {
       pageType: "DONATION",
@@ -32,10 +36,10 @@ const options: Options = {
     {
       pageType: "ADVOCACY",
       label: "Sign",
-    }
+    },
   ],
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(App),
+  onLoad: () => customScript(App, DonationFrequency),
   onResize: () => console.log("Starter Theme Window Resized"),
 };
 new App(options);

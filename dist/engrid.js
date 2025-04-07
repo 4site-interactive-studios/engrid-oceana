@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, February 14, 2025 @ 17:27:28 ET
- *  By: fernando
- *  ENGrid styles: v0.20.6
- *  ENGrid scripts: v0.20.8
+ *  Date: Monday, April 7, 2025 @ 12:18:47 ET
+ *  By: 4Site
+ *  ENGrid styles: v0.21.0
+ *  ENGrid scripts: v0.21.0
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10969,6 +10969,9 @@ class engrid_ENGrid {
             return window.pageJson.pageNumber;
         return null;
     }
+    static isThankYouPage() {
+        return this.getPageNumber() === this.getPageCount();
+    }
     // Return the current page ID
     static getPageID() {
         if ("pageJson" in window)
@@ -11925,6 +11928,7 @@ class App extends engrid_ENGrid {
         new ThankYouPageConditionalContent();
         new EmbeddedEcard();
         new CheckboxLabel();
+        new PostDonationEmbed();
         //Debug panel
         let showDebugPanel = this.options.Debug;
         try {
@@ -18448,6 +18452,9 @@ class EventTickets {
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/swap-amounts.js
 // This script allows you to override the default donation amounts in Engaging Networks
 // with a custom list of amounts.
+// If the URL contains a query parameter "engrid-amounts" with a comma separated values, the script will load the
+// amounts from the parameter and set them as the default amounts for the donation
+// form.
 /**
  * Example:
  * window.EngridAmounts = {
@@ -18481,6 +18488,7 @@ class SwapAmounts {
         this._frequency = DonationFrequency.getInstance();
         this.defaultChange = false;
         this.swapped = false;
+        this.loadAmountsFromUrl();
         if (!this.shouldRun())
             return;
         this._frequency.onFrequencyChange.subscribe(() => this.swapAmounts());
@@ -18496,6 +18504,25 @@ class SwapAmounts {
                 this.defaultChange = true;
             }
         });
+    }
+    loadAmountsFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const amounts = urlParams.get("engrid-amounts");
+        if (amounts) {
+            const amountArray = amounts.split(",").map((amt) => amt.trim());
+            const defaultAmount = parseFloat(engrid_ENGrid.getUrlParameter("transaction.donationAmt")) || parseFloat(amountArray[0]);
+            const amountsObj = {};
+            for (let i = 0; i < amountArray.length; i++) {
+                amountsObj[amountArray[i].toString()] = isNaN(parseFloat(amountArray[i]))
+                    ? amountArray[i]
+                    : parseFloat(amountArray[i]);
+            }
+            amountsObj["Other"] = "other";
+            window.EngridAmounts = {
+                onetime: { amounts: amountsObj, default: defaultAmount },
+                monthly: { amounts: amountsObj, default: defaultAmount },
+            };
+        }
     }
     swapAmounts() {
         if (this._frequency.frequency in window.EngridAmounts) {
@@ -21054,6 +21081,8 @@ class EmbeddedEcard {
         this.options = EmbeddedEcardOptionsDefaults;
         this._form = en_form_EnForm.getInstance();
         this.isSubmitting = false;
+        this.ecardFormActive = false;
+        this.iframe = null;
         // For the page hosting the embedded ecard
         if (this.onHostPage()) {
             // Clean up session variables if the page is reloaded, and it isn't a submission failure
@@ -21115,7 +21144,8 @@ class EmbeddedEcard {
         </div>
       </div>`;
         container.appendChild(checkbox);
-        container.appendChild(this.createIframe(this.options.pageUrl));
+        this.iframe = this.createIframe(this.options.pageUrl);
+        container.appendChild(this.iframe);
         (_a = document
             .querySelector(this.options.anchor)) === null || _a === void 0 ? void 0 : _a.insertAdjacentElement(this.options.placement, container);
     }
@@ -21131,28 +21161,64 @@ class EmbeddedEcard {
         return iframe;
     }
     addEventListeners() {
-        const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
         const sendEcardCheckbox = document.getElementById("en__field_embedded-ecard");
-        // Initialize based on checkbox's default state
-        if (sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.checked) {
+        this.toggleEcardForm(sendEcardCheckbox.checked);
+        sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
+            const checkbox = e.target;
+            this.toggleEcardForm(checkbox.checked);
+        });
+        this._form.onValidate.subscribe(this.validateRecipients.bind(this));
+    }
+    validateRecipients() {
+        var _a, _b, _c, _d;
+        if (!this.ecardFormActive || !this._form.validate)
+            return;
+        this.logger.log("Validating ecard");
+        let embeddedEcardData = JSON.parse(sessionStorage.getItem("engrid-embedded-ecard") || "{}");
+        // Testing if the ecard recipient data is set and valid
+        if (!embeddedEcardData.formData ||
+            !embeddedEcardData.formData.recipients ||
+            embeddedEcardData.formData.recipients.length == 0 ||
+            embeddedEcardData.formData.recipients.some((recipient) => {
+                const recipientName = recipient.name;
+                const recipientEmail = recipient.email;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return (recipientName === "" ||
+                    recipientEmail === "" ||
+                    !emailRegex.test(recipientEmail));
+            })) {
+            this.logger.log("Ecard recipients validation failed");
+            this._form.validate = false;
+            this.sendPostMessage(this.iframe, "recipient_error");
+            const iframeDoc = ((_a = this.iframe) === null || _a === void 0 ? void 0 : _a.contentDocument) || ((_c = (_b = this.iframe) === null || _b === void 0 ? void 0 : _b.contentWindow) === null || _c === void 0 ? void 0 : _c.document);
+            if (!iframeDoc)
+                return;
+            const scrollTarget = iframeDoc.querySelector(".en__ecardrecipients");
+            if (!scrollTarget)
+                return;
+            const iframeRect = (_d = this.iframe) === null || _d === void 0 ? void 0 : _d.getBoundingClientRect();
+            if (!iframeRect)
+                return;
+            const elementRect = scrollTarget.getBoundingClientRect();
+            window.scrollTo({
+                top: iframeRect.top + elementRect.top + window.scrollY - 10,
+                behavior: "smooth",
+            });
+        }
+    }
+    toggleEcardForm(visible) {
+        const iframe = document.querySelector(".engrid-iframe--embedded-ecard");
+        this.ecardFormActive = visible;
+        if (visible) {
             iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
             sessionStorage.setItem("engrid-send-embedded-ecard", "true");
+            this.logger.log("Ecard form is visible");
         }
         else {
             iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
             sessionStorage.removeItem("engrid-send-embedded-ecard");
+            this.logger.log("Ecard form is hidden");
         }
-        sendEcardCheckbox === null || sendEcardCheckbox === void 0 ? void 0 : sendEcardCheckbox.addEventListener("change", (e) => {
-            const checkbox = e.target;
-            if (checkbox === null || checkbox === void 0 ? void 0 : checkbox.checked) {
-                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: block");
-                sessionStorage.setItem("engrid-send-embedded-ecard", "true");
-            }
-            else {
-                iframe === null || iframe === void 0 ? void 0 : iframe.setAttribute("style", "display: none");
-                sessionStorage.removeItem("engrid-send-embedded-ecard");
-            }
-        });
     }
     setEmbeddedEcardSessionData() {
         let ecardVariant = document.querySelector("[name='friend.ecard']");
@@ -21244,6 +21310,15 @@ class EmbeddedEcard {
                 ecardVariant.dispatchEvent(new Event("input"));
             });
         });
+        // Remove the recipient error message when the user starts typing in the recipient fields
+        [recipientName, recipientEmail].forEach((el) => {
+            el.addEventListener("input", () => {
+                const recipientDetails = document.querySelector(".en__ecardrecipients__detail");
+                const error = document.querySelector(".engrid__recipient__error");
+                recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.classList.remove("validationFail");
+                error === null || error === void 0 ? void 0 : error.classList.add("hide");
+            });
+        });
         window.addEventListener("message", (e) => {
             if (e.origin !== location.origin || !e.data.action)
                 return;
@@ -21278,6 +21353,18 @@ class EmbeddedEcard {
                     recipientName.dispatchEvent(new Event("input"));
                     recipientEmail.dispatchEvent(new Event("input"));
                     break;
+                case "recipient_error":
+                    const recipientDetails = document.querySelector(".en__ecardrecipients__detail");
+                    const error = document.querySelector(".engrid__recipient__error");
+                    if (error) {
+                        error.classList.remove("hide");
+                    }
+                    else {
+                        recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.insertAdjacentHTML("afterend", "<div class='en__field__error engrid__recipient__error'>Please provide the details for your eCard recipient</div>");
+                    }
+                    recipientDetails === null || recipientDetails === void 0 ? void 0 : recipientDetails.classList.add("validationFail");
+                    window.dispatchEvent(new Event("resize"));
+                    break;
             }
         });
         this.sendPostMessage("parent", "ecard_form_ready");
@@ -21298,6 +21385,8 @@ class EmbeddedEcard {
     }
     sendPostMessage(target, action, data = {}) {
         var _a;
+        if (!target)
+            return;
         const message = Object.assign({ action }, data);
         if (target === "parent") {
             window.parent.postMessage(message, location.origin);
@@ -21683,11 +21772,70 @@ class OptInLadder {
     }
 }
 
+;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/post-donation-embed.js
+// This component only works on Thank You pages and the current page IS NOT embedded as an iframe.
+// It searches for a post-donation tag (engrid-post-donation)
+// and if it exists, it will replace it with an iframe of the current donation page, replacing the
+// "/donate/2" with "/donate/1" and adding a ?chain.
+// It has 2 parameters:
+// 1. params: the URL parameters to pass to the iframe
+// 2. amounts: comma separated list of amounts to pass to the iframe
+
+class PostDonationEmbed {
+    constructor() {
+        this.logger = new logger_EngridLogger("PostDonationEmbed", "red", "white", "🖼️");
+        if (!this.shouldRun())
+            return;
+        this.logger.log("Post Donation Tag found");
+        const postDonationTag = document.querySelector("engrid-post-donation");
+        // Get current page URL
+        let currentUrl = new URL(window.location.href);
+        // Modify the path: replace "/donate/2" with "/donate/1"
+        currentUrl.pathname = currentUrl.pathname.replace("/donate/2", "/donate/1");
+        // Extract parameters from the <engrid-post-donation> tag
+        let params = postDonationTag.getAttribute("params") || "";
+        let amounts = postDonationTag.getAttribute("amounts");
+        // Format parameters correctly
+        let searchParams = new URLSearchParams(params.replace(/&/g, "&"));
+        let paramString = searchParams
+            .toString()
+            .replace(/%5B/g, "[")
+            .replace(/%5D/g, "]");
+        // Construct new URL with "chain" parameter
+        let newUrl = `${currentUrl.origin}${currentUrl.pathname}?chain&${paramString}`;
+        if (amounts) {
+            newUrl += `&engrid-amounts=${amounts}`;
+        }
+        // Create the iframe element
+        let iframe = document.createElement("iframe");
+        iframe.setAttribute("loading", "lazy");
+        iframe.setAttribute("width", "100%");
+        iframe.setAttribute("scrolling", "no");
+        iframe.setAttribute("class", "engrid-iframe thank-you-page-donation");
+        iframe.setAttribute("src", newUrl);
+        iframe.setAttribute("frameborder", "0");
+        iframe.setAttribute("allowfullscreen", "");
+        iframe.setAttribute("allowpaymentrequest", "true");
+        iframe.setAttribute("allow", "payment");
+        // Replace <engrid-post-donation> with the iframe
+        postDonationTag.replaceWith(iframe);
+    }
+    shouldRun() {
+        return (engrid_ENGrid.isThankYouPage() &&
+            this.hasPostDonationTag() &&
+            engrid_ENGrid.getBodyData("embedded") === null);
+    }
+    hasPostDonationTag() {
+        return !!document.querySelector("engrid-post-donation");
+    }
+}
+
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.20.8";
+const AppVersion = "0.21.0";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
+
 
 
 
@@ -21775,9 +21923,13 @@ const AppVersion = "0.20.8";
 // Version
 
 
+// EXTERNAL MODULE: ./node_modules/tippy.js/dist/tippy.esm.js + 52 modules
+var tippy_esm = __webpack_require__(3861);
 ;// CONCATENATED MODULE: ./src/scripts/main.js
-const customScript = function (App) {
-  console.log("ENGrid client scripts are executing");
+
+const customScript = function (App, Frequency) {
+  const freq = Frequency.getInstance(); // console.log("ENGrid client scripts are executing");
+
   const tidepoolButton = document.querySelector(".tide-pool-wrapper button");
 
   if (tidepoolButton) {
@@ -21808,6 +21960,52 @@ const customScript = function (App) {
         }
       });
     });
+  } // If the URL contains assets=redesign then add two body data attributes if they're not already present
+  // This is a temporary solution to ensure the page layout is correct while we migrate to the new theme
+  // and to ensure the correct theme is loaded.
+  // This will be removed once the migration is complete.
+
+
+  if (window.location.search.includes("assets=redesign")) {
+    document.body.setAttribute("data-engrid-layout", "leftleft1col");
+    document.body.setAttribute("data-engrid-theme-version", "202503");
+    document.body.setAttribute("data-engrid-legacy-theme-version", "2024"); // Remove .give-by-select_count_3
+
+    const giveBySelectCount3 = document.querySelector(".give-by-select_count_3");
+
+    if (giveBySelectCount3) {
+      giveBySelectCount3.remove();
+    } // If a class contains "i1-100 i2-50 i3-50 i4-100 i5-33 i6-33 i7-33 i8-100" remove the i2-50 i3-50 i5-33 i6-33 i7-33 classes
+
+
+    const elements = document.querySelectorAll('[class*="i1-100 i2-50 i3-50 i4-100 i5-33 i6-33 i7-33 i8-100"]');
+    elements.forEach(element => {
+      element.classList.remove("i2-50", "i3-50", "i5-33", "i6-33", "i7-33");
+    }); // Find .en__field--donationAmt and on the parent div add .radio-to-buttons_donationAmt class then remove the .radio-to-buttons_donationAmt class from the body
+
+    const donationAmt = document.querySelector(".en__field--donationAmt");
+
+    if (donationAmt?.parentElement) {
+      donationAmt.parentElement.classList.add("radio-to-buttons_donationAmt");
+    }
+
+    document.body.classList.remove("radio-to-buttons_donationAmt");
+  }
+
+  const attriubtion = document.querySelector(".media-with-attribution figattribution");
+
+  if (attriubtion) {
+    const tippyInstance = attriubtion._tippy;
+
+    if (tippyInstance) {
+      tippyInstance.setProps({
+        allowHTML: true,
+        theme: "oceana",
+        placement: "left-end",
+        arrow: "<div class='custom-tooltip-arrow'></div>",
+        trigger: "click mouseenter focus"
+      });
+    }
   }
   /**
    * This function checks the value of the mobile phone input field and toggles
@@ -21829,11 +22027,13 @@ const customScript = function (App) {
           /* `smsOptInCheckbox` is a variable that stores a reference to the checkbox element for SMS
           opt-in. It is used to toggle the checked state of the checkbox based on the value of the
           mobile phone input field. */
-          smsOptInCheckbox.checked = true;
-          console.log("SMS Opt-in Checkbox checked: Mobile phone input has a value.");
+          smsOptInCheckbox.checked = true; // console.log(
+          //   "SMS Opt-in Checkbox checked: Mobile phone input has a value."
+          // );
         } else {
-          smsOptInCheckbox.checked = false;
-          console.log("SMS Opt-in Checkbox unchecked: Mobile phone input is empty.");
+          smsOptInCheckbox.checked = false; // console.log(
+          //   "SMS Opt-in Checkbox unchecked: Mobile phone input is empty."
+          // );
         }
       }; // Call the function on page load
 
@@ -22031,11 +22231,258 @@ const customScript = function (App) {
   //       }
   //     });
   //   });
+  // Transaction fee tooltip
 
+
+  function addTransactionFeeTooltip() {
+    const transactionFeeEl = document.querySelector(".transaction-fee-opt-in .en__field__element--checkbox");
+    if (!transactionFeeEl) return;
+    const transactionFeeTooltip = document.createElement("div");
+    transactionFeeTooltip.classList.add("transaction-fee-tooltip");
+    transactionFeeTooltip.innerHTML = "i";
+    transactionFeeEl.appendChild(transactionFeeTooltip);
+    (0,tippy_esm/* default */.ZP)(transactionFeeTooltip, {
+      content: "By checking this box, you agree to cover the transaction fee for your donation. This small additional amount helps us ensure that 100% of you donation goes directly to Oceana.",
+      allowHTML: true,
+      theme: "white",
+      placement: "top",
+      trigger: "mouseenter click focus",
+      interactive: true,
+      arrow: "<div class='custom-tooltip-arrow'></div>",
+      offset: [0, 20]
+    });
+  }
+
+  addTransactionFeeTooltip(); // If using a two column layout without content in the body-top OR body-main section, automatically change to a one column layout
+
+  const checkForTwoColumnLayout = document.querySelector('body[data-engrid-layout="centercenter2col"]');
+  const checkForBodyTopContent = document.querySelector(".body-top > *");
+  const checkForBodyMainContent = document.querySelector(".body-main > *");
+
+  if (checkForTwoColumnLayout && (!checkForBodyTopContent || !checkForBodyMainContent)) {
+    document.querySelector("body").setAttribute("data-engrid-layout", "centercenter1col");
+  } //  On select#en__field_transaction_paycurrency add the data-option-count="#" attribute with # being the number of options in the select element
+
+
+  function handleCurrencySelect() {
+    const payCurrencySelect = document.querySelector("#en__field_transaction_paycurrency");
+
+    if (payCurrencySelect) {
+      const updateOptionCount = () => {
+        const optionCount = payCurrencySelect.options.length;
+        payCurrencySelect.setAttribute("data-option-count", optionCount); // payCurrencySelect.disabled = optionCount === 1;
+      }; // Initial count
+
+
+      updateOptionCount(); // Watch for changes in the select element
+
+      const observer = new MutationObserver(updateOptionCount);
+      observer.observe(payCurrencySelect, {
+        childList: true,
+        subtree: true
+      });
+    }
+  }
+
+  handleCurrencySelect();
+
+  function moveAttributionClass() {
+    const allowedClasses = ["attribution-bottom", "attribution-bottomcenter", "attribution-bottomright", "attribution-bottomleft", "attribution-top", "attribution-topcenter", "attribution-topright", "attribution-topleft", "attribution-left", "attribution-leftcenter", "attribution-right", "attribution-rightcenter"];
+    document.querySelectorAll("img").forEach(img => {
+      const matchedClass = allowedClasses.find(cls => img.classList.contains(cls));
+
+      if (matchedClass) {
+        const parentDiv = img.closest(".en__component--column");
+
+        if (parentDiv) {
+          img.classList.remove(matchedClass);
+          parentDiv.classList.add(matchedClass);
+        }
+      }
+    });
+  } // Call it immediately
+
+
+  moveAttributionClass();
+  /**
+   * This function moves the "--banner-image-height" custom attribute from the "img" tag inside ".page-backgroundImage"
+   * and adds it to the ".page-backgroundImage" element's style attribute, ensuring not to overwrite any existing styles.
+   */
+
+  function moveBannerImageHeightToBackgroundImage() {
+    const pageBackgroundImage = document.querySelector(".page-backgroundImage");
+    let backgroundImage = null;
+
+    if (pageBackgroundImage) {
+      backgroundImage = pageBackgroundImage.querySelector("img");
+    }
+
+    if (pageBackgroundImage && backgroundImage) {
+      // Get the "--banner-image-height" style from the "img" tag
+      const bannerImageHeightStyle = backgroundImage.getAttribute("style");
+
+      if (bannerImageHeightStyle) {
+        // Remove the "--banner-image-height" style from the "img" tag
+        backgroundImage.setAttribute("style", bannerImageHeightStyle.replace(/(--banner-image-height:[^;]+;?)/g, "").trim()); // Append the "--banner-image-height" style to the ".page-backgroundImage" style
+
+        const pageBackgroundImageStyle = pageBackgroundImage.getAttribute("style");
+        pageBackgroundImage.setAttribute("style", `${pageBackgroundImageStyle ? pageBackgroundImageStyle + " " : ""}${bannerImageHeightStyle}`);
+      }
+    }
+  } // Call the function to move "--banner-image-height" from the "img" tag to ".page-backgroundImage" style
+
+
+  moveBannerImageHeightToBackgroundImage(); // function mobileMediaAttribution() {
+  //   const bgImageTooltip = document.querySelector(
+  //     ".page-backgroundImage figattribution"
+  //   );
+  //   if (bgImageTooltip) {
+  //     const bgImageTooltipText = bgImageTooltip.innerHTML;
+  //     bgImageTooltip.insertAdjacentHTML(
+  //       "afterend",
+  //       `<div id="mobile-bg-tooltip"></div>`
+  //     );
+  //     tippy("#mobile-bg-tooltip", {
+  //       theme: "oceana",
+  //       content: bgImageTooltipText,
+  //       allowHTML: true,
+  //       placement: "left",
+  //       trigger: "click mouseenter focus",
+  //     });
+  //   }
+  // }
+  // mobileMediaAttribution(); // Call the function to set the mobile media attribution tooltip
+
+  function enforceSubmitButtonLabel() {
+    const button = document.querySelector(".en__submit button");
+    if (!button || typeof pageJson !== "object") return;
+    const {
+      pageType,
+      pageNumber,
+      pageCount
+    } = pageJson;
+    if (pageType !== "emailtotarget" || pageNumber !== 1) return;
+    const correctLabel = pageCount === 1 || pageCount === 2 ? "Submit" : pageCount > 2 ? "Continue" : null;
+
+    const updateLabelIfNeeded = () => {
+      if (button.textContent.trim() === "SUBMIT" && correctLabel) {
+        button.textContent = correctLabel;
+      }
+    };
+
+    updateLabelIfNeeded();
+    new MutationObserver(updateLabelIfNeeded).observe(button, {
+      characterData: true,
+      childList: true,
+      subtree: true
+    });
+  } // Just call it whenever you want – assume DOM is ready
+
+
+  enforceSubmitButtonLabel(); // Add One-Time to the live frequency text
+
+  freq.onFrequencyChange.subscribe(() => {
+    const freqValue = freq.frequency;
+
+    if (freqValue === "onetime") {
+      window.setTimeout(() => {
+        const liveFrequency = document.querySelectorAll(".live-variable-frequency");
+        liveFrequency.forEach(el => {
+          el.innerHTML = "One-Time";
+        });
+      }, 250);
+    }
+  });
+
+  function addNoCCFlag() {
+    if (!document.querySelector(".en__field--ccnumber")) {
+      document.body.setAttribute("data-no-cc-present", "");
+    }
+  }
+
+  addNoCCFlag();
+  /* Copied from an event page code block and cleaned up with ChatGPT */
+
+  function initializeTicketLogic() {
+    const ticketQuantityInputs = document.querySelectorAll(".en__ticket__quantity");
+    if (ticketQuantityInputs.length === 0) return; // Bail if no ticket inputs
+
+    const ticketMinusButtons = document.querySelectorAll(".en__ticket__minus");
+    const ticketPlusButtons = document.querySelectorAll(".en__ticket__plus");
+    const ticketCountInput = document.querySelector("#en__field_supporter_questions_1798479");
+    const ticketNameCSVInput = document.querySelector("#en__field_supporter_questions_1798480");
+
+    function getTotalTicketsAndPackageNames() {
+      let totalTickets = 0;
+      let packageNames = [];
+      ticketQuantityInputs.forEach(input => {
+        const quantity = parseInt(input.value, 10) || 0;
+
+        if (quantity > 0) {
+          const ticket = input.closest(".en__ticket");
+          const ticketDesc = ticket.querySelector(".en__ticket__desc");
+          const ticketName = ticket.querySelector(".en__ticket__name").textContent;
+          const ticketCountMatch = ticketDesc.textContent.match(/(\d+)/);
+          const ticketCount = ticketCountMatch ? parseInt(ticketCountMatch[0], 10) : 1;
+          totalTickets += quantity * ticketCount;
+          packageNames.push(ticketName);
+        }
+      });
+      return {
+        totalTickets,
+        packageNames
+      };
+    }
+
+    function onQuantityChange() {
+      const {
+        totalTickets,
+        packageNames
+      } = getTotalTicketsAndPackageNames();
+      const packageNamesCSV = packageNames.join(", ");
+      ticketCountInput.value = totalTickets;
+      ticketNameCSVInput.value = packageNamesCSV;
+      console.log("Total tickets being purchased:", totalTickets);
+      console.log("Ticket packages being purchased:", packageNamesCSV);
+    }
+
+    function handleClickEvent(event) {
+      const input = event.target.closest(".en__ticket__selector").querySelector(".en__ticket__quantity");
+      const updateEvent = new CustomEvent("updateValue", {
+        bubbles: true,
+        detail: {
+          input
+        }
+      });
+      document.dispatchEvent(updateEvent);
+    }
+
+    document.addEventListener("updateValue", event => {
+      const {
+        input
+      } = event.detail;
+      setTimeout(() => {
+        onQuantityChange(input);
+      }, 50);
+    });
+    ticketMinusButtons.forEach(button => {
+      button.addEventListener("click", handleClickEvent);
+    });
+    ticketPlusButtons.forEach(button => {
+      button.addEventListener("click", handleClickEvent);
+    });
+    ticketQuantityInputs.forEach(input => {
+      input.addEventListener("input", onQuantityChange);
+      input.addEventListener("keyup", onQuantityChange);
+    });
+  } // Call the function
+
+
+  initializeTicketLogic();
 };
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
-// import { Options, App } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+// import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 
 
 
@@ -22060,6 +22507,9 @@ const options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7"
   },
+  Placeholders: {
+    ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Custom Amount"
+  },
   MobileCTA: [{
     pageType: "DONATION",
     label: "Donate"
@@ -22068,7 +22518,7 @@ const options = {
     label: "Sign"
   }],
   Debug: App.getUrlParameter("debug") == "true" ? true : false,
-  onLoad: () => customScript(App),
+  onLoad: () => customScript(App, DonationFrequency),
   onResize: () => console.log("Starter Theme Window Resized")
 };
 new App(options);
