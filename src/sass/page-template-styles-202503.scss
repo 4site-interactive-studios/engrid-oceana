@@ -1178,24 +1178,22 @@
     display: inline-block;
   }
 
-  @media (max-width: calc($one_col_content-column_max-width - 1px)){
-
-    
-    .en__submit button{
+  @media (max-width: calc($one_col_content-column_max-width - 1px)) {
+    .en__submit button {
       --submit__button_font-size: 1.5rem;
       width: auto;
       margin-left: auto;
       margin-right: auto;
       min-width: min(450px, 100%);
 
-      .live-variable-currency{
+      .live-variable-currency {
         font-size: 1.5rem;
         top: initial;
       }
     }
 
-    @media (max-width: 368px){
-      .en__captcha{
+    @media (max-width: 368px) {
+      .en__captcha {
         max-width: calc(100vw - 5rem);
         transform: scale(0.85);
         transform-origin: left;
@@ -1209,4 +1207,7 @@
     bottom: -100vh;
   }
 
+  &[data-no-cc-present] .hide-if-no-cc {
+    display: none;
+  }
 }

@@ -546,4 +546,99 @@ export const customScript = function (App, Frequency) {
       }, 250);
     }
   });
+
+  function addNoCCFlag() {
+    if (!document.querySelector(".en__field--ccnumber")) {
+      document.body.setAttribute("data-no-cc-present", "");
+    }
+  }
+
+  addNoCCFlag();
+
+  /* Copied from an event page code block and cleaned up with ChatGPT */
+  function initializeTicketLogic() {
+    const ticketQuantityInputs = document.querySelectorAll(
+      ".en__ticket__quantity"
+    );
+    if (ticketQuantityInputs.length === 0) return; // Bail if no ticket inputs
+
+    const ticketMinusButtons = document.querySelectorAll(".en__ticket__minus");
+    const ticketPlusButtons = document.querySelectorAll(".en__ticket__plus");
+
+    const ticketCountInput = document.querySelector(
+      "#en__field_supporter_questions_1798479"
+    );
+    const ticketNameCSVInput = document.querySelector(
+      "#en__field_supporter_questions_1798480"
+    );
+
+    function getTotalTicketsAndPackageNames() {
+      let totalTickets = 0;
+      let packageNames = [];
+
+      ticketQuantityInputs.forEach((input) => {
+        const quantity = parseInt(input.value, 10) || 0;
+        if (quantity > 0) {
+          const ticket = input.closest(".en__ticket");
+          const ticketDesc = ticket.querySelector(".en__ticket__desc");
+          const ticketName =
+            ticket.querySelector(".en__ticket__name").textContent;
+          const ticketCountMatch = ticketDesc.textContent.match(/(\d+)/);
+          const ticketCount = ticketCountMatch
+            ? parseInt(ticketCountMatch[0], 10)
+            : 1;
+
+          totalTickets += quantity * ticketCount;
+          packageNames.push(ticketName);
+        }
+      });
+
+      return { totalTickets, packageNames };
+    }
+
+    function onQuantityChange() {
+      const { totalTickets, packageNames } = getTotalTicketsAndPackageNames();
+      const packageNamesCSV = packageNames.join(", ");
+
+      ticketCountInput.value = totalTickets;
+      ticketNameCSVInput.value = packageNamesCSV;
+
+      console.log("Total tickets being purchased:", totalTickets);
+      console.log("Ticket packages being purchased:", packageNamesCSV);
+    }
+
+    function handleClickEvent(event) {
+      const input = event.target
+        .closest(".en__ticket__selector")
+        .querySelector(".en__ticket__quantity");
+      const updateEvent = new CustomEvent("updateValue", {
+        bubbles: true,
+        detail: { input },
+      });
+      document.dispatchEvent(updateEvent);
+    }
+
+    document.addEventListener("updateValue", (event) => {
+      const { input } = event.detail;
+      setTimeout(() => {
+        onQuantityChange(input);
+      }, 50);
+    });
+
+    ticketMinusButtons.forEach((button) => {
+      button.addEventListener("click", handleClickEvent);
+    });
+
+    ticketPlusButtons.forEach((button) => {
+      button.addEventListener("click", handleClickEvent);
+    });
+
+    ticketQuantityInputs.forEach((input) => {
+      input.addEventListener("input", onQuantityChange);
+      input.addEventListener("keyup", onQuantityChange);
+    });
+  }
+
+  // Call the function
+  initializeTicketLogic();
 };
