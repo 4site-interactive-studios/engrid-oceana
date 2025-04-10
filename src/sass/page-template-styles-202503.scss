@@ -409,13 +409,9 @@
   }
 
   .en__field--give-by-select input:checked + label > img.paypal,
-  .en__field--give-by-select input:hover + label > img.paypal,
   .en__field--give-by-select input:checked + label > img.google-pay-type,
-  .en__field--give-by-select input:hover + label > img.google-pay-type,
   .en__field--give-by-select input:checked + label > img.apple-pay-logo,
-  .en__field--give-by-select input:hover + label > img.apple-pay-logo,
-  .en__field--give-by-select input:checked + label > img.paypal-venmo,
-  .en__field--give-by-select input:hover + label > img.paypal-venmo {
+  .en__field--give-by-select input:checked + label > img.paypal-venmo{
     filter: brightness(0) invert(1);
   }
 
