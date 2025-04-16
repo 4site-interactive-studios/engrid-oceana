@@ -286,7 +286,7 @@
           content: "";
           left: 0;
           position: absolute;
-          top: -47px;
+          top: 37px;
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 88px 74px;
@@ -314,7 +314,7 @@
           content: "";
           left: calc(50% + 5px);
           position: absolute;
-          top: 72px;
+          top: 40px;
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 116px 74px;
@@ -322,7 +322,7 @@
 
         input:checked+label:after,
         input:hover+label:after {
-          transform: scale(0.7) translateY(-125px); // Move the image up
+          transform:scale(.7) translateY(10px); // Move the image up
         }
 
         input:checked+label:after {
@@ -1167,26 +1167,26 @@
   }
 
   // On premium pages, when the visitor is not in the US, hide the premium gift options other than the no gift option
-  &:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="US"]) .en__pgList[data-nogift] {
+  // &:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="US"]) .en__pgList[data-nogift] {
 
-    // Force the no gift option to always appear selected
-    .en__pg__select input:before {
-      background-color: var(--radio_background-color_selected);
-      border-color: var(--radio_border-color_selected);
-      box-shadow: var(--radio_box-shadow_selected);
-      color: var(--radio_color_selected);
-    }
+  //   // Force the no gift option to always appear selected
+  //   .en__pg__select input:before {
+  //     background-color: var(--radio_background-color_selected);
+  //     border-color: var(--radio_border-color_selected);
+  //     box-shadow: var(--radio_box-shadow_selected);
+  //     color: var(--radio_color_selected);
+  //   }
 
-    .en__pg:last-child .en__pg__body {
-      --premium__item_background-color: #e9f7f6;
-    }
+  //   .en__pg:last-child .en__pg__body {
+  //     --premium__item_background-color: #e9f7f6;
+  //   }
 
-    // Hide the other premium options
-    // We might want to make these visible in debug mode
-    .en__pg:not(:last-child) {
-      display: none;
-    }
-  }
+  //   // Hide the other premium options
+  //   // We might want to make these visible in debug mode
+  //   .en__pg:not(:last-child) {
+  //     display: none;
+  //   }
+  // }
 
   h2.en__pg__name {
     font-size: 32px !important;
@@ -1276,54 +1276,54 @@
       --h2_font-weight: 400;
     }
 
-    .en__pgList[data-non-us-donor][data-nogift] {
+    // .en__pgList[data-non-us-donor][data-nogift] {
 
-      // border: 1px solid #bfbfbf;
-      // pointer-events: none;
-      .en__pg:not(:last-child):not(.en__pg--selected) {
-        opacity: 0.5;
-        filter: grayscale(1);
-      }
+    //   // border: 1px solid #bfbfbf;
+    //   // pointer-events: none;
+    //   .en__pg:not(:last-child):not(.en__pg--selected) {
+    //     opacity: 0.5;
+    //     filter: grayscale(1);
+    //   }
 
-      .en__pg.en__pg--selected:not(:last-child) {
-        --premium__item_background-color: var(--error__color_faded);
-        --h2_color: var(--error__color);
+    //   .en__pg.en__pg--selected:not(:last-child) {
+    //     --premium__item_background-color: var(--error__color_faded);
+    //     --h2_color: var(--error__color);
 
-        input:checked:before {
-          background-color: var(--error__color);
-          border-color: var(--error__color);
-          box-shadow: inset 0 0 0 3px var(--error__color_faded);
-          color: var(--error__color);
-        }
+    //     input:checked:before {
+    //       background-color: var(--error__color);
+    //       border-color: var(--error__color);
+    //       box-shadow: inset 0 0 0 3px var(--error__color_faded);
+    //       color: var(--error__color);
+    //     }
 
-        .en__pg__display,
-        .en__pg__detail {
-          opacity: 0.75;
-        }
+    //     .en__pg__display,
+    //     .en__pg__detail {
+    //       opacity: 0.75;
+    //     }
 
-        .en__pg__optionType {
-          label {
-            color: var(--error__color);
-          }
+    //     .en__pg__optionType {
+    //       label {
+    //         color: var(--error__color);
+    //       }
 
-          select {
-            background-color: var(--error__color_faded);
-            border-color: var(--error__color);
-            color: var(--error__color);
-          }
-        }
+    //       select {
+    //         background-color: var(--error__color_faded);
+    //         border-color: var(--error__color);
+    //         color: var(--error__color);
+    //       }
+    //     }
 
-        .en__pg__description {
-          color: var(--error__color);
-        }
+    //     .en__pg__description {
+    //       color: var(--error__color);
+    //     }
 
-        .en__pg__images {
-          filter: brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%) contrast(0.9) opacity(0.5);
-          // opacity: 0.5;
-          // filter: grayscale(1);
-        }
-      }
-    }
+    //     .en__pg__images {
+    //       filter: brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%) contrast(0.9) opacity(0.5);
+    //       // opacity: 0.5;
+    //       // filter: grayscale(1);
+    //     }
+    //   }
+    // }
 
     .en__pgList {
       margin-bottom: 0.75rem;
@@ -1341,32 +1341,32 @@
 
     // Styles the Maximize my gift option
     // @TODO: See if there is a way to apply this only when there is a maximize my gift option.
-    [data-nogift] .en__pg:last-child .en__pg__description {
-      font-size: var(--h2_font-size);
-      line-height: var(--h2_line-height);
-      font-weight: var(--h2_font-weight);
+    // [data-nogift] .en__pg:last-child .en__pg__description {
+    //   font-size: var(--h2_font-size);
+    //   line-height: var(--h2_line-height);
+    //   font-weight: var(--h2_font-weight);
 
-      &:after {
-        font-size: 14px;
-        line-height: 18.2px;
-      }
-    }
+    //   &:after {
+    //     font-size: 14px;
+    //     line-height: 18.2px;
+    //   }
+    // }
   }
 
   // When a non-us address is selected on a premium page
-  &:not([data-engrid-country="US"]) {
-    .en__pg:last-child {
-      .en__pg__description {
-        display: flex;
-        flex-direction: column;
+  // &:not([data-engrid-country="US"]) {
+  //   .en__pg:last-child {
+  //     .en__pg__description {
+  //       display: flex;
+  //       flex-direction: column;
 
-        &:after {
-          content: "We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the 'Maximize my donation' option for you.";
-          // color: var(--error__color);
-        }
-      }
-    }
-  }
+  //       &:after {
+  //         content: "We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the 'Maximize my donation' option for you.";
+  //         // color: var(--error__color);
+  //       }
+  //     }
+  //   }
+  // }
 
   .en__pgHeader .en__submit button:hover {
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
