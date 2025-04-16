@@ -1,7 +1,5 @@
 [data-engrid-theme="oceana"][data-engrid-theme-version="202503"] {
-  --engrid__content-header_background-color: var(
-    --engrid__body_background-color
-  );
+  --engrid__content-header_background-color: var(--engrid__body_background-color);
   --engrid__body_background-color: #d3eafb;
   --engrid__content-footer_background-color: #22214a;
   --engrid__body_box-shadow: none;
@@ -47,7 +45,8 @@
   //   --button_font-family: var(--default_font-family);
   --button_color: var(--color_white);
   --button_font-size: 26px;
-  --button_font-weight: 700; /* Suppoed to be 900, but we don't have that font in Lato */
+  --button_font-weight: 700;
+  /* Suppoed to be 900, but we don't have that font in Lato */
   //   --button_line-height: initial;
   --button_background-color: #058ceb;
   --button_border-width: 2px;
@@ -116,7 +115,7 @@
   }
 
   .radio-to-buttons_donationAmt .en__field--donationAmt {
-    .en__field__input--radio:focus + .en__field__label {
+    .en__field__input--radio:focus+.en__field__label {
       outline: none;
     }
 
@@ -125,7 +124,7 @@
       --fields_spacing-block: 5px;
     }
 
-    .en__field__item input[type="radio"]:checked + label {
+    .en__field__item input[type="radio"]:checked+label {
       span {
         color: var(--engrid__body_background-color);
       }
@@ -190,11 +189,9 @@
       width: 100vw;
       height: 100vh;
       position: fixed;
-      background: linear-gradient(
-        180deg,
-        rgb(211, 234, 251) 50%,
-        rgb(34, 33, 74) 50%
-      );
+      background: linear-gradient(180deg,
+          rgb(211, 234, 251) 50%,
+          rgb(34, 33, 74) 50%);
     }
   }
 
@@ -242,18 +239,16 @@
     }
 
     .click-to-expand-text-wrapper {
-      mask-image: linear-gradient(
-        to bottom,
-        #000 50%,
-        #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px)
-      );
+      mask-image: linear-gradient(to bottom,
+          #000 50%,
+          #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
     }
   }
 
   .click-to-expand.expanded {
     margin-bottom: 1.4rem;
 
-    .click-to-expand-text-wrapper > *:last-child {
+    .click-to-expand-text-wrapper>*:last-child {
       margin-bottom: 0;
     }
   }
@@ -263,7 +258,7 @@
   }
 
   .content-header,
-  .content-header.pseudo-subgrid > div {
+  .content-header.pseudo-subgrid>div {
     grid-column: bc;
   }
 
@@ -275,11 +270,11 @@
     margin-top: calc(60px - 1em);
     margin-bottom: 0;
 
-    input:focus + label {
+    input:focus+label {
       outline: none;
     }
 
-    & > .en__field__element .en__field__item {
+    &>.en__field__element .en__field__item {
       &:first-of-type {
         padding-right: 0;
 
@@ -303,7 +298,7 @@
         //   transform: scale(0.7) translateY(10px);
         // }
 
-        input:checked + label:after {
+        input:checked+label:after {
           filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
@@ -325,12 +320,12 @@
           background-size: 116px 74px;
         }
 
-        input:checked + label:after,
-        input:hover + label:after {
+        input:checked+label:after,
+        input:hover+label:after {
           transform: scale(0.7) translateY(-125px); // Move the image up
         }
 
-        input:checked + label:after {
+        input:checked+label:after {
           filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
@@ -386,13 +381,11 @@
   //   width: auto;
   // }
 
-  .en__field--give-by-select.en__field--radio
-    input[type="radio"]:focus
-    + label {
+  .en__field--give-by-select.en__field--radio input[type="radio"]:focus+label {
     outline: none;
   }
 
-  .en__field--give-by-select.en__field--radio input[type="radio"] + label {
+  .en__field--give-by-select.en__field--radio input[type="radio"]+label {
     gap: 1rem;
   }
 
@@ -408,20 +401,20 @@
     }
   }
 
-  .en__field--give-by-select input:checked + label > img.paypal,
-  .en__field--give-by-select input:checked + label > img.google-pay-type,
-  .en__field--give-by-select input:checked + label > img.apple-pay-logo,
-  .en__field--give-by-select input:checked + label > img.paypal-venmo{
+  .en__field--give-by-select input:checked+label>img.paypal,
+  .en__field--give-by-select input:checked+label>img.google-pay-type,
+  .en__field--give-by-select input:checked+label>img.apple-pay-logo,
+  .en__field--give-by-select input:checked+label>img.paypal-venmo {
     filter: brightness(0) invert(1);
   }
 
-  .en__field--give-by-select input:checked + label > img.paypal-venmo,
-  .en__field--give-by-select input:checked + label > img.paypal {
+  .en__field--give-by-select input:checked+label>img.paypal-venmo,
+  .en__field--give-by-select input:checked+label>img.paypal {
     filter: invert(1) grayscale(1) contrast(100) brightness(1);
   }
 
   // Removed .en__field--give-by-select input:hover + label > img.daf-logo
-  .en__field--give-by-select input:checked + label > img.daf-logo {
+  .en__field--give-by-select input:checked+label>img.daf-logo {
     filter: brightness(3) invert(0);
   }
 
@@ -465,7 +458,7 @@
     margin: 30px auto 20px;
     padding: 30px 20px;
 
-    > img {
+    >img {
       width: 82px;
       height: 64px;
       display: block;
@@ -497,7 +490,7 @@
   }
 
   .body-bottom {
-    & > div.giving-seals {
+    &>div.giving-seals {
       max-width: 366px;
       margin: 1em auto;
     }
@@ -595,23 +588,23 @@
       padding: 0;
     }
 
-    &[data-placement^="top"] > .tippy-arrow::before {
+    &[data-placement^="top"]>.tippy-arrow::before {
       border-top-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="bottom"] > .tippy-arrow::before {
+    &[data-placement^="bottom"]>.tippy-arrow::before {
       border-bottom-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="left"] > .tippy-arrow::before {
+    &[data-placement^="left"]>.tippy-arrow::before {
       border-left-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="right"] > .tippy-arrow::before {
+    &[data-placement^="right"]>.tippy-arrow::before {
       border-right-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="left"] > .tippy-arrow {
+    &[data-placement^="left"]>.tippy-arrow {
       bottom: -15px;
       right: -8px;
       top: auto !important;
@@ -724,6 +717,7 @@
 
   @media screen and (max-width: calc($leftleft1col_content-column_max-width + 0px)) {
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
+
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         gap: 1rem;
@@ -756,6 +750,7 @@
 
   @media screen and (max-width: $rightright1col_content-column_max-width) {
     &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         gap: 1rem;
@@ -771,8 +766,10 @@
 
   /* Advocacy Page Footer - Force a single column layout on small screens */
   @media screen and (max-width: 500px) {
+
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"],
     &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
+
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         // grid-template-rows: min-content min-content min-content min-content min-content;
@@ -785,6 +782,7 @@
       }
     }
   }
+
   select,
   select.en__field__input--select,
   select.en__field__input--splitselect,
@@ -794,12 +792,14 @@
     background-position: right -23px center;
     background-size: 1.5rem;
   }
+
   /**  HEADER STYLES **/
   /** Header: Background **/
   @media (min-width: $one_col_content-column_max-width) {
     .content-header {
       padding: 2.5rem 0;
     }
+
     .en__component--copyblock:has(#header-logo),
     .en__component--codeblock:has(#header-logo) {
       padding: 0 64px;
@@ -813,10 +813,12 @@
       padding: 2em 0;
     }
   }
+
   .en__component {
     position: relative;
     z-index: 1;
   }
+
   &[data-engrid-page-background="image"] {
     .page-backgroundImage figure.media-with-attribution {
       figattribution {
@@ -906,87 +908,51 @@
   }
 
   // Attribution Image Positioning
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topleft:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topleft
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topleft figure.media-with-attribution {
     background-position: top left !important; // Pinned to Top Left
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topright:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topright
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topright figure.media-with-attribution {
     background-position: top right !important; // Pinned to Top Right
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomright:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomright
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomright figure.media-with-attribution {
     background-position: bottom right !important; // Pinned to Bottom Right
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomleft:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomleft
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomleft figure.media-with-attribution {
     background-position: bottom left !important; // Pinned to Bottom Left
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-top:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-top
-    figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-topcenter
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-top:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-top figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topcenter figure.media-with-attribution {
     background-position: top !important; // Pinned to Top Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottomcenter
-    figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottom:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-bottom
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomcenter figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottom:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottom figure.media-with-attribution {
     background-position: bottom !important; // Pinned to Bottom Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-left:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-left
-    figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-leftcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-leftcenter
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-left:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-left figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-leftcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-leftcenter figure.media-with-attribution {
     background-position: left !important; // Pinned to Top Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-right:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-right
-    figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-rightcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
-    .page-backgroundImage.attribution-rightcenter
-    figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-right:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-right figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-rightcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-rightcenter figure.media-with-attribution {
     background-position: right !important; // Pinned to Top Center
   }
 
@@ -1021,7 +987,7 @@
       font-size: 16px;
     }
 
-    .en__field__input--checkbox:focus + .en__field__label {
+    .en__field__input--checkbox:focus+.en__field__label {
       outline: none;
     }
   }
@@ -1052,6 +1018,7 @@
       .tippy-svg-arrow {
         bottom: -10px;
       }
+
       .custom-tooltip-arrow {
         transform: rotate(45deg) translateY(2px);
       }
@@ -1061,6 +1028,7 @@
       .tippy-svg-arrow {
         top: -10px;
       }
+
       .custom-tooltip-arrow {
         transform: rotate(-135deg) translateY(2px);
       }
@@ -1083,29 +1051,10 @@
     // @include engrid_replace-banner-with-background("rightright1col");
 
     // Put the Body Banner at the top of the page
-    #engrid > .en__component--advrow,
-    form > .en__component--advrow {
+    #engrid>.en__component--advrow,
+    form>.en__component--advrow {
       grid-template-rows:
-        [page-start page-alert-start] min-content
-        [page-alert-end body-headerOutside-start] min-content
-        [body-headerOutside-end body-banner-start] min-content
-        [body-banner-end body-bannerOverlay-start] min-content
-        [body-bannerOverlay-end content-header-start] min-content
-        [content-header-end body-header-start] min-content
-        [body-header-end body-title-start] min-content
-        [body-title-end body-top-start] min-content
-        [body-top-end body-side-start] min-content
-        [body-side-end body-main-start] min-content
-        [body-main-end body-bottom-start] min-content
-        [body-bottom-end body-footer-start] min-content
-        [body-footer-end body-footerOutside-start] min-content
-        [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr)
-        [content-footerSpacer-end content-preFooter-start] min-content
-        [content-preFooter-end content-footer-start] min-content
-        [content-footer-end page-backgroundImage-start] min-content
-        [page-backgroundImage-end page-backgroundImageOverlay-start] min-content
-        [page-backgroundImageOverlay-end page-end page-customCode-start] min-content
-        [page-customCode-end];
+        [page-start page-alert-start] min-content [page-alert-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end content-header-start] min-content [content-header-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr) [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
     }
 
     // &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-background-image"][data-engrid-page-background="image"] [class*="page-backgroundImage"] img,
@@ -1207,7 +1156,248 @@
     display: none;
   }
 
+  // Premium Gift Styling
+
+  --premium__image_max-height: 100px;
+
+  .en__component--premiumgiftblock,
+  .donation-summary,
+  .alternative-donation-methods {
+    border-top: 1px solid #cccccc;
+  }
+
+  // On premium pages, when the visitor is not in the US, hide the premium gift options other than the no gift option
+  &:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="US"]) .en__pgList[data-nogift] {
+
+    // Force the no gift option to always appear selected
+    .en__pg__select input:before {
+      background-color: var(--radio_background-color_selected);
+      border-color: var(--radio_border-color_selected);
+      box-shadow: var(--radio_box-shadow_selected);
+      color: var(--radio_color_selected);
+    }
+
+    .en__pg:last-child .en__pg__body {
+      --premium__item_background-color: #e9f7f6;
+    }
+
+    // Hide the other premium options
+    // We might want to make these visible in debug mode
+    .en__pg:not(:last-child) {
+      display: none;
+    }
+  }
+
   h2.en__pg__name {
     font-size: 32px !important;
+  }
+
+  // When the no gift option is present, move it from the last premium option to being the first premium option
+  &[data-nogift] {
+    display: grid;
+
+    .en__pg:last-child {
+      grid-row: 1 / 2;
+
+      .en__pg__display {
+        background-image: var(--maximize_my_donation_image);
+        // background-image: url("https://acb0a5d73b67fccd4bbe-c2d8138f0ea10a18dd4c43ec3aa4240a.ssl.cf5.rackcdn.com/10114/donation-gift_maximize-my-gift-placeholder.jpg?v=1680364148000");
+        background-size: contain;
+        // min-width: 100%; // Causing this overlay issue on Safari https://cln.sh/mGf3gcGc
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100px;
+
+        @media screen and (max-width: 628px) {
+          background-position: left center;
+        }
+      }
+    }
+  }
+
+  .en__pg--selected {
+    --premium__item_background-color: #e9f7f6;
+  }
+
+  .en__pg__body {
+    grid-template-areas: "en__pg__select en__pg__detail en__pg__display" ". en__pg__detail-mobile .";
+    grid-template-columns: min-content auto var(--premium__image_max-width);
+    gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
+    padding: calc(var(--fields_spacing-block)) calc(var(--fields_spacing-inline) * 2);
+  }
+
+  // Move premium images on mobile
+  @media screen and (max-width: $centercenter1col_body-column_max-width) {
+    .en__pg__display {
+      grid-area: en__pg__detail-mobile;
+
+      .en__pg__images img {
+        min-width: auto;
+        margin-left: 0;
+        margin-top: 0.5rem;
+      }
+    }
+
+    // Hide unselected premium images on mobile
+    .en__pg:not(.en__pg--selected) {
+      .en__pg__body {
+        --premium__image_max-width: 0px;
+        grid-template-columns: min-content auto 0px;
+      }
+
+      .en__pg__display {
+        display: none;
+      }
+    }
+  }
+
+  .en__pg__detail {
+    margin-bottom: 4px;
+  }
+
+  .en__pg__optionType select {
+    --select_padding: 1.2ch 1.6ch;
+    --select_font-size: 16px;
+    --select_line-height: 24px;
+    margin-top: calc(var(--fields_spacing-inline) * 0.5);
+  }
+
+  .en__component--premiumgiftblock {
+    --h2_font-size: 20px;
+    --h2_line-height: 30px;
+
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    margin-bottom: 0;
+
+    // [data-engrid-premium-gift-maximize="true"]
+    .en__pgList {
+      --h2_font-weight: 400;
+    }
+
+    .en__pgList[data-non-us-donor][data-nogift] {
+
+      // border: 1px solid #bfbfbf;
+      // pointer-events: none;
+      .en__pg:not(:last-child):not(.en__pg--selected) {
+        opacity: 0.5;
+        filter: grayscale(1);
+      }
+
+      .en__pg.en__pg--selected:not(:last-child) {
+        --premium__item_background-color: var(--error__color_faded);
+        --h2_color: var(--error__color);
+
+        input:checked:before {
+          background-color: var(--error__color);
+          border-color: var(--error__color);
+          box-shadow: inset 0 0 0 3px var(--error__color_faded);
+          color: var(--error__color);
+        }
+
+        .en__pg__display,
+        .en__pg__detail {
+          opacity: 0.75;
+        }
+
+        .en__pg__optionType {
+          label {
+            color: var(--error__color);
+          }
+
+          select {
+            background-color: var(--error__color_faded);
+            border-color: var(--error__color);
+            color: var(--error__color);
+          }
+        }
+
+        .en__pg__description {
+          color: var(--error__color);
+        }
+
+        .en__pg__images {
+          filter: brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%) contrast(0.9) opacity(0.5);
+          // opacity: 0.5;
+          // filter: grayscale(1);
+        }
+      }
+    }
+
+    .en__pgList {
+      margin-bottom: 0.75rem;
+    }
+
+    .en__pg__name {
+      margin-bottom: 0px;
+    }
+
+    .en__pg__description {
+      --p_font-size: 14px;
+      --p_line-height: 18.2px;
+      max-width: 238px;
+    }
+
+    // Styles the Maximize my gift option
+    // @TODO: See if there is a way to apply this only when there is a maximize my gift option.
+    [data-nogift] .en__pg:last-child .en__pg__description {
+      font-size: var(--h2_font-size);
+      line-height: var(--h2_line-height);
+      font-weight: var(--h2_font-weight);
+
+      &:after {
+        font-size: 14px;
+        line-height: 18.2px;
+      }
+    }
+  }
+
+  // When a non-us address is selected on a premium page
+  &:not([data-engrid-country="US"]) {
+    .en__pg:last-child {
+      .en__pg__description {
+        display: flex;
+        flex-direction: column;
+
+        &:after {
+          content: "We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the 'Maximize my donation' option for you.";
+          // color: var(--error__color);
+        }
+      }
+    }
+  }
+
+  .en__pgHeader .en__submit button:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  @media screen and (max-width: 768px) {
+    .engrid-mobile-cta-container {
+      bottom: 12px;
+      width: calc(100% - 40px - 2rem - var(--launcher-width));
+      left: calc(20px + 1rem);
+    }
+
+    &[data-engrid-page-type="premiumgift"],
+    &[data-engrid-page-type="donation"] {
+      .nav-content>ul.nav-actions.-mobile {
+        display: none !important;
+      }
+
+      #header {
+        margin-bottom: 0 !important;
+        border-bottom: 1px solid #ccc;
+      }
+    }
+
+    &:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-page-type="premiumgift"] .showif-not-donation {
+      display: none;
+    }
+
+    .en__component--premiumgiftblock {
+      --h2_font-size: 16px;
+      --h2_line-height: 24px;
+    }
   }
 }

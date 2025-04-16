@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, April 15, 2025 @ 13:02:53 ET
+ *  Date: Wednesday, April 16, 2025 @ 12:09:49 ET
  *  By: daryl
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -9037,9 +9037,7 @@ body[data-engrid-debug]:before{
 }
 
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]{
-  --engrid__content-header_background-color:var(
-    --engrid__body_background-color
-  );
+  --engrid__content-header_background-color:var(--engrid__body_background-color);
   --engrid__body_background-color:#d3eafb;
   --engrid__content-footer_background-color:#22214a;
   --engrid__body_box-shadow:none;
@@ -9107,6 +9105,7 @@ body[data-engrid-debug]:before{
   --click-to-expand__cta-image_width:100%;
   --recurring-frequency__button_font-size:1.5rem;
   --recurring-frequency__button_padding:70px 0px 14px;
+  --premium__image_max-height:100px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-type=supporterhub]{
   --h1_font-size:52px;
@@ -9893,8 +9892,169 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-no-cc-present] .hide-if-no-cc{
   display:none;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .alternative-donation-methods,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .donation-summary,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock{
+  border-top:1px solid #ccc;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-demo])[data-engrid-page-type=premiumgift]:not([data-engrid-country=US]) .en__pgList[data-nogift] .en__pg__select input:before{
+  background-color:var(--radio_background-color_selected);
+  border-color:var(--radio_border-color_selected);
+  box-shadow:var(--radio_box-shadow_selected);
+  color:var(--radio_color_selected);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-demo])[data-engrid-page-type=premiumgift]:not([data-engrid-country=US]) .en__pgList[data-nogift] .en__pg:last-child .en__pg__body{
+  --premium__item_background-color:#e9f7f6;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-demo])[data-engrid-page-type=premiumgift]:not([data-engrid-country=US]) .en__pgList[data-nogift] .en__pg:not(:last-child){
+  display:none;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] h2.en__pg__name{
   font-size:32px !important;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-nogift]{
+  display:grid;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-nogift] .en__pg:last-child{
+  grid-row:1 /  2;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-nogift] .en__pg:last-child .en__pg__display{
+  background-image:var(--maximize_my_donation_image);
+  background-position:50%;
+  background-repeat:no-repeat;
+  background-size:contain;
+  height:100px;
+}
+@media screen and (max-width:628px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-nogift] .en__pg:last-child .en__pg__display{
+    background-position:0;
+  }
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg--selected{
+  --premium__item_background-color:#e9f7f6;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg__body{
+  gap:0 max(var(--fields_spacing-inline) * 2, .5rem);
+  grid-template-areas:"en__pg__select en__pg__detail en__pg__display" ". en__pg__detail-mobile .";
+  grid-template-columns:min-content auto var(--premium__image_max-width);
+  padding:calc(var(--fields_spacing-block)) calc(var(--fields_spacing-inline)*2);
+}
+@media screen and (max-width:680px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg__display{
+    grid-area:en__pg__detail-mobile;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg__display .en__pg__images img{
+    margin-left:0;
+    margin-top:.5rem;
+    min-width:auto;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg:not(.en__pg--selected) .en__pg__body{
+    --premium__image_max-width:0px;
+    grid-template-columns:min-content auto 0;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg:not(.en__pg--selected) .en__pg__display{
+    display:none;
+  }
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg__detail{
+  margin-bottom:4px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pg__optionType select{
+  --select_padding:1.2ch 1.6ch;
+  --select_font-size:16px;
+  --select_line-height:24px;
+  margin-top:calc(var(--fields_spacing-inline)*.5);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock{
+  --h2_font-size:20px;
+  --h2_line-height:30px;
+  border-bottom:0;
+  border-left:0;
+  border-right:0;
+  margin-bottom:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList{
+  --h2_font-weight:400;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg:not(:last-child):not(.en__pg--selected){
+  filter:grayscale(1);
+  opacity:.5;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child){
+  --premium__item_background-color:var(--error__color_faded);
+  --h2_color:var(--error__color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) input:checked:before{
+  background-color:var(--error__color);
+  border-color:var(--error__color);
+  box-shadow:inset 0 0 0 3px var(--error__color_faded);
+  color:var(--error__color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__detail,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__display{
+  opacity:.75;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__optionType label{
+  color:var(--error__color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__optionType select{
+  background-color:var(--error__color_faded);
+  border-color:var(--error__color);
+  color:var(--error__color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__description{
+  color:var(--error__color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList[data-non-us-donor][data-nogift] .en__pg.en__pg--selected:not(:last-child) .en__pg__images{
+  filter:brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%) contrast(.9) opacity(.5);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pgList{
+  margin-bottom:.75rem;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pg__name{
+  margin-bottom:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pg__description{
+  --p_font-size:14px;
+  --p_line-height:18.2px;
+  max-width:238px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock [data-nogift] .en__pg:last-child .en__pg__description{
+  font-size:var(--h2_font-size);
+  font-weight:var(--h2_font-weight);
+  line-height:var(--h2_line-height);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock [data-nogift] .en__pg:last-child .en__pg__description:after{
+  font-size:14px;
+  line-height:18.2px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-country=US]) .en__pg:last-child .en__pg__description{
+  display:flex;
+  flex-direction:column;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not([data-engrid-country=US]) .en__pg:last-child .en__pg__description:after{
+  content:"We are unable to mail thank-you gifts to donors outside the United States and its territories and have selected the 'Maximize my donation' option for you.";
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__pgHeader .en__submit button:hover{
+  box-shadow:0 4px 12px #00000026;
+}
+@media screen and (max-width:768px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .engrid-mobile-cta-container{
+    bottom:12px;
+    left:calc(20px + 1rem);
+    width:calc(100% - 40px - 2rem - var(--launcher-width));
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-type=donation] .nav-content>ul.nav-actions.-mobile,[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-type=premiumgift] .nav-content>ul.nav-actions.-mobile{
+    display:none !important;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-type=donation] #header,[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-type=premiumgift] #header{
+    border-bottom:1px solid #ccc;
+    margin-bottom:0 !important;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-page-type=premiumgift] .showif-not-donation{
+    display:none;
+  }
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock{
+    --h2_font-size:16px;
+    --h2_line-height:24px;
+  }
 }
 body{
   opacity:1;
