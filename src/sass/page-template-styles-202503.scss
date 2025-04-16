@@ -291,7 +291,7 @@
           content: "";
           left: 0;
           position: absolute;
-          top: 37px;
+          top: -47px;
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 88px 74px;
@@ -319,7 +319,7 @@
           content: "";
           left: calc(50% + 5px);
           position: absolute;
-          top: 40px;
+          top: 72px;
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 116px 74px;
@@ -327,7 +327,7 @@
 
         input:checked + label:after,
         input:hover + label:after {
-          transform: scale(0.7) translateY(10px);
+          transform: scale(0.7) translateY(-125px); // Move the image up
         }
 
         input:checked + label:after {
@@ -1205,5 +1205,9 @@
 
   &[data-no-cc-present] .hide-if-no-cc {
     display: none;
+  }
+
+  h2.en__pg__name {
+    font-size: 32px !important;
   }
 }
