@@ -709,6 +709,22 @@
     }
   }
 
+  /* Fixes error messages getting cut off */
+  /* Screenshot: https://cln.sh/HTKWrBkg */
+  @media screen and (min-width: calc($leftleft1col_content-column_max-width)) {
+    .en__errorHeader,
+    .en__errorList {
+      max-width: min(680px, 100vw);
+    }
+  }
+
+  @media screen and (max-width: calc($leftleft1col_content-column_max-width - 1px)) {
+    .en__errorHeader,
+    .en__errorList {
+      max-width: 100vw;
+    }
+  }
+
   @media screen and (min-width: calc($leftleft1col_content-column_max-width + 0px)) {
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
       .page-backgroundImage {

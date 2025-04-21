@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, April 7, 2025 @ 12:18:47 ET
+ *  Date: Monday, April 21, 2025 @ 15:35:45 ET
  *  By: 4Site
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -9606,6 +9606,16 @@ body[data-engrid-debug]:before{
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .content-footer .social-media li{
   text-align:center;
+}
+@media screen and (min-width:768px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__errorHeader,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__errorList{
+    max-width:min(680px, 100vw);
+  }
+}
+@media screen and (max-width:767px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__errorHeader,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__errorList{
+    max-width:100vw;
+  }
 }
 @media screen and (min-width:768px){
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder)[data-engrid-layout=leftleft1col] .page-backgroundImage{
