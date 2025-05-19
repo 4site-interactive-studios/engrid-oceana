@@ -1403,18 +1403,16 @@
 
   // Click to call Page styles
 
-  [data-engrid-page-type="click2call"] {
-
-    .en__overlay {
+  .en__overlay {
       background: none;
       padding: 0;
       border: 2px solid var(--color_primary);
   
       .en__overlay__header {
-        background: var(--color_green);
+        background: #058ceb;
   
         h2 {
-          color: #fff;
+          color: #fff !important;
         }
       }
     }
@@ -1425,6 +1423,10 @@
       .en__c2c__actions {
         justify-content: space-evenly;
       }
+    }
+
+    .en__errorHeader, ul.en__errorList {
+      max-width: 680px;
     }
     
     .en__contact__detail {
@@ -1445,5 +1447,4 @@
         }
       }
     }
-  }
 }

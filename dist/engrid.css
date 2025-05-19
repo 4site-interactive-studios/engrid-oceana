@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, April 16, 2025 @ 16:11:51 ET
+ *  Date: Monday, May 19, 2025 @ 14:56:25 ET
  *  By: daryl
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -10054,6 +10054,34 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock{
     --h2_font-size:16px;
     --h2_line-height:24px;
+  }
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__overlay{
+  background:none;
+  border:2px solid var(--color_primary);
+  padding:0;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__overlay .en__overlay__header{
+  background:#058ceb;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__overlay .en__overlay__header h2{
+  color:#fff !important;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__overlay__content{
+  background:var(--engrid__body-main_background-color);
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__overlay__content .en__c2c__actions{
+  justify-content:space-evenly;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__errorHeader,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] ul.en__errorList{
+  max-width:680px;
+}
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__contact__detail .en__button{
+  font-size:1.5rem;
+}
+@media screen and (min-width:769px){
+  [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__c2c__survey__rating button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__contact__detail .en__button{
+    font-size:1.7rem;
   }
 }
 body{
