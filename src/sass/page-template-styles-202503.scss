@@ -195,6 +195,14 @@
     }
   }
 
+  h1 {
+    font-size: var(--h2_font-size);
+
+    @media screen and (min-width: 769px) {
+      font-size: var(--h1_font-size);
+    }
+  }
+
   h1 strong {
     --h1_font-weight: 700;
   }
