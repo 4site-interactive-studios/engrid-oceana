@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, May 2, 2025 @ 16:21:31 ET
+ *  Date: Monday, June 2, 2025 @ 20:31:10 ET
  *  By: fernando
- *  ENGrid styles: v0.22.0
- *  ENGrid scripts: v0.22.0
+ *  ENGrid styles: v0.22.4
+ *  ENGrid scripts: v0.22.6
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -4830,6 +4830,10 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
   outline:none;
 }
 
+.engrid-modal:not(.engrid-modal--close-x) .engrid-modal__close-x{
+  display:none;
+}
+
 .engrid-modal__close{
   cursor:pointer;
   font-size:20px;
@@ -4866,6 +4870,19 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
 .engrid-modal--scale{
   animation:scaleAnimation .5s ease-in-out;
   transform-origin:center;
+}
+
+[data-engrid-theme] .engrid--frequency-upsell-modal .engrid-modal__container{
+  --submit__button_text-transform:none;
+  max-width:700px;
+}
+
+.frequency-upsell-modal__title{
+  margin-top:0;
+}
+
+#frequency-upsell-no{
+  margin-bottom:0;
 }
 div[id^=nb-field-],div[id^=nb-field-] div.nb-feedback{
   max-width:100% !important;
