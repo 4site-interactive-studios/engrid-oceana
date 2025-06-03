@@ -99,7 +99,7 @@ export const customScript = function (App, Frequency) {
       '[name="supporter.phoneNumber2"]'
     );
     const smsOptInCheckbox = document.querySelector(
-      ".en__field--sms input[type='checkbox']"
+      ".en__field--sms input[type='checkbox'], .en__field--sailors-for-the-sea-sms input[type='checkbox']"
     );
 
     if (mobilePhoneInput && smsOptInCheckbox) {

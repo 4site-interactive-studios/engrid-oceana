@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, June 2, 2025 @ 20:31:10 ET
+ *  Date: Tuesday, June 3, 2025 @ 16:19:10 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.6
@@ -22587,7 +22587,7 @@ const customScript = function (App, Frequency) {
 
   function toggleSMSOptInCheckboxBasedOnMobilePhone() {
     const mobilePhoneInput = document.querySelector('[name="supporter.phoneNumber2"]');
-    const smsOptInCheckbox = document.querySelector(".en__field--sms input[type='checkbox']");
+    const smsOptInCheckbox = document.querySelector(".en__field--sms input[type='checkbox'], .en__field--sailors-for-the-sea-sms input[type='checkbox']");
 
     if (mobilePhoneInput && smsOptInCheckbox) {
       // Add a notice to the mobile phone field
