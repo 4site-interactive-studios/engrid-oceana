@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, June 4, 2025 @ 09:30:20 ET
+ *  Date: Thursday, June 5, 2025 @ 14:25:35 ET
  *  By: daryl
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -9310,6 +9310,7 @@ body[data-engrid-debug]:before{
   background-size:88px 74px;
   bottom:0;
   content:"";
+  height:122px;
   left:0;
   position:absolute;
   top:37px;
@@ -9330,6 +9331,7 @@ body[data-engrid-debug]:before{
   background-size:116px 74px;
   bottom:0;
   content:"";
+  height:120px;
   left:calc(50% + 5px);
   position:absolute;
   top:40px;
