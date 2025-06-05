@@ -299,6 +299,7 @@
           width: 50%;
           background-size: 88px 74px;
           transform: scale(0.7) translateY(10px);
+          height: 122px;
         }
 
         // input:checked + label:after,
@@ -326,6 +327,7 @@
           transition: transform 0.25s ease-in-out;
           width: 50%;
           background-size: 116px 74px;
+          height: 120px;
         }
 
         input:checked+label:after,
