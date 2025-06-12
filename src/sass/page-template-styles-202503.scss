@@ -1374,7 +1374,9 @@
 
       &:after {
         font-size: 14px;
-        line-height: 18.2px;
+        line-height: 20px;
+        position: relative;
+        top: 5px
       }
     }
   }
