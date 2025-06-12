@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, June 12, 2025 @ 11:24:54 ET
+ *  Date: Thursday, June 12, 2025 @ 13:22:16 ET
  *  By: daryl
  *  ENGrid styles: v0.21.0
  *  ENGrid scripts: v0.21.0
@@ -10034,7 +10034,7 @@ body[data-engrid-debug]:before{
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock .en__pg__description{
   --p_font-size:14px;
   --p_line-height:18.2px;
-  max-width:238px;
+  max-width:500px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__component--premiumgiftblock [data-nogift] .en__pg:last-child .en__pg__description{
   font-size:var(--h2_font-size);
