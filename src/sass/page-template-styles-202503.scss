@@ -1,5 +1,7 @@
 [data-engrid-theme="oceana"][data-engrid-theme-version="202503"] {
-  --engrid__content-header_background-color: var(--engrid__body_background-color);
+  --engrid__content-header_background-color: var(
+    --engrid__body_background-color
+  );
   --engrid__body_background-color: #d3eafb;
   --engrid__content-footer_background-color: #22214a;
   --engrid__body_box-shadow: none;
@@ -115,7 +117,7 @@
   }
 
   .radio-to-buttons_donationAmt .en__field--donationAmt {
-    .en__field__input--radio:focus+.en__field__label {
+    .en__field__input--radio:focus + .en__field__label {
       outline: none;
     }
 
@@ -124,7 +126,7 @@
       --fields_spacing-block: 5px;
     }
 
-    .en__field__item input[type="radio"]:checked+label {
+    .en__field__item input[type="radio"]:checked + label {
       span {
         color: var(--engrid__body_background-color);
       }
@@ -189,9 +191,11 @@
       width: 100vw;
       height: 100vh;
       position: fixed;
-      background: linear-gradient(180deg,
-          rgb(211, 234, 251) 50%,
-          rgb(34, 33, 74) 50%);
+      background: linear-gradient(
+        180deg,
+        rgb(211, 234, 251) 50%,
+        rgb(34, 33, 74) 50%
+      );
     }
   }
 
@@ -247,16 +251,18 @@
     }
 
     .click-to-expand-text-wrapper {
-      mask-image: linear-gradient(to bottom,
-          #000 50%,
-          #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+      mask-image: linear-gradient(
+        to bottom,
+        #000 50%,
+        #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px)
+      );
     }
   }
 
   .click-to-expand.expanded {
     margin-bottom: 1.4rem;
 
-    .click-to-expand-text-wrapper>*:last-child {
+    .click-to-expand-text-wrapper > *:last-child {
       margin-bottom: 0;
     }
   }
@@ -266,7 +272,7 @@
   }
 
   .content-header,
-  .content-header.pseudo-subgrid>div {
+  .content-header.pseudo-subgrid > div {
     grid-column: bc;
   }
 
@@ -278,11 +284,11 @@
     margin-top: calc(60px - 1em);
     margin-bottom: 0;
 
-    input:focus+label {
+    input:focus + label {
       outline: none;
     }
 
-    &>.en__field__element .en__field__item {
+    & > .en__field__element .en__field__item {
       &:first-of-type {
         padding-right: 0;
 
@@ -307,7 +313,7 @@
         //   transform: scale(0.7) translateY(10px);
         // }
 
-        input:checked+label:after {
+        input:checked + label:after {
           filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
@@ -330,12 +336,12 @@
           height: 120px;
         }
 
-        input:checked+label:after,
-        input:hover+label:after {
-          transform:scale(.7) translateY(10px); // Move the image up
+        input:checked + label:after,
+        input:hover + label:after {
+          transform: scale(0.7) translateY(10px); // Move the image up
         }
 
-        input:checked+label:after {
+        input:checked + label:after {
           filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
         }
       }
@@ -391,11 +397,13 @@
   //   width: auto;
   // }
 
-  .en__field--give-by-select.en__field--radio input[type="radio"]:focus+label {
+  .en__field--give-by-select.en__field--radio
+    input[type="radio"]:focus
+    + label {
     outline: none;
   }
 
-  .en__field--give-by-select.en__field--radio input[type="radio"]+label {
+  .en__field--give-by-select.en__field--radio input[type="radio"] + label {
     gap: 1rem;
   }
 
@@ -411,20 +419,20 @@
     }
   }
 
-  .en__field--give-by-select input:checked+label>img.paypal,
-  .en__field--give-by-select input:checked+label>img.google-pay-type,
-  .en__field--give-by-select input:checked+label>img.apple-pay-logo,
-  .en__field--give-by-select input:checked+label>img.paypal-venmo {
+  .en__field--give-by-select input:checked + label > img.paypal,
+  .en__field--give-by-select input:checked + label > img.google-pay-type,
+  .en__field--give-by-select input:checked + label > img.apple-pay-logo,
+  .en__field--give-by-select input:checked + label > img.paypal-venmo {
     filter: brightness(0) invert(1);
   }
 
-  .en__field--give-by-select input:checked+label>img.paypal-venmo,
-  .en__field--give-by-select input:checked+label>img.paypal {
+  .en__field--give-by-select input:checked + label > img.paypal-venmo,
+  .en__field--give-by-select input:checked + label > img.paypal {
     filter: invert(1) grayscale(1) contrast(100) brightness(1);
   }
 
   // Removed .en__field--give-by-select input:hover + label > img.daf-logo
-  .en__field--give-by-select input:checked+label>img.daf-logo {
+  .en__field--give-by-select input:checked + label > img.daf-logo {
     filter: brightness(3) invert(0);
   }
 
@@ -468,7 +476,7 @@
     margin: 30px auto 20px;
     padding: 30px 20px;
 
-    >img {
+    > img {
       width: 82px;
       height: 64px;
       display: block;
@@ -500,7 +508,7 @@
   }
 
   .body-bottom {
-    &>div.giving-seals {
+    & > div.giving-seals {
       max-width: 366px;
       margin: 1em auto;
     }
@@ -598,23 +606,23 @@
       padding: 0;
     }
 
-    &[data-placement^="top"]>.tippy-arrow::before {
+    &[data-placement^="top"] > .tippy-arrow::before {
       border-top-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="bottom"]>.tippy-arrow::before {
+    &[data-placement^="bottom"] > .tippy-arrow::before {
       border-bottom-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="left"]>.tippy-arrow::before {
+    &[data-placement^="left"] > .tippy-arrow::before {
       border-left-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="right"]>.tippy-arrow::before {
+    &[data-placement^="right"] > .tippy-arrow::before {
       border-right-color: var(--engrid__body_background-color);
     }
 
-    &[data-placement^="left"]>.tippy-arrow {
+    &[data-placement^="left"] > .tippy-arrow {
       bottom: -15px;
       right: -8px;
       top: auto !important;
@@ -743,7 +751,6 @@
 
   @media screen and (max-width: calc($leftleft1col_content-column_max-width + 0px)) {
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] {
-
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         gap: 1rem;
@@ -776,7 +783,6 @@
 
   @media screen and (max-width: $rightright1col_content-column_max-width) {
     &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
-
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         gap: 1rem;
@@ -792,10 +798,8 @@
 
   /* Advocacy Page Footer - Force a single column layout on small screens */
   @media screen and (max-width: 500px) {
-
     &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"],
     &:not(#en__pagebuilder)[data-engrid-layout="rightright1col"] {
-
       /* Advocacy Page Footer */
       .content-footer .menu-container {
         // grid-template-rows: min-content min-content min-content min-content min-content;
@@ -934,51 +938,87 @@
   }
 
   // Attribution Image Positioning
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topleft:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topleft figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topleft
+    figure.media-with-attribution {
     background-position: top left !important; // Pinned to Top Left
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topright:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topright figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topright
+    figure.media-with-attribution {
     background-position: top right !important; // Pinned to Top Right
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomright:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomright figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomright:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomright
+    figure.media-with-attribution {
     background-position: bottom right !important; // Pinned to Bottom Right
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomleft:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomleft figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomleft:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomleft
+    figure.media-with-attribution {
     background-position: bottom left !important; // Pinned to Bottom Left
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-top:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-top figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-topcenter figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-top:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-top
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-topcenter
+    figure.media-with-attribution {
     background-position: top !important; // Pinned to Top Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottomcenter figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottom:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-bottom figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottomcenter
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottom:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-bottom
+    figure.media-with-attribution {
     background-position: bottom !important; // Pinned to Bottom Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-left:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-left figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-leftcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-leftcenter figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-left:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-left
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-leftcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-leftcenter
+    figure.media-with-attribution {
     background-position: left !important; // Pinned to Top Center
   }
 
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-right:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-right figure.media-with-attribution,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-rightcenter:before,
-  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"] .page-backgroundImage.attribution-rightcenter figure.media-with-attribution {
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-right:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-right
+    figure.media-with-attribution,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-rightcenter:before,
+  &:not(#en__pagebuilder)[data-engrid-layout="leftleft1col"]
+    .page-backgroundImage.attribution-rightcenter
+    figure.media-with-attribution {
     background-position: right !important; // Pinned to Top Center
   }
 
@@ -1013,7 +1053,7 @@
       font-size: 16px;
     }
 
-    .en__field__input--checkbox:focus+.en__field__label {
+    .en__field__input--checkbox:focus + .en__field__label {
       outline: none;
     }
   }
@@ -1077,10 +1117,14 @@
     // @include engrid_replace-banner-with-background("rightright1col");
 
     // Put the Body Banner at the top of the page
-    #engrid>.en__component--advrow,
-    form>.en__component--advrow {
+    #engrid > .en__component--advrow,
+    form > .en__component--advrow {
       grid-template-rows:
-        [page-start page-alert-start] min-content [page-alert-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end content-header-start] min-content [content-header-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(0, 1fr) [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
+        [page-start page-alert-start] min-content [page-alert-end body-headerOutside-start] min-content [body-headerOutside-end body-banner-start] min-content [body-banner-end body-bannerOverlay-start] min-content [body-bannerOverlay-end content-header-start] min-content [content-header-end body-header-start] min-content [body-header-end body-title-start] min-content [body-title-end body-top-start] min-content [body-top-end body-side-start] min-content [body-side-end body-main-start] min-content [body-main-end body-bottom-start] min-content [body-bottom-end body-footer-start] min-content [body-footer-end body-footerOutside-start] min-content [body-footerOutside-end content-footerSpacer-start] minmax(
+          0,
+          1fr
+        )
+        [content-footerSpacer-end content-preFooter-start] min-content [content-preFooter-end content-footer-start] min-content [content-footer-end page-backgroundImage-start] min-content [page-backgroundImage-end page-backgroundImageOverlay-start] min-content [page-backgroundImageOverlay-end page-end page-customCode-start] min-content [page-customCode-end];
     }
 
     // &[data-engrid-layout="leftleft1col"][data-replace-banner-with-background="if-background-image"][data-engrid-page-background="image"] [class*="page-backgroundImage"] img,
@@ -1193,8 +1237,8 @@
   }
 
   // On premium pages, when the visitor is not in the US, hide the premium gift options other than the no gift option
-  &:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="US"]) .en__pgList[data-nogift] {
-
+  &:not([data-engrid-demo])[data-engrid-page-type="premiumgift"]:not([data-engrid-country="United States"])
+    .en__pgList[data-nogift] {
     // Force the no gift option to always appear selected
     .en__pg__select input:before {
       background-color: var(--radio_background-color_selected);
@@ -1249,7 +1293,8 @@
     grid-template-areas: "en__pg__select en__pg__detail en__pg__display" ". en__pg__detail-mobile .";
     grid-template-columns: min-content auto var(--premium__image_max-width);
     gap: 0 max(calc(var(--fields_spacing-inline) * 2), 0.5rem);
-    padding: calc(var(--fields_spacing-block)) calc(var(--fields_spacing-inline) * 2);
+    padding: calc(var(--fields_spacing-block))
+      calc(var(--fields_spacing-inline) * 2);
   }
 
   // Move premium images on mobile
@@ -1303,7 +1348,6 @@
     }
 
     .en__pgList[data-non-us-donor][data-nogift] {
-
       // border: 1px solid #bfbfbf;
       // pointer-events: none;
       .en__pg:not(:last-child):not(.en__pg--selected) {
@@ -1344,7 +1388,8 @@
         }
 
         .en__pg__images {
-          filter: brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%) contrast(0.9) opacity(0.5);
+          filter: brightness(60%) sepia(100%) hue-rotate(-50deg) saturate(250%)
+            contrast(0.9) opacity(0.5);
           // opacity: 0.5;
           // filter: grayscale(1);
         }
@@ -1376,13 +1421,13 @@
         font-size: 14px;
         line-height: 20px;
         position: relative;
-        top: 5px
+        top: 5px;
       }
     }
   }
 
   // When a non-us address is selected on a premium page
-  &:not([data-engrid-country="US"]) {
+  &:not([data-engrid-country="United States"]) {
     .en__pg:last-child {
       .en__pg__description {
         display: flex;
@@ -1409,7 +1454,7 @@
 
     &[data-engrid-page-type="premiumgift"],
     &[data-engrid-page-type="donation"] {
-      .nav-content>ul.nav-actions.-mobile {
+      .nav-content > ul.nav-actions.-mobile {
         display: none !important;
       }
 
@@ -1419,7 +1464,8 @@
       }
     }
 
-    &:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-page-type="premiumgift"] .showif-not-donation {
+    &:not(#en__pagebuilder):not([data-engrid-debug])[data-engrid-page-type="premiumgift"]
+      .showif-not-donation {
       display: none;
     }
 
@@ -1432,47 +1478,48 @@
   // Click to call Page styles
 
   .en__overlay {
-      background: none;
-      padding: 0;
-      border: 2px solid var(--color_primary);
-  
-      .en__overlay__header {
-        background: #058ceb;
-  
-        h2 {
-          color: #fff !important;
-        }
-      }
-    }
-  
-    .en__overlay__content {
-      background: var(--engrid__body-main_background-color);
-    
-      .en__c2c__actions {
-        justify-content: space-evenly;
-      }
-    }
+    background: none;
+    padding: 0;
+    border: 2px solid var(--color_primary);
 
-    .en__errorHeader, ul.en__errorList {
-      max-width: 680px;
-    }
-    
-    .en__contact__detail {
-      .en__button {
-        font-size: 1.5rem;
-    
-        @media screen and (min-width: 769px) {
-          font-size: 1.7rem;
-        }
+    .en__overlay__header {
+      background: #058ceb;
+
+      h2 {
+        color: #fff !important;
       }
     }
-    
-    // Adjust font size for buttons on desktop
-    @media screen and (min-width: 769px) {
-      .en__c2c__survey__rating {
-        button {
-          font-size: 1.7rem;
-        }
+  }
+
+  .en__overlay__content {
+    background: var(--engrid__body-main_background-color);
+
+    .en__c2c__actions {
+      justify-content: space-evenly;
+    }
+  }
+
+  .en__errorHeader,
+  ul.en__errorList {
+    max-width: 680px;
+  }
+
+  .en__contact__detail {
+    .en__button {
+      font-size: 1.5rem;
+
+      @media screen and (min-width: 769px) {
+        font-size: 1.7rem;
       }
     }
+  }
+
+  // Adjust font size for buttons on desktop
+  @media screen and (min-width: 769px) {
+    .en__c2c__survey__rating {
+      button {
+        font-size: 1.7rem;
+      }
+    }
+  }
 }
