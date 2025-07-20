@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, July 19, 2025 @ 22:41:20 ET
+ *  Date: Saturday, July 19, 2025 @ 22:52:39 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.7
@@ -23499,6 +23499,39 @@ const customScript = function (App, Frequency) {
 
 
   initializeTicketLogic();
+  const recurringStatus = document.querySelector(".js-recurring-status");
+
+  if (recurringStatus) {
+    if (window.navigator.language === "es-MX" || window.location.href.indexOf("locale=es-MX") > -1 || pageJson.locale === "es-MX") {
+      console.log(recurringStatus.textContent);
+
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Mensual";
+          break;
+
+        case "ANNUAL":
+          recurringStatus.textContent = "Anual";
+          break;
+
+        default:
+          recurringStatus.textContent = "Una vez";
+      }
+    } else {
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Monthly";
+          break;
+
+        case "ANNUAL":
+          recurringStatus.textContent = "Annual";
+          break;
+
+        default:
+          recurringStatus.textContent = "One-time";
+      }
+    }
+  }
 };
 // EXTERNAL MODULE: ./node_modules/smoothscroll-polyfill/dist/smoothscroll.js
 var smoothscroll = __webpack_require__(523);
