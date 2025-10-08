@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, October 8, 2025 @ 15:25:33 ET
+ *  Date: Wednesday, October 8, 2025 @ 16:43:01 ET
  *  By: fernando
  *  ENGrid styles: v0.22.18
  *  ENGrid scripts: v0.22.20
@@ -2867,7 +2867,8 @@ body:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   overflow:hidden;
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
   max-height:calc(var(--click-to-expand__copy-area_height) - var(--click-to-expand__cta-image_height) - 35px);
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta{
@@ -9000,7 +9001,8 @@ body[data-engrid-debug]:before{
   top:2px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"] .click-to-expand.expanded .click-to-expand-text-wrapper>:last-child{
   margin-bottom:0;
@@ -9317,7 +9319,8 @@ body[data-engrid-debug]:before{
   position:relative;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .click-to-expand.expanded{
   margin-bottom:1.4rem;
