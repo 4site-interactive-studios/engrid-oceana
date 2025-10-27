@@ -1200,7 +1200,7 @@ export default class DonationLightboxForm {
         const card = document.querySelector(
           "[name='transaction.giveBySelect'][value='card']"
         );
-        if (card) {
+        if (card && !card.checked) {
           card.checked = true;
           const event = new Event("change");
           card.dispatchEvent(event);

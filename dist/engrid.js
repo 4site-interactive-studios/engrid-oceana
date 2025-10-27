@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, October 23, 2025 @ 14:02:15 ET
+ *  Date: Monday, October 27, 2025 @ 12:12:06 ET
  *  By: fernando
  *  ENGrid styles: v0.22.4
  *  ENGrid scripts: v0.22.7
@@ -24658,7 +24658,7 @@ class DonationLightboxForm {
 
         const card = document.querySelector("[name='transaction.giveBySelect'][value='card']");
 
-        if (card) {
+        if (card && !card.checked) {
           card.checked = true;
           const event = new Event("change");
           card.dispatchEvent(event);
