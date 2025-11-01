@@ -24,6 +24,27 @@ const options: Options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7",
   },
+  RememberMe: {
+    checked: true,
+    remoteUrl: "https://engrid-oceana.test/dist/data-remember.html",
+    fieldOptInSelectorTarget:
+      "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+    fieldOptInSelectorTargetLocation: "after",
+    fieldClearSelectorTarget:
+      "div.en__field--firstName div, div.en__field--email div",
+    fieldClearSelectorTargetLocation: "after",
+    fieldNames: [
+      "supporter.firstName",
+      "supporter.lastName",
+      "supporter.address1",
+      "supporter.address2",
+      "supporter.city",
+      "supporter.country",
+      "supporter.region",
+      "supporter.postcode",
+      "supporter.emailAddress",
+    ],
+  },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
       "Custom Amount",
