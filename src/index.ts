@@ -45,6 +45,9 @@ const options: Options = {
       "supporter.emailAddress",
     ],
   },
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.questions.paymentPreference",
+  },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
       "Custom Amount",
