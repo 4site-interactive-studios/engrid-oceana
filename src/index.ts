@@ -1,5 +1,5 @@
-import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+// import { Options, App, DonationFrequency } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
+import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 
@@ -44,6 +44,9 @@ const options: Options = {
       "supporter.postcode",
       "supporter.emailAddress",
     ],
+  },
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.questions.paymentPreference",
   },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
