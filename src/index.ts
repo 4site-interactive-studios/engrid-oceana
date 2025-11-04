@@ -46,7 +46,7 @@ const options: Options = {
     ],
   },
   PreferredPaymentMethod: {
-    preferredPaymentMethodField: "supporter.questions.paymentPreference",
+    preferredPaymentMethodField: "supporter.NOT_TAGGED_16",
   },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
