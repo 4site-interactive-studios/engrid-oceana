@@ -26,7 +26,7 @@ const options: Options = {
   },
   RememberMe: {
     checked: true,
-    remoteUrl: "https://engrid-oceana.test/dist/data-remember.html",
+    remoteUrl: "https://oceana.org/data-remember.html",
     fieldOptInSelectorTarget:
       "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
     fieldOptInSelectorTargetLocation: "after",
