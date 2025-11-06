@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 5, 2025 @ 16:05:55 ET
+ *  Date: Wednesday, November 5, 2025 @ 18:44:37 ET
  *  By: Cawe Coy
  *  ENGrid styles: v0.23.0
- *  ENGrid scripts: v0.23.0
+ *  ENGrid scripts: v0.23.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -23009,11 +23009,15 @@ class PreferredPaymentMethod {
             this.logger.log("Not a donation page. Skipping preferred payment selection.");
             return false;
         }
+        // If there's a "payment" URL parameter, we can proceed
+        if (engrid_ENGrid.getUrlParameter("payment")) {
+            return true;
+        }
         if (!this.getGiveBySelectInputs().length) {
             this.logger.log("No give-by-select inputs found. Skipping.");
             return false;
         }
-        const config = engrid_ENGrid.getOption("PreferredPaymentMethod");
+        const config = engrid_ENGrid.getOption("PreferredPaymentMethod") || false;
         if (config === false) {
             this.logger.log("PreferredPaymentMethod option disabled.");
             return false;
@@ -23021,7 +23025,7 @@ class PreferredPaymentMethod {
         return true;
     }
     resolveConfig() {
-        const option = engrid_ENGrid.getOption("PreferredPaymentMethod");
+        const option = engrid_ENGrid.getOption("PreferredPaymentMethod") || false;
         if (option && typeof option === "object") {
             const preferredPaymentMethodField = option.preferredPaymentMethodField || "";
             const defaultPaymentMethod = Array.isArray(option.defaultPaymentMethod)
@@ -23195,14 +23199,8 @@ class PreferredPaymentMethod {
             this.logger.log(`Payment method "${method}" is not available to select.`);
             return;
         }
-        const label = this.findLabelForInput(input);
-        if (label) {
-            label.click();
-        }
-        else {
-            input.checked = true;
-            input.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
-        }
+        input.checked = true;
+        input.dispatchEvent(new Event("change", { bubbles: true, cancelable: true }));
         engrid_ENGrid.setPaymentType(method);
         this.syncPreferredField(input.value);
         this.selectionFinalized = true;
@@ -23271,7 +23269,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.23.0";
+const AppVersion = "0.23.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
