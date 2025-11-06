@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 5, 2025 @ 22:58:09 ET
+ *  Date: Thursday, November 6, 2025 @ 10:47:12 ET
  *  By: fernando
  *  ENGrid styles: v0.23.0
- *  ENGrid scripts: v0.23.1
+ *  ENGrid scripts: v0.23.2
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -12607,6 +12607,13 @@ class DataAttributes {
         this.setDataAttributes();
     }
     setDataAttributes() {
+        // Apple Pay Availability
+        if (window.hasOwnProperty("ApplePaySession")) {
+            engrid_ENGrid.setBodyData("apple-pay-available", "true");
+        }
+        else {
+            engrid_ENGrid.setBodyData("apple-pay-available", "false");
+        }
         // Add the Page Type as a Data Attribute on the Body Tag
         if (engrid_ENGrid.checkNested(window, "pageJson", "pageType")) {
             engrid_ENGrid.setBodyData("page-type", window.pageJson.pageType);
@@ -20114,8 +20121,17 @@ class DigitalWallets {
     }
     addStripeDigitalWallets() {
         this.addOptionToPaymentTypeField("stripedigitalwallet", "GooglePay / ApplePay");
-        engrid_ENGrid.setBodyData("payment-type-option-apple-pay", DigitalWallets.isApplePayAvailable.toString());
-        engrid_ENGrid.setBodyData("payment-type-option-google-pay", !DigitalWallets.isApplePayAvailable.toString());
+        // ENGrid.setBodyData(
+        //   "payment-type-option-apple-pay",
+        //   DigitalWallets.isApplePayAvailable.toString()
+        // );
+        // ENGrid.setBodyData(
+        //   "payment-type-option-google-pay",
+        //   !DigitalWallets.isApplePayAvailable.toString()
+        // );
+        // TODO: Change to trustworthy detection of Google Pay & Apple Pay availability
+        engrid_ENGrid.setBodyData("payment-type-option-apple-pay", "true");
+        engrid_ENGrid.setBodyData("payment-type-option-google-pay", "true");
         engrid_ENGrid.setBodyData("payment-type-option-stripedigitalwallet", "true");
     }
     addPaypalTouchDigitalWallets() {
@@ -20171,7 +20187,6 @@ class DigitalWallets {
         observer.observe(node, { childList: true, subtree: true });
     }
 }
-DigitalWallets.isApplePayAvailable = !!window.hasOwnProperty("ApplePaySession");
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/mobile-cta.js
 // This component adds a floating CTA button to the page, which can be used to scroll to the top of the form
@@ -23269,7 +23284,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.23.1";
+const AppVersion = "0.23.2";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
