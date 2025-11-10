@@ -22,6 +22,10 @@
 @import "./page-template-styles-2024";
 @import "./page-template-styles-202503";
 
+[data-engrid-theme="oceana"][data-engrid-subtheme="multistep"] {
+  @import "./multistep";
+}
+
 /* ENGRID PAGE TEMPLATES MAKES THE BODY INVISIBLE SO THE USER NEVER SEE'S AN UNSTYLED PAGE*/
 /* THIS MAKES THE BODY VISIBLE AFTER IT'S DOWNLOADED AND PARSED BY THE BROWSER */
 body {
