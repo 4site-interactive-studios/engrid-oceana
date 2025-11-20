@@ -641,4 +641,36 @@ export const customScript = function (App, Frequency) {
 
   // Call the function
   initializeTicketLogic();
+
+  const recurringStatus = document.querySelector(".js-recurring-status");
+  if (recurringStatus) {
+    if (
+      window.navigator.language === "es-MX" ||
+      window.location.href.indexOf("locale=es-MX") > -1 ||
+      pageJson.locale === "es-MX"
+    ) {
+      console.log(recurringStatus.textContent);
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Mensual";
+          break;
+        case "ANNUAL":
+          recurringStatus.textContent = "Anual";
+          break;
+        default:
+          recurringStatus.textContent = "Una vez";
+      }
+    } else {
+      switch (recurringStatus.textContent) {
+        case "MONTHLY":
+          recurringStatus.textContent = "Monthly";
+          break;
+        case "ANNUAL":
+          recurringStatus.textContent = "Annual";
+          break;
+        default:
+          recurringStatus.textContent = "One-time";
+      }
+    }
+  }
 };
