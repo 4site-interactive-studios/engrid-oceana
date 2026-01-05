@@ -4,7 +4,12 @@ import {
   DonationFrequency,
   DonationAmount,
 } from "@4site/engrid-scripts"; // Uses ENGrid via NPM
-// import { Options, App, DonationFrequency } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+// import {
+//   Options,
+//   App,
+//   DonationFrequency,
+//   DonationAmount,
+// } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
@@ -30,30 +35,30 @@ const options: Options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7",
   },
-  RememberMe: {
-    checked: true,
-    remoteUrl: "https://oceana.org/data-remember.html",
-    fieldOptInSelectorTarget:
-      "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
-    fieldOptInSelectorTargetLocation: "after",
-    fieldClearSelectorTarget:
-      "div.en__field--firstName div, div.en__field--email div",
-    fieldClearSelectorTargetLocation: "after",
-    fieldNames: [
-      "supporter.firstName",
-      "supporter.lastName",
-      "supporter.address1",
-      "supporter.address2",
-      "supporter.city",
-      "supporter.country",
-      "supporter.region",
-      "supporter.postcode",
-      "supporter.emailAddress",
-    ],
-  },
-  PreferredPaymentMethod: {
-    preferredPaymentMethodField: "supporter.NOT_TAGGED_16",
-  },
+  // RememberMe: {
+  //   checked: true,
+  //   remoteUrl: "https://oceana.org/data-remember.html",
+  //   fieldOptInSelectorTarget:
+  //     "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+  //   fieldOptInSelectorTargetLocation: "after",
+  //   fieldClearSelectorTarget:
+  //     "div.en__field--firstName div, div.en__field--email div",
+  //   fieldClearSelectorTargetLocation: "after",
+  //   fieldNames: [
+  //     "supporter.firstName",
+  //     "supporter.lastName",
+  //     "supporter.address1",
+  //     "supporter.address2",
+  //     "supporter.city",
+  //     "supporter.country",
+  //     "supporter.region",
+  //     "supporter.postcode",
+  //     "supporter.emailAddress",
+  //   ],
+  // },
+  // PreferredPaymentMethod: {
+  //   preferredPaymentMethodField: "supporter.NOT_TAGGED_16",
+  // },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other":
       "Custom Amount",
