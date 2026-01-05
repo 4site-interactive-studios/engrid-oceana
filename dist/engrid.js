@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, November 26, 2025 @ 17:55:25 ET
- *  By: fernando
+ *  Date: Monday, January 5, 2026 @ 13:03:23 ET
+ *  By: bryancasler
  *  ENGrid styles: v0.23.4
  *  ENGrid scripts: v0.23.7
  *
@@ -24048,7 +24048,7 @@ const customScript = function (App, Frequency) {
 
     if (mobilePhoneInput && smsOptInCheckbox) {
       // Add a notice to the mobile phone field
-      App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana on how to help the oceans (including marketing messages). Consent is not a condition of purchase. Msg & data rates may apply. Txt STOP to stop or HELP for help. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', ".en__field--phoneNumber2 .en__field__element", "after"); // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
+      App.addHtml('<div class="en__field__notice"><em>By providing your mobile phone number you agree to receive automated updates from Oceana from +1 (202) 883-3993 on how to help the oceans (including marketing messages). Recurring msgs. Msg&DataRatesMayApply. Reply STOP to cancel or HELP for more information. <a href="https://oceana.org/terms-of-use/" target="_blank" title="Terms">Terms</a> and <a href="https://oceana.org/privacy-policy/" target="_blank" title="Privacy Policy">Privacy Policy</a></em></div>', ".en__field--phoneNumber2 .en__field__element", "after"); // Function to toggle the SMS opt-in checkbox based on the mobile phone input value
 
       const toggleCheckbox = () => {
         if (mobilePhoneInput.value.trim() !== "") {
