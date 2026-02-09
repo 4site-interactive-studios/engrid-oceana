@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 5, 2026 @ 13:03:23 ET
- *  By: bryancasler
+ *  Date: Friday, February 6, 2026 @ 01:20:45 ET
+ *  By: fernando
  *  ENGrid styles: v0.23.4
- *  ENGrid scripts: v0.23.7
+ *  ENGrid scripts: v0.23.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -9363,7 +9363,7 @@ body[data-engrid-debug]:before{
   width:50%;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:first-of-type input:checked+label:after{
-  filter:invert(1) grayscale(1) contrast(100) brightness(1);
+  filter:invert(1) grayscale(1) contrast(1) brightness(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type{
   padding-left:0;
@@ -9386,7 +9386,7 @@ body[data-engrid-debug]:before{
   transform:scale(.7) translateY(10px);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .radio-to-buttons_recurrfreq .en__field--recurrfreq.en__field--radio>.en__field__element .en__field__item:last-of-type input:checked+label:after{
-  filter:invert(1) grayscale(1) contrast(100) brightness(1);
+  filter:invert(1) grayscale(1) contrast(1) brightness(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .inline-donation-message{
   border-bottom:2px solid #0000;
@@ -9442,7 +9442,7 @@ body[data-engrid-debug]:before{
   filter:brightness(0) invert(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.paypal-venmo{
-  filter:invert(1) grayscale(1) contrast(100) brightness(1);
+  filter:invert(1) grayscale(1) contrast(1) brightness(1);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__field--give-by-select input:checked+label>img.daf-logo{
   filter:brightness(3) invert(0);

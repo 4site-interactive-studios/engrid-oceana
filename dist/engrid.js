@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, January 5, 2026 @ 13:03:23 ET
- *  By: bryancasler
+ *  Date: Friday, February 6, 2026 @ 01:20:45 ET
+ *  By: fernando
  *  ENGrid styles: v0.23.4
- *  ENGrid scripts: v0.23.7
+ *  ENGrid scripts: v0.23.11
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -17361,7 +17361,7 @@ class DataLayer {
             if (el.value === "" || this.excludedFields.includes(el.name))
                 return;
             const value = this.hashedFields.includes(el.name)
-                ? this.hash(el.value)
+                ? yield this.hash(el.value)
                 : el.value;
             if (["checkbox", "radio"].includes(el.type)) {
                 if (el.checked) {
@@ -17389,7 +17389,7 @@ class DataLayer {
             }
             if (el.name === this.retainedEmailField) {
                 const retainedEmailValue = this.geRetainedFieldsValue("email");
-                const sha256value = yield this.shaHash(retainedEmailValue);
+                const sha256value = yield this.hash(retainedEmailValue);
                 localStorage.setItem(`EN_HASH_EMAIL`, sha256value);
                 this.dataLayer.push({
                     event: "EN_HASH_VALUE_UPDATED",
@@ -17401,7 +17401,7 @@ class DataLayer {
             }
             else if (this.retainedAddressFields.includes(el.name)) {
                 const retainedAddressValue = this.geRetainedFieldsValue("address");
-                const sha256value = yield this.shaHash(retainedAddressValue);
+                const sha256value = yield this.hash(retainedAddressValue);
                 localStorage.setItem(`EN_HASH_ADDRESS`, sha256value);
                 this.dataLayer.push({
                     event: "EN_HASH_VALUE_UPDATED",
@@ -17412,7 +17412,7 @@ class DataLayer {
             }
             else if (this.retainedPhoneFields.includes(el.name)) {
                 const retainedPhoneValue = this.geRetainedFieldsValue("phone");
-                const sha256value = yield this.shaHash(retainedPhoneValue);
+                const sha256value = yield this.hash(retainedPhoneValue);
                 localStorage.setItem(`EN_HASH_PHONE`, sha256value);
                 this.dataLayer.push({
                     event: "EN_HASH_VALUE_UPDATED",
@@ -17454,10 +17454,6 @@ class DataLayer {
         }
     }
     hash(value) {
-        return btoa(value);
-    }
-    // TODO: Replace the hash function with this secure SHA-256 implementation later
-    shaHash(value) {
         return data_layer_awaiter(this, void 0, void 0, function* () {
             const data = this.encoder.encode(value);
             const hashBuffer = yield crypto.subtle.digest("SHA-256", data);
@@ -22089,6 +22085,7 @@ class VGS {
                 // Autocomplete is not customizable
                 autoComplete: "cc-number",
                 validations: ["required", "validCardNumber"],
+                validCardBrands: null
             },
             "transaction.ccvv": {
                 showCardIcon: false,
@@ -22106,6 +22103,12 @@ class VGS {
                 css: styles,
             },
         };
+        // Override the validCardBrands if set in the theme options, as this should not be deep merged.
+        if (options &&
+            options["transaction.ccnumber"] &&
+            options["transaction.ccnumber"].validCardBrands) {
+            defaultOptions["transaction.ccnumber"].validCardBrands = options["transaction.ccnumber"].validCardBrands;
+        }
         // Deep merge the default options with the options set in the theme
         this.options = engrid_ENGrid.deepMerge(defaultOptions, options);
         this.logger.log("Options", this.options);
@@ -22307,6 +22310,7 @@ class WelcomeBack {
             region: engrid_ENGrid.getFieldValue("supporter.region"),
             postcode: engrid_ENGrid.getFieldValue("supporter.postcode"),
             country: engrid_ENGrid.getFieldValue("supporter.country"),
+            mobilePhone: engrid_ENGrid.getFieldValue("supporter.phoneNumber2"),
         };
         this.addWelcomeBack();
         this.addPersonalDetailsSummary();
@@ -22361,6 +22365,9 @@ class WelcomeBack {
         ${this.supporterDetails["firstName"]} ${this.supporterDetails["lastName"]}
         <br>
         ${this.supporterDetails["emailAddress"]}
+        ${this.supporterDetails["mobilePhone"]
+            ? `<br>${this.supporterDetails["mobilePhone"]}`
+            : ""}
      </p>
     `);
         if (this.supporterDetails["address1"] &&
@@ -23854,7 +23861,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.23.7";
+const AppVersion = "0.23.11";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -25914,30 +25921,18 @@ const options = {
     phone_date_field: "supporter.NOT_TAGGED_6",
     phone_status_field: "supporter.NOT_TAGGED_7"
   },
-  // RememberMe: {
-  //   checked: true,
-  //   remoteUrl: "https://oceana.org/data-remember.html",
-  //   fieldOptInSelectorTarget:
-  //     "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
-  //   fieldOptInSelectorTargetLocation: "after",
-  //   fieldClearSelectorTarget:
-  //     "div.en__field--firstName div, div.en__field--email div",
-  //   fieldClearSelectorTargetLocation: "after",
-  //   fieldNames: [
-  //     "supporter.firstName",
-  //     "supporter.lastName",
-  //     "supporter.address1",
-  //     "supporter.address2",
-  //     "supporter.city",
-  //     "supporter.country",
-  //     "supporter.region",
-  //     "supporter.postcode",
-  //     "supporter.emailAddress",
-  //   ],
-  // },
-  // PreferredPaymentMethod: {
-  //   preferredPaymentMethodField: "supporter.NOT_TAGGED_16",
-  // },
+  RememberMe: {
+    checked: true,
+    remoteUrl: "https://oceana.org/data-remember.html",
+    fieldOptInSelectorTarget: "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+    fieldOptInSelectorTargetLocation: "after",
+    fieldClearSelectorTarget: "div.en__field--firstName div, div.en__field--email div",
+    fieldClearSelectorTargetLocation: "after",
+    fieldNames: ["supporter.firstName", "supporter.lastName", "supporter.address1", "supporter.address2", "supporter.city", "supporter.country", "supporter.region", "supporter.postcode", "supporter.emailAddress"]
+  },
+  PreferredPaymentMethod: {
+    preferredPaymentMethodField: "supporter.NOT_TAGGED_16"
+  },
   Placeholders: {
     ".en__field--donationAmt.en__field--withOther .en__field__input--other": "Custom Amount"
   },

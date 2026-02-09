@@ -314,7 +314,7 @@
         // }
 
         input:checked + label:after {
-          filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
+          filter: invert(1) grayscale(1) contrast(1) brightness(1); // Make white with no grays
         }
       }
 
@@ -342,7 +342,7 @@
         }
 
         input:checked + label:after {
-          filter: invert(1) grayscale(1) contrast(100) brightness(1); // Make white with no grays
+          filter: invert(1) grayscale(1) contrast(1) brightness(1); // Make white with no grays
         }
       }
 
@@ -428,7 +428,7 @@
 
   .en__field--give-by-select input:checked + label > img.paypal-venmo,
   .en__field--give-by-select input:checked + label > img.paypal {
-    filter: invert(1) grayscale(1) contrast(100) brightness(1);
+    filter: invert(1) grayscale(1) contrast(1) brightness(1);
   }
 
   // Removed .en__field--give-by-select input:hover + label > img.daf-logo
