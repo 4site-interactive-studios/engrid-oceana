@@ -39,7 +39,7 @@ const options: Options = {
     checked: true,
     remoteUrl: "https://oceana.org/data-remember.html",
     fieldOptInSelectorTarget:
-      "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+      "[data-engrid-page-type=donation] .en__field.en__field--postcode .en__field__element, .en__field.en__field--telephone .en__field__notice, .en__field .en__field__element--email",
     fieldOptInSelectorTargetLocation: "after",
     fieldClearSelectorTarget:
       "div.en__field--firstName div, div.en__field--email div",

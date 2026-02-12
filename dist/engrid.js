@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, February 6, 2026 @ 01:20:45 ET
+ *  Date: Thursday, February 12, 2026 @ 17:25:02 ET
  *  By: fernando
  *  ENGrid styles: v0.23.4
- *  ENGrid scripts: v0.23.11
+ *  ENGrid scripts: v0.23.12
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -16623,8 +16623,40 @@ class RememberMe {
     setFieldValue(field, value, overwrite = false) {
         value = decodeURIComponent(value || "");
         if (field && value !== undefined) {
-            if ((field.value && overwrite) || !field.value) {
-                field.value = value;
+            if ("type" in field) {
+                switch (field.type) {
+                    case "select-one":
+                    case "select-multiple": {
+                        const selectField = field;
+                        for (const option of Array.from(selectField.options)) {
+                            if (option.value === value) {
+                                if ((selectField.value && overwrite) || !selectField.value) {
+                                    option.selected = true;
+                                    selectField.dispatchEvent(new Event("change", { bubbles: true }));
+                                }
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case "checkbox":
+                    case "radio": {
+                        const inputField = field;
+                        if (inputField.value === value) {
+                            inputField.checked = true;
+                            inputField.dispatchEvent(new Event("change", { bubbles: true }));
+                        }
+                        break;
+                    }
+                    case "textarea":
+                    case "text":
+                    default:
+                        if ((field.value && overwrite) || !field.value) {
+                            field.value = value;
+                            field.dispatchEvent(new Event("change", { bubbles: true }));
+                            field.dispatchEvent(new Event("blur", { bubbles: true }));
+                        }
+                }
             }
         }
     }
@@ -23861,7 +23893,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.23.11";
+const AppVersion = "0.23.12";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
@@ -25924,7 +25956,7 @@ const options = {
   RememberMe: {
     checked: true,
     remoteUrl: "https://oceana.org/data-remember.html",
-    fieldOptInSelectorTarget: "div.en__field--postcode, div.en__field--telephone, div.en__field--email, div.en__field--lastName",
+    fieldOptInSelectorTarget: "[data-engrid-page-type=donation] .en__field.en__field--postcode .en__field__element, .en__field.en__field--telephone .en__field__notice, .en__field .en__field__element--email",
     fieldOptInSelectorTargetLocation: "after",
     fieldClearSelectorTarget: "div.en__field--firstName div, div.en__field--email div",
     fieldClearSelectorTargetLocation: "after",
