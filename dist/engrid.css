@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 9, 2026 @ 15:39:16 ET
+ *  Date: Monday, March 9, 2026 @ 15:45:25 ET
  *  By: fernando
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -2867,8 +2867,7 @@ body:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   overflow:hidden;
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
-          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
+  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height)));
   max-height:calc(var(--click-to-expand__copy-area_height) - var(--click-to-expand__cta-image_height) - 35px);
 }
 body:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta{
@@ -8998,8 +8997,7 @@ body[data-engrid-debug]:before{
   top:2px;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
-          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"] .click-to-expand.expanded .click-to-expand-text-wrapper>:last-child{
   margin-bottom:0;
@@ -9316,8 +9314,7 @@ body[data-engrid-debug]:before{
   position:relative;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-text-wrapper{
-  -webkit-mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
-          mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
+  mask-image:linear-gradient(to bottom, #000 50%, #fff0 calc(100% - var(--click-to-expand__cta-image_height) - 13px));
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .click-to-expand.expanded{
   margin-bottom:1.4rem;
