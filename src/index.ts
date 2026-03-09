@@ -24,7 +24,6 @@ const options: Options = {
   MediaAttribution: true,
   SkipToMainContentLink: true,
   SrcDefer: true,
-  Plaid: true,
   // ProgressBar: true,
   TidyContact: {
     cid: "1ad9c6ab-a7ae-4da2-a1aa-065a140b2c27",
