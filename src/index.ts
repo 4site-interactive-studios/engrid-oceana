@@ -13,6 +13,7 @@ import {
 import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
+import MobileCommons from "./scripts/mobilecommons";
 
 const options: Options = {
   applePay: false,
@@ -79,6 +80,13 @@ const options: Options = {
     if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
+    new MobileCommons({
+      opt_in_paths: {
+        "98245": "OP666A6495505DCD60CF5F19729E142F64",
+        "184713": "OP666A6495505DCD60CF5F19729E142F64",
+        default: "OPF4BDF7B12C0D12DF861AD2C77DD74ECB"
+      }
+    });
   },
   onResize: () => console.log("Starter Theme Window Resized"),
 };

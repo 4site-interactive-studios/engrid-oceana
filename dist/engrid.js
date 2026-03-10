@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 9, 2026 @ 15:45:25 ET
- *  By: fernando
+ *  Date: Tuesday, March 10, 2026 @ 14:18:06 ET
+ *  By: nick
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
  *
@@ -26007,6 +26007,143 @@ class DonationLightboxForm {
   }
 
 }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+;// CONCATENATED MODULE: ./src/scripts/mobilecommons.ts
+
+
+/**
+ * MobileCommons integration module for ENGrid forms. 
+ * This module listens for form submissions and sends supporter data to MobileCommons using their API.
+ * It maps ENGrid fields to MobileCommons fields based on a defined mapping.
+ */
+
+const MOBILE_COMMONS_URL = "https://secure.mcommons.com/profiles/join";
+class MobileCommons {
+  constructor(options) {
+    _defineProperty(this, "logger", new logger_EngridLogger("MobileCommons", "blue", "lightblue", "💬"));
+
+    _defineProperty(this, "options", void 0);
+
+    this.options = options;
+    en_form_EnForm.getInstance().onSubmit.subscribe(async () => await this.postToMC());
+  }
+
+  async postToMC() {
+    const multipartData = new FormData(); // Map ENGrid fields to Mobile Commons fields based on the defined field mapping
+
+    let missingRequiredField = false;
+    const customFields = {};
+
+    for (const [mcField, engridField] of Object.entries(MobileCommons.fieldMapping)) {
+      const value = engrid_ENGrid.getFieldValue(engridField.name);
+
+      if (value) {
+        if (engridField.custom) {
+          customFields[mcField] = value;
+        } else {
+          multipartData.append(mcField, value);
+        }
+      } else if (engridField.required) {
+        this.logger.warn(`Required field ${mcField} is missing.`);
+        missingRequiredField = true;
+      }
+    }
+
+    if (missingRequiredField) {
+      this.logger.warn("Skipping Mobile Commons submission due to missing required fields.");
+      return;
+    }
+
+    if (Object.keys(customFields).length > 0) {
+      multipartData.append("person[custom_fields]", JSON.stringify(customFields));
+    }
+
+    this.logger.log("Prepared data for Mobile Commons submission:\n", multipartData); // Determine the opt-in path based on the current page
+
+    const pageId = engrid_ENGrid.getPageID();
+    const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths['default'];
+    multipartData.append("opt_in_path_id", optInPath);
+    this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
+
+    try {
+      const response = await fetch(MOBILE_COMMONS_URL, {
+        method: "POST",
+        body: multipartData,
+        signal: this.createTimeoutSignal(5000)
+      });
+
+      if (!response.ok) {
+        this.logger.error(`Mobile Commons submission failed with status: ${response.status}`);
+      } else {
+        this.logger.log("Mobile Commons submission successful.");
+      }
+    } catch (error) {
+      this.logger.error("Error submitting to Mobile Commons:", error);
+    }
+  } // Polyfill for fetch timeout using AbortController
+  // Has greater support than the newer AbortSignal.timeout() method
+
+
+  createTimeoutSignal(timeout) {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), timeout);
+    return controller.signal;
+  }
+
+}
+
+_defineProperty(MobileCommons, "fieldMapping", {
+  "person[phone]": {
+    name: "supporter.phoneNumber2",
+    required: true
+  },
+  "person[email]": {
+    name: "supporter.emailAddress"
+  },
+  "person[first_name]": {
+    name: "supporter.firstName"
+  },
+  "person[last_name]": {
+    name: "supporter.lastName"
+  },
+  "person[street1]": {
+    name: "supporter.address1"
+  },
+  "person[city]": {
+    name: "supporter.city"
+  },
+  "person[state]": {
+    name: "supporter.region"
+  },
+  "person[postal_code]": {
+    name: "supporter.postcode"
+  },
+  "person[country]": {
+    name: "supporter.country"
+  },
+  "no_fundraising_ask": {
+    name: "supporter.questions.1495752",
+    custom: true
+  },
+  "sailors_for_the_sea_sms": {
+    name: "supporter.questions.2156746",
+    custom: true
+  }
+});
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -26015,6 +26152,7 @@ class DonationLightboxForm {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -26069,6 +26207,14 @@ const options = {
     if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
+
+    new MobileCommons({
+      opt_in_paths: {
+        "98245": "OP666A6495505DCD60CF5F19729E142F64",
+        "184713": "OP666A6495505DCD60CF5F19729E142F64",
+        default: "OPF4BDF7B12C0D12DF861AD2C77DD74ECB"
+      }
+    });
   },
   onResize: () => console.log("Starter Theme Window Resized")
 };
