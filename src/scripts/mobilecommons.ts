@@ -11,18 +11,16 @@ import {
 
 interface MobileCommonsOptions {
   opt_in_paths: {
-    [key: string]: string;
-    default: string;
+    [key: string]: string; // You can set specific page IDs as keys or use 'default' for a fallback opt-in path. Setting a page id to "" will disable Mobile Commons for that page.
   };
 }
 interface MobileCommonsFieldMapping {
   [key: string]: {
-    name: string;
-    custom?: boolean;
-    required?: boolean;
+    name: string;// The ENGrid field name to pull the value from
+    custom?: boolean;// If true, the field will be included in the person[custom_fields] JSON object instead of as a top-level field
+    required?: boolean;// If true, the Mobile Commons submission will be blocked if this field is missing or empty
   };
 }
-const MOBILE_COMMONS_URL = "https://secure.mcommons.com/profiles/join";
 
 export default class MobileCommons {
   private logger: EngridLogger = new EngridLogger(
@@ -31,6 +29,12 @@ export default class MobileCommons {
     "lightblue",
     "💬"
   );
+
+  private endpoint = "https://secure.mcommons.com/profiles/join";
+  private wasCalled = false; // True if the API endpoint was called
+  private timeout = 5; // Seconds to API Timeout
+
+  private _form: EnForm = EnForm.getInstance();
 
   private static fieldMapping: MobileCommonsFieldMapping = {
     "person[phone]": { name: "supporter.phoneNumber2", required: true },
@@ -49,10 +53,51 @@ export default class MobileCommons {
   private options: MobileCommonsOptions;
   constructor(options: MobileCommonsOptions) {
     this.options = options;
-    EnForm.getInstance().onSubmit.subscribe(async () => await this.postToMC());
+    if(!this.shouldRun()) return;
+    this.addEventListeners();
   }
 
-  public async postToMC() {
+  private shouldRun() {
+    if(!this.options.opt_in_paths) return false;
+    const hasPhoneNumber = ENGrid.getField("supporter.phoneNumber2") !== undefined;
+    const hasOptInPath = this.options.opt_in_paths.default !== undefined || ENGrid.getPageID() && this.options.opt_in_paths[ENGrid.getPageID().toString()] !== undefined && this.options.opt_in_paths[ENGrid.getPageID().toString()] !== "";
+    return hasPhoneNumber && hasOptInPath;
+  }
+
+  private addEventListeners() {
+    this.logger.log("Initializing Mobile Commons integration");
+    // Add event listener to submit
+    this._form.onSubmit.subscribe(this.callAPI.bind(this));
+    // Un-comment the below code to anticipate the use of Digital Wallets, should the client choose to use them in the future.
+    // // Attach the API call event to the Give By Select to anticipate the use of Digital Wallets
+    // const transactionGiveBySelect = document.getElementsByName(
+    //   "transaction.giveBySelect"
+    // ) as NodeListOf<HTMLInputElement>;
+    // if (transactionGiveBySelect) {
+    //   transactionGiveBySelect.forEach((giveBySelect) => {
+    //     giveBySelect.addEventListener("change", () => {
+    //       if (
+    //         ["stripedigitalwallet", "paypaltouch"].includes(
+    //           giveBySelect.value.toLowerCase()
+    //         )
+    //       ) {
+    //         this.logger.log("Clicked Digital Wallet Button");
+    //         window.setTimeout(() => {
+    //           this.callAPI();
+    //         }, 500);
+    //       }
+    //     });
+    //   });
+    // }
+  }
+  
+  public callAPI() {
+    if (this.wasCalled) return;
+    if (!this._form.submit) {
+      this.logger.log("Form Submission Interrupted by Other Component");
+      return;
+    }
+
     const multipartData = new FormData();
     // Map ENGrid fields to Mobile Commons fields based on the defined field mapping
     let missingRequiredField = false;
@@ -71,6 +116,13 @@ export default class MobileCommons {
       }
     }
 
+    const smsField = document.querySelector('.en__field--sms input[type="checkbox"]') as HTMLInputElement | null;
+    const sailorsField = document.querySelector('.en__field--sailors-for-the-sea-sms input[type="checkbox"]') as HTMLInputElement | null;
+    if (!smsField?.checked && !sailorsField?.checked) {
+      this.logger.warn("At least one SMS opt-in checkbox must be selected.");
+      missingRequiredField = true;
+    }
+
     if (missingRequiredField) {
       this.logger.warn("Skipping Mobile Commons submission due to missing required fields.");
       return;
@@ -80,36 +132,40 @@ export default class MobileCommons {
       multipartData.append("person[custom_fields]", JSON.stringify(customFields));
     }
 
-    this.logger.log("Prepared data for Mobile Commons submission:\n", multipartData);
+    this.logger.log("Prepared data for Mobile Commons submission:\n", Object.fromEntries(multipartData.entries()), "\nCustom Fields:\n", customFields);
 
     // Determine the opt-in path based on the current page
-    const pageId = ENGrid.getPageID();
+    const pageId = ENGrid.getPageID().toString();
     const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths['default'];
     multipartData.append("opt_in_path_id", optInPath);
     this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
 
-    try {
-      const response = await fetch(MOBILE_COMMONS_URL, {
-        method: "POST",
-        body: multipartData,
-        signal: this.createTimeoutSignal(5000),
-      });
+    this.wasCalled = true;
 
-      if (!response.ok) {
-        this.logger.error(`Mobile Commons submission failed with status: ${response.status}`);
-      } else {
-        this.logger.log("Mobile Commons submission successful.");
+    const ret = this.fetchTimeOut(this.endpoint, {
+      method: "POST",
+      body: multipartData,
+    }).then((response) => {
+      return response.text();
+    }).then(async (data) => {
+      this.logger.log("API response", data);
+    }).catch((error) => {
+      if (error.toString().includes("AbortError")) {
+        // fetch aborted due to timeout
+        this.logger.log("Fetch aborted");
       }
-    } catch (error) {
-      this.logger.error("Error submitting to Mobile Commons:", error);
-    }
+      this.logger.log("Error calling Mobile Commons API", error);
+    });
+    this._form.submitPromise = ret;
+    return ret;
   }
-
-  // Polyfill for fetch timeout using AbortController
-  // Has greater support than the newer AbortSignal.timeout() method
-  private createTimeoutSignal(timeout: number): AbortSignal {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), timeout);
-    return controller.signal;
+  private fetchTimeOut(url: RequestInfo, params?: RequestInit) {
+    const abort = new AbortController();
+    const signal = abort.signal;
+    params = { ...params, signal };
+    const promise = fetch(url, params);
+    if (signal) signal.addEventListener("abort", () => abort.abort());
+    const timeout = setTimeout(() => abort.abort(), this.timeout * 1000);
+    return promise.finally(() => clearTimeout(timeout));
   }
 }
