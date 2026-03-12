@@ -84,6 +84,7 @@ const options: Options = {
       opt_in_paths: {
         "98245": "OP666A6495505DCD60CF5F19729E142F64",
         "184713": "OP666A6495505DCD60CF5F19729E142F64",
+        "188263": "OP666A6495505DCD60CF5F19729E142F64", // Demonstration Page
         default: "OPF4BDF7B12C0D12DF861AD2C77DD74ECB"
       }
     });
