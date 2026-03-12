@@ -68,27 +68,26 @@ export default class MobileCommons {
     this.logger.log("Initializing Mobile Commons integration");
     // Add event listener to submit
     this._form.onSubmit.subscribe(this.callAPI.bind(this));
-    // Un-comment the below code to anticipate the use of Digital Wallets, should the client choose to use them in the future.
-    // // Attach the API call event to the Give By Select to anticipate the use of Digital Wallets
-    // const transactionGiveBySelect = document.getElementsByName(
-    //   "transaction.giveBySelect"
-    // ) as NodeListOf<HTMLInputElement>;
-    // if (transactionGiveBySelect) {
-    //   transactionGiveBySelect.forEach((giveBySelect) => {
-    //     giveBySelect.addEventListener("change", () => {
-    //       if (
-    //         ["stripedigitalwallet", "paypaltouch"].includes(
-    //           giveBySelect.value.toLowerCase()
-    //         )
-    //       ) {
-    //         this.logger.log("Clicked Digital Wallet Button");
-    //         window.setTimeout(() => {
-    //           this.callAPI();
-    //         }, 500);
-    //       }
-    //     });
-    //   });
-    // }
+    // Attach the API call event to the Give By Select to anticipate the use of Digital Wallets
+    const transactionGiveBySelect = document.getElementsByName(
+      "transaction.giveBySelect"
+    ) as NodeListOf<HTMLInputElement>;
+    if (transactionGiveBySelect) {
+      transactionGiveBySelect.forEach((giveBySelect) => {
+        giveBySelect.addEventListener("change", () => {
+          if (
+            ["stripedigitalwallet", "paypaltouch"].includes(
+              giveBySelect.value.toLowerCase()
+            )
+          ) {
+            this.logger.log("Clicked Digital Wallet Button");
+            window.setTimeout(() => {
+              this.callAPI();
+            }, 500);
+          }
+        });
+      });
+    }
   }
   
   public callAPI() {
