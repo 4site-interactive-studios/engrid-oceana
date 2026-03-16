@@ -21,7 +21,11 @@ interface MobileCommonsFieldMapping {
     required?: boolean;// If true, the Mobile Commons submission will be blocked if this field is missing or empty
   };
 }
-
+declare global {
+  interface Window {
+    EngagingNetworks: any;
+  }
+}
 export default class MobileCommons {
   private logger: EngridLogger = new EngridLogger(
     "MobileCommons",
@@ -29,6 +33,10 @@ export default class MobileCommons {
     "lightblue",
     "💬"
   );
+
+  private listeningForDAF = false;
+  private listeningForStripeDigialWallets = false;
+  private listeningForPayPalTouch = false;
 
   private endpoint = "https://secure.mcommons.com/profiles/join";
   private wasCalled = false; // True if the API endpoint was called
@@ -53,43 +61,107 @@ export default class MobileCommons {
   private options: MobileCommonsOptions;
   constructor(options: MobileCommonsOptions) {
     this.options = options;
-    if(!this.shouldRun()) return;
+    if (!this.shouldRun()) return;
     this.addEventListeners();
   }
 
   private shouldRun() {
-    if(!this.options.opt_in_paths) return false;
+    if (!this.options.opt_in_paths) return false;
     const hasPhoneNumber = ENGrid.getField("supporter.phoneNumber2") !== undefined;
     const hasOptInPath = this.options.opt_in_paths.default !== undefined || ENGrid.getPageID() && this.options.opt_in_paths[ENGrid.getPageID().toString()] !== undefined && this.options.opt_in_paths[ENGrid.getPageID().toString()] !== "";
-    return hasPhoneNumber && hasOptInPath;
+    const isThankYouPage = ENGrid.isThankYouPage();
+    return hasPhoneNumber && hasOptInPath && !isThankYouPage;
   }
 
   private addEventListeners() {
     this.logger.log("Initializing Mobile Commons integration");
-    // Add event listener to submit
+    // Add event listener to submit - For standard form submissions
     this._form.onSubmit.subscribe(this.callAPI.bind(this));
-    // Attach the API call event to the Give By Select to anticipate the use of Digital Wallets
+    // Attach the API call event to the Give By Select (or PaymentType) to anticipate the use of Digital Wallets.
     const transactionGiveBySelect = document.getElementsByName(
       "transaction.giveBySelect"
     ) as NodeListOf<HTMLInputElement>;
-    if (transactionGiveBySelect) {
+    const paymentTypeSelect = ENGrid.getField("transaction.paymenttype");
+    if (transactionGiveBySelect && transactionGiveBySelect.length > 0) {
+      this.logger.log("Attaching event listeners to transaction.giveBySelect fields for payment type changes");
+      // Check initial value
+      this.handlePaymentTypeChange(transactionGiveBySelect[0].value);
+      // Handle changes
       transactionGiveBySelect.forEach((giveBySelect) => {
         giveBySelect.addEventListener("change", () => {
-          if (
-            ["stripedigitalwallet", "paypaltouch"].includes(
-              giveBySelect.value.toLowerCase()
-            )
-          ) {
-            this.logger.log("Clicked Digital Wallet Button");
-            window.setTimeout(() => {
-              this.callAPI();
-            }, 500);
-          }
+          this.handlePaymentTypeChange(giveBySelect.value);
         });
+      });
+    } else if (paymentTypeSelect) {
+      this.logger.log("Attaching event listener to transaction.paymenttype field for payment type changes");
+      // Check initial value
+      const value = ENGrid.getFieldValue("transaction.paymenttype");
+      if (value) {
+        this.handlePaymentTypeChange(value);
+      }
+      // Handle changes
+      paymentTypeSelect.addEventListener("change", (e) => {
+        this.handlePaymentTypeChange((e.target as HTMLInputElement).value);
       });
     }
   }
-  
+  private handlePaymentTypeChange(value: string) {
+    switch (value.toLowerCase()) {
+      case "stripedigitalwallet":
+        this.addStripeDigitalWalletListener();
+        break;
+      case "paypaltouch":
+      case "paypal-onetouch":
+      case "paypal-one-touch":
+      case "paypalonetouch":
+        this.addPaypalOneTouchListener();
+        break;
+      case "daf":
+      case "dafpay":
+        this.addDAFListener();
+        break;
+    }
+  }
+  private addPaypalOneTouchListener() {
+    if (!this.listeningForPayPalTouch) {
+      this.listeningForPayPalTouch = true;
+      this.logger.log("Activating PayPal Touch listener for Mobile Commons API call");
+      const paypalTouch = window.EngagingNetworks?.require?._defined?.enPaypalTouch?.paypalTouch,
+        buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+      paypalTouch.library.Buttons = (o: any) =>
+        buttons({
+          ...o,
+          onClick: (d: any, a: any) => (
+            this.logger.log("PayPal Touch button clicked, sending Mobile Commons API call"),
+            this.callAPI(),
+            o.onClick && o.onClick(d, a)
+          ),
+        });
+      paypalTouch.unloadButton && paypalTouch.unloadButton();
+      paypalTouch.loadButton && paypalTouch.loadButton();
+    }
+  }
+  private addStripeDigitalWalletListener() {
+    if (!this.listeningForStripeDigialWallets) {
+      this.logger.log("Activating Stripe Digital Wallet listener for Mobile Commons API call");
+      this.listeningForStripeDigialWallets = true;
+      window.EngagingNetworks?.require?._defined?.enStripeButtons?.stripeButtons?.paymentRequest?.on("paymentmethod", () => {
+        this.logger.log("Stripe Digital Wallet payment method triggered, sending Mobile Commons API call");
+        this.callAPI();
+      });
+    }
+  }
+  private addDAFListener() {
+    if (!this.listeningForDAF) {
+      this.logger.log("Activating DAF listener for Mobile Commons API call");
+      this.listeningForDAF = true;
+      document.getElementById("chariot-button")?.addEventListener("click", () => {
+        this.logger.log("Chariot button clicked, sending Mobile Commons API call");
+        this.callAPI();
+      });
+    }
+  }
+
   public callAPI() {
     if (this.wasCalled) return;
     if (!this._form.submit) {

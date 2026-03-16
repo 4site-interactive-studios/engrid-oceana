@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Wednesday, March 11, 2026 @ 15:14:28 ET
+ *  Date: Monday, March 16, 2026 @ 15:44:11 ET
  *  By: nick
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -26041,6 +26041,12 @@ class MobileCommons {
   constructor(options) {
     _defineProperty(this, "logger", new logger_EngridLogger("MobileCommons", "blue", "lightblue", "💬"));
 
+    _defineProperty(this, "listeningForDAF", false);
+
+    _defineProperty(this, "listeningForStripeDigialWallets", false);
+
+    _defineProperty(this, "listeningForPayPalTouch", false);
+
     _defineProperty(this, "endpoint", "https://secure.mcommons.com/profiles/join");
 
     _defineProperty(this, "wasCalled", false);
@@ -26059,35 +26065,102 @@ class MobileCommons {
   shouldRun() {
     if (!this.options.opt_in_paths) return false;
     const hasPhoneNumber = engrid_ENGrid.getField("supporter.phoneNumber2") !== undefined;
-    const hasOptInPath = this.options.opt_in_paths.default !== undefined || engrid_ENGrid.getPageID() && this.options.opt_in_paths[engrid_ENGrid.getPageID().toString()] !== undefined;
-    return hasPhoneNumber && hasOptInPath;
+    const hasOptInPath = this.options.opt_in_paths.default !== undefined || engrid_ENGrid.getPageID() && this.options.opt_in_paths[engrid_ENGrid.getPageID().toString()] !== undefined && this.options.opt_in_paths[engrid_ENGrid.getPageID().toString()] !== "";
+    const isThankYouPage = engrid_ENGrid.isThankYouPage();
+    return hasPhoneNumber && hasOptInPath && !isThankYouPage;
   }
 
   addEventListeners() {
-    this.logger.log("Initializing Mobile Commons integration"); // Add event listener to submit
+    this.logger.log("Initializing Mobile Commons integration"); // Add event listener to submit - For standard form submissions
 
-    this._form.onSubmit.subscribe(this.callAPI.bind(this)); // Un-comment the below code to anticipate the use of Digital Wallets, should the client choose to use them in the future.
-    // // Attach the API call event to the Give By Select to anticipate the use of Digital Wallets
-    // const transactionGiveBySelect = document.getElementsByName(
-    //   "transaction.giveBySelect"
-    // ) as NodeListOf<HTMLInputElement>;
-    // if (transactionGiveBySelect) {
-    //   transactionGiveBySelect.forEach((giveBySelect) => {
-    //     giveBySelect.addEventListener("change", () => {
-    //       if (
-    //         ["stripedigitalwallet", "paypaltouch"].includes(
-    //           giveBySelect.value.toLowerCase()
-    //         )
-    //       ) {
-    //         this.logger.log("Clicked Digital Wallet Button");
-    //         window.setTimeout(() => {
-    //           this.callAPI();
-    //         }, 500);
-    //       }
-    //     });
-    //   });
-    // }
+    this._form.onSubmit.subscribe(this.callAPI.bind(this)); // Attach the API call event to the Give By Select (or PaymentType) to anticipate the use of Digital Wallets.
 
+
+    const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
+    const paymentTypeSelect = engrid_ENGrid.getField("transaction.paymenttype");
+
+    if (transactionGiveBySelect && transactionGiveBySelect.length > 0) {
+      this.logger.log("Attaching event listeners to transaction.giveBySelect fields for payment type changes"); // Check initial value
+
+      this.handlePaymentTypeChange(transactionGiveBySelect[0].value); // Handle changes
+
+      transactionGiveBySelect.forEach(giveBySelect => {
+        giveBySelect.addEventListener("change", () => {
+          this.handlePaymentTypeChange(giveBySelect.value);
+        });
+      });
+    } else if (paymentTypeSelect) {
+      this.logger.log("Attaching event listener to transaction.paymenttype field for payment type changes"); // Check initial value
+
+      const value = engrid_ENGrid.getFieldValue("transaction.paymenttype");
+
+      if (value) {
+        this.handlePaymentTypeChange(value);
+      } // Handle changes
+
+
+      paymentTypeSelect.addEventListener("change", e => {
+        this.handlePaymentTypeChange(e.target.value);
+      });
+    }
+  }
+
+  handlePaymentTypeChange(value) {
+    switch (value.toLowerCase()) {
+      case "stripedigitalwallet":
+        this.addStripeDigitalWalletListener();
+        break;
+
+      case "paypaltouch":
+      case "paypal-onetouch":
+      case "paypal-one-touch":
+      case "paypalonetouch":
+        this.addPaypalOneTouchListener();
+        break;
+
+      case "daf":
+      case "dafpay":
+        this.addDAFListener();
+        break;
+    }
+  }
+
+  addPaypalOneTouchListener() {
+    if (!this.listeningForPayPalTouch) {
+      this.listeningForPayPalTouch = true;
+      this.logger.log("Activating PayPal Touch listener for Mobile Commons API call");
+      const paypalTouch = window.EngagingNetworks?.require?._defined?.enPaypalTouch?.paypalTouch,
+            buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+
+      paypalTouch.library.Buttons = o => buttons(_objectSpread(_objectSpread({}, o), {}, {
+        onClick: (d, a) => (this.logger.log("PayPal Touch button clicked, sending Mobile Commons API call"), this.callAPI(), o.onClick && o.onClick(d, a))
+      }));
+
+      paypalTouch.unloadButton && paypalTouch.unloadButton();
+      paypalTouch.loadButton && paypalTouch.loadButton();
+    }
+  }
+
+  addStripeDigitalWalletListener() {
+    if (!this.listeningForStripeDigialWallets) {
+      this.logger.log("Activating Stripe Digital Wallet listener for Mobile Commons API call");
+      this.listeningForStripeDigialWallets = true;
+      window.EngagingNetworks?.require?._defined?.enStripeButtons?.stripeButtons?.paymentRequest?.on("paymentmethod", () => {
+        this.logger.log("Stripe Digital Wallet payment method triggered, sending Mobile Commons API call");
+        this.callAPI();
+      });
+    }
+  }
+
+  addDAFListener() {
+    if (!this.listeningForDAF) {
+      this.logger.log("Activating DAF listener for Mobile Commons API call");
+      this.listeningForDAF = true;
+      document.getElementById("chariot-button")?.addEventListener("click", () => {
+        this.logger.log("Chariot button clicked, sending Mobile Commons API call");
+        this.callAPI();
+      });
+    }
   }
 
   callAPI() {
@@ -26281,6 +26354,8 @@ const options = {
       opt_in_paths: {
         "98245": "OP666A6495505DCD60CF5F19729E142F64",
         "184713": "OP666A6495505DCD60CF5F19729E142F64",
+        "188263": "OP666A6495505DCD60CF5F19729E142F64",
+        // Demonstration Page
         default: "OPF4BDF7B12C0D12DF861AD2C77DD74ECB"
       }
     });
