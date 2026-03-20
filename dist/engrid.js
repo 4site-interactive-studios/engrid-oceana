@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 9, 2026 @ 15:45:25 ET
+ *  Date: Friday, March 20, 2026 @ 07:51:17 ET
  *  By: fernando
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -26007,6 +26007,310 @@ class DonationLightboxForm {
   }
 
 }
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+;// CONCATENATED MODULE: ./src/scripts/mobilecommons.ts
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+/**
+ * MobileCommons integration module for ENGrid forms.
+ * This module listens for form submissions and sends supporter data to MobileCommons using their API.
+ * It maps ENGrid fields to MobileCommons fields based on a defined mapping.
+ */
+
+class MobileCommons {
+  // Once true the API will not be called again for this page load.
+  // This is intentional to prevent duplicate SMS opt-ins even if the
+  // user re-submits after a payment error.
+  // Seconds to API Timeout
+  constructor(options) {
+    _defineProperty(this, "logger", new logger_EngridLogger("MobileCommons", "blue", "lightblue", "💬"));
+
+    _defineProperty(this, "listeningForDAF", false);
+
+    _defineProperty(this, "listeningForStripeDigialWallets", false);
+
+    _defineProperty(this, "listeningForPayPalTouch", false);
+
+    _defineProperty(this, "endpoint", "https://secure.mcommons.com/profiles/join");
+
+    _defineProperty(this, "wasCalled", false);
+
+    _defineProperty(this, "timeout", 5);
+
+    _defineProperty(this, "_form", en_form_EnForm.getInstance());
+
+    _defineProperty(this, "options", void 0);
+
+    this.options = options;
+    if (!this.shouldRun()) return;
+    this.addEventListeners();
+  }
+
+  shouldRun() {
+    if (!this.options.opt_in_paths) return false;
+    const hasPhoneNumber = engrid_ENGrid.getField("supporter.phoneNumber2") !== null;
+    const pageId = engrid_ENGrid.getPageID()?.toString();
+    const pageSpecificPath = pageId ? this.options.opt_in_paths[pageId] : undefined; // A page explicitly set to "" disables MobileCommons for that page
+
+    if (pageSpecificPath === "") return false;
+    const hasOptInPath = pageSpecificPath !== undefined || this.options.opt_in_paths.default !== undefined; // also verify at least one SMS checkbox exists on the page
+
+    const smsField = document.querySelector('.en__field--sms input[type="checkbox"]');
+    const sailorsField = document.querySelector('.en__field--sailors-for-the-sea-sms input[type="checkbox"]');
+    const hasSmsCheckbox = smsField !== null || sailorsField !== null;
+    const isThankYouPage = engrid_ENGrid.isThankYouPage();
+    return hasPhoneNumber && hasOptInPath && hasSmsCheckbox && !isThankYouPage;
+  }
+
+  addEventListeners() {
+    this.logger.log("Initializing Mobile Commons integration"); // Add event listener to submit - For standard form submissions
+
+    this._form.onSubmit.subscribe(() => this.callAPI()); // Attach the API call event to the Give By Select (or PaymentType) to anticipate the use of Digital Wallets.
+
+
+    const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
+    const paymentTypeSelect = engrid_ENGrid.getField("transaction.paymenttype");
+
+    if (transactionGiveBySelect && transactionGiveBySelect.length > 0) {
+      this.logger.log("Attaching event listeners to transaction.giveBySelect fields for payment type changes"); // Check initial value
+
+      this.handlePaymentTypeChange(transactionGiveBySelect[0].value); // Handle changes
+
+      transactionGiveBySelect.forEach(giveBySelect => {
+        giveBySelect.addEventListener("change", () => {
+          this.handlePaymentTypeChange(giveBySelect.value);
+        });
+      });
+    } else if (paymentTypeSelect) {
+      this.logger.log("Attaching event listener to transaction.paymenttype field for payment type changes"); // Check initial value
+
+      const value = engrid_ENGrid.getFieldValue("transaction.paymenttype");
+
+      if (value) {
+        this.handlePaymentTypeChange(value);
+      } // Handle changes
+
+
+      paymentTypeSelect.addEventListener("change", e => {
+        this.handlePaymentTypeChange(e.target.value);
+      });
+    }
+  }
+
+  handlePaymentTypeChange(value) {
+    switch (value.toLowerCase()) {
+      case "stripedigitalwallet":
+        this.addStripeDigitalWalletListener();
+        break;
+
+      case "paypaltouch":
+      case "paypal-onetouch":
+      case "paypal-one-touch":
+      case "paypalonetouch":
+        this.addPaypalOneTouchListener();
+        break;
+
+      case "daf":
+      case "dafpay":
+        this.addDAFListener();
+        break;
+    }
+  }
+
+  addPaypalOneTouchListener() {
+    if (!this.listeningForPayPalTouch) {
+      this.listeningForPayPalTouch = true;
+      this.logger.log("Activating PayPal Touch listener for Mobile Commons API call"); // Guard against null/undefined paypalTouch before accessing .library
+
+      const paypalTouch = window.EngagingNetworks?.require?._defined?.enPaypalTouch?.paypalTouch;
+
+      if (!paypalTouch?.library?.Buttons) {
+        this.logger.warn("PayPal Touch library not available, skipping listener");
+        return;
+      }
+
+      const buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+
+      paypalTouch.library.Buttons = o => buttons(_objectSpread(_objectSpread({}, o), {}, {
+        onClick: (d, a) => (this.logger.log("PayPal Touch button clicked, sending Mobile Commons API call"), this.callAPI(true), o.onClick && o.onClick(d, a))
+      }));
+
+      paypalTouch.unloadButton && paypalTouch.unloadButton();
+      paypalTouch.loadButton && paypalTouch.loadButton();
+    }
+  }
+
+  addStripeDigitalWalletListener() {
+    if (!this.listeningForStripeDigialWallets) {
+      this.logger.log("Activating Stripe Digital Wallet listener for Mobile Commons API call");
+      this.listeningForStripeDigialWallets = true;
+      window.EngagingNetworks?.require?._defined?.enStripeButtons?.stripeButtons?.paymentRequest?.on("paymentmethod", () => {
+        this.logger.log("Stripe Digital Wallet payment method triggered, sending Mobile Commons API call");
+        this.callAPI(true);
+      });
+    }
+  }
+
+  addDAFListener() {
+    if (!this.listeningForDAF) {
+      this.logger.log("Activating DAF listener for Mobile Commons API call");
+      this.listeningForDAF = true;
+      document.getElementById("chariot-button")?.addEventListener("click", () => {
+        this.logger.log("Chariot button clicked, sending Mobile Commons API call");
+        this.callAPI(true);
+      });
+    }
+  } // changed from public to private since it is only called internally
+  // added `isDigitalWallet` parameter to skip the `this._form.submit`
+  // guard for digital wallet flows which fire before form submission starts.
+
+
+  callAPI() {
+    let isDigitalWallet = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+    if (this.wasCalled) return;
+
+    if (!isDigitalWallet && !this._form.submit) {
+      this.logger.log("Form Submission Interrupted by Other Component");
+      return;
+    }
+
+    const multipartData = new FormData(); // Map ENGrid fields to Mobile Commons fields based on the defined field mapping
+
+    let missingRequiredField = false;
+    const customFields = {};
+
+    for (const [mcField, engridField] of Object.entries(MobileCommons.fieldMapping)) {
+      const value = engrid_ENGrid.getFieldValue(engridField.name);
+
+      if (value) {
+        if (engridField.custom) {
+          customFields[mcField] = value;
+        } else {
+          multipartData.append(mcField, value);
+        }
+      } else if (engridField.required) {
+        this.logger.warn(`Required field ${mcField} is missing.`);
+        missingRequiredField = true;
+      }
+    } // only block if at least one checkbox is present but none are checked.
+    // If neither checkbox exists on the page, shouldRun() already prevents initialization.
+
+
+    const smsField = document.querySelector('.en__field--sms input[type="checkbox"]');
+    const sailorsField = document.querySelector('.en__field--sailors-for-the-sea-sms input[type="checkbox"]');
+    const smsChecked = smsField?.checked ?? false;
+    const sailorsChecked = sailorsField?.checked ?? false;
+
+    if (!smsChecked && !sailorsChecked) {
+      this.logger.warn("At least one SMS opt-in checkbox must be selected.");
+      missingRequiredField = true;
+    }
+
+    if (missingRequiredField) {
+      this.logger.warn("Skipping Mobile Commons submission due to missing required fields.");
+      return;
+    }
+
+    if (Object.keys(customFields).length > 0) {
+      multipartData.append("person[custom_fields]", JSON.stringify(customFields));
+    }
+
+    this.logger.log("Prepared data for Mobile Commons submission:\n", Object.fromEntries(multipartData.entries()), "\nCustom Fields:\n", customFields); // Determine the opt-in path based on the current page
+
+    const pageId = engrid_ENGrid.getPageID().toString();
+    const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths["default"];
+    multipartData.append("opt_in_path_id", optInPath);
+    this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
+    this.wasCalled = true;
+    const ret = this.fetchTimeOut(this.endpoint, {
+      method: "POST",
+      body: multipartData
+    }).then(response => {
+      return response.text();
+    }).then(async data => {
+      this.logger.log("API response", data);
+    }).catch(error => {
+      if (error.toString().includes("AbortError")) {
+        // fetch aborted due to timeout
+        this.logger.log("Fetch aborted");
+      }
+
+      this.logger.log("Error calling Mobile Commons API", error);
+    });
+    this._form.submitPromise = ret;
+    return ret;
+  } // removed the circular signal.addEventListener("abort", ...) call
+  // and the always-truthy `if (signal)` guard.
+
+
+  fetchTimeOut(url, params) {
+    const abort = new AbortController();
+    params = _objectSpread(_objectSpread({}, params), {}, {
+      signal: abort.signal
+    });
+    const promise = fetch(url, params);
+    const timeout = setTimeout(() => abort.abort(), this.timeout * 1000);
+    return promise.finally(() => clearTimeout(timeout));
+  }
+
+}
+
+_defineProperty(MobileCommons, "fieldMapping", {
+  "person[phone]": {
+    name: "supporter.phoneNumber2",
+    required: true
+  },
+  "person[email]": {
+    name: "supporter.emailAddress"
+  },
+  "person[first_name]": {
+    name: "supporter.firstName"
+  },
+  "person[last_name]": {
+    name: "supporter.lastName"
+  },
+  "person[street1]": {
+    name: "supporter.address1"
+  },
+  "person[city]": {
+    name: "supporter.city"
+  },
+  "person[state]": {
+    name: "supporter.region"
+  },
+  "person[postal_code]": {
+    name: "supporter.postcode"
+  },
+  "person[country]": {
+    name: "supporter.country"
+  },
+  no_fundraising_ask: {
+    name: "supporter.questions.1495752",
+    custom: true
+  },
+  sailors_for_the_sea_sms: {
+    name: "supporter.questions.2156746",
+    custom: true
+  }
+});
 ;// CONCATENATED MODULE: ./src/index.ts
  // Uses ENGrid via NPM
 // import {
@@ -26015,6 +26319,7 @@ class DonationLightboxForm {
 //   DonationFrequency,
 //   DonationAmount,
 // } from "../../engrid/packages/scripts"; // Uses ENGrid via Visual Studio Workspace
+
 
 
 
@@ -26069,6 +26374,16 @@ const options = {
     if (App.getBodyData("subtheme") === "multistep") {
       new DonationLightboxForm(DonationAmount, DonationFrequency, App);
     }
+
+    new MobileCommons({
+      opt_in_paths: {
+        "98245": "OP666A6495505DCD60CF5F19729E142F64",
+        "184713": "OP666A6495505DCD60CF5F19729E142F64",
+        "188263": "OP666A6495505DCD60CF5F19729E142F64",
+        // Demonstration Page
+        default: "OPF4BDF7B12C0D12DF861AD2C77DD74ECB"
+      }
+    });
   },
   onResize: () => console.log("Starter Theme Window Resized")
 };
