@@ -17,8 +17,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Monday, March 16, 2026 @ 15:44:11 ET
- *  By: nick
+ *  Date: Friday, March 20, 2026 @ 07:51:17 ET
+ *  By: fernando
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
  *
@@ -26030,13 +26030,15 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 /**
- * MobileCommons integration module for ENGrid forms. 
+ * MobileCommons integration module for ENGrid forms.
  * This module listens for form submissions and sends supporter data to MobileCommons using their API.
  * It maps ENGrid fields to MobileCommons fields based on a defined mapping.
  */
 
 class MobileCommons {
-  // True if the API endpoint was called
+  // Once true the API will not be called again for this page load.
+  // This is intentional to prevent duplicate SMS opt-ins even if the
+  // user re-submits after a payment error.
   // Seconds to API Timeout
   constructor(options) {
     _defineProperty(this, "logger", new logger_EngridLogger("MobileCommons", "blue", "lightblue", "💬"));
@@ -26064,16 +26066,24 @@ class MobileCommons {
 
   shouldRun() {
     if (!this.options.opt_in_paths) return false;
-    const hasPhoneNumber = engrid_ENGrid.getField("supporter.phoneNumber2") !== undefined;
-    const hasOptInPath = this.options.opt_in_paths.default !== undefined || engrid_ENGrid.getPageID() && this.options.opt_in_paths[engrid_ENGrid.getPageID().toString()] !== undefined && this.options.opt_in_paths[engrid_ENGrid.getPageID().toString()] !== "";
+    const hasPhoneNumber = engrid_ENGrid.getField("supporter.phoneNumber2") !== null;
+    const pageId = engrid_ENGrid.getPageID()?.toString();
+    const pageSpecificPath = pageId ? this.options.opt_in_paths[pageId] : undefined; // A page explicitly set to "" disables MobileCommons for that page
+
+    if (pageSpecificPath === "") return false;
+    const hasOptInPath = pageSpecificPath !== undefined || this.options.opt_in_paths.default !== undefined; // also verify at least one SMS checkbox exists on the page
+
+    const smsField = document.querySelector('.en__field--sms input[type="checkbox"]');
+    const sailorsField = document.querySelector('.en__field--sailors-for-the-sea-sms input[type="checkbox"]');
+    const hasSmsCheckbox = smsField !== null || sailorsField !== null;
     const isThankYouPage = engrid_ENGrid.isThankYouPage();
-    return hasPhoneNumber && hasOptInPath && !isThankYouPage;
+    return hasPhoneNumber && hasOptInPath && hasSmsCheckbox && !isThankYouPage;
   }
 
   addEventListeners() {
     this.logger.log("Initializing Mobile Commons integration"); // Add event listener to submit - For standard form submissions
 
-    this._form.onSubmit.subscribe(this.callAPI.bind(this)); // Attach the API call event to the Give By Select (or PaymentType) to anticipate the use of Digital Wallets.
+    this._form.onSubmit.subscribe(() => this.callAPI()); // Attach the API call event to the Give By Select (or PaymentType) to anticipate the use of Digital Wallets.
 
 
     const transactionGiveBySelect = document.getElementsByName("transaction.giveBySelect");
@@ -26128,12 +26138,19 @@ class MobileCommons {
   addPaypalOneTouchListener() {
     if (!this.listeningForPayPalTouch) {
       this.listeningForPayPalTouch = true;
-      this.logger.log("Activating PayPal Touch listener for Mobile Commons API call");
-      const paypalTouch = window.EngagingNetworks?.require?._defined?.enPaypalTouch?.paypalTouch,
-            buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
+      this.logger.log("Activating PayPal Touch listener for Mobile Commons API call"); // Guard against null/undefined paypalTouch before accessing .library
+
+      const paypalTouch = window.EngagingNetworks?.require?._defined?.enPaypalTouch?.paypalTouch;
+
+      if (!paypalTouch?.library?.Buttons) {
+        this.logger.warn("PayPal Touch library not available, skipping listener");
+        return;
+      }
+
+      const buttons = paypalTouch.library.Buttons.bind(paypalTouch.library);
 
       paypalTouch.library.Buttons = o => buttons(_objectSpread(_objectSpread({}, o), {}, {
-        onClick: (d, a) => (this.logger.log("PayPal Touch button clicked, sending Mobile Commons API call"), this.callAPI(), o.onClick && o.onClick(d, a))
+        onClick: (d, a) => (this.logger.log("PayPal Touch button clicked, sending Mobile Commons API call"), this.callAPI(true), o.onClick && o.onClick(d, a))
       }));
 
       paypalTouch.unloadButton && paypalTouch.unloadButton();
@@ -26147,7 +26164,7 @@ class MobileCommons {
       this.listeningForStripeDigialWallets = true;
       window.EngagingNetworks?.require?._defined?.enStripeButtons?.stripeButtons?.paymentRequest?.on("paymentmethod", () => {
         this.logger.log("Stripe Digital Wallet payment method triggered, sending Mobile Commons API call");
-        this.callAPI();
+        this.callAPI(true);
       });
     }
   }
@@ -26158,15 +26175,19 @@ class MobileCommons {
       this.listeningForDAF = true;
       document.getElementById("chariot-button")?.addEventListener("click", () => {
         this.logger.log("Chariot button clicked, sending Mobile Commons API call");
-        this.callAPI();
+        this.callAPI(true);
       });
     }
-  }
+  } // changed from public to private since it is only called internally
+  // added `isDigitalWallet` parameter to skip the `this._form.submit`
+  // guard for digital wallet flows which fire before form submission starts.
+
 
   callAPI() {
+    let isDigitalWallet = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     if (this.wasCalled) return;
 
-    if (!this._form.submit) {
+    if (!isDigitalWallet && !this._form.submit) {
       this.logger.log("Form Submission Interrupted by Other Component");
       return;
     }
@@ -26189,12 +26210,16 @@ class MobileCommons {
         this.logger.warn(`Required field ${mcField} is missing.`);
         missingRequiredField = true;
       }
-    }
+    } // only block if at least one checkbox is present but none are checked.
+    // If neither checkbox exists on the page, shouldRun() already prevents initialization.
+
 
     const smsField = document.querySelector('.en__field--sms input[type="checkbox"]');
     const sailorsField = document.querySelector('.en__field--sailors-for-the-sea-sms input[type="checkbox"]');
+    const smsChecked = smsField?.checked ?? false;
+    const sailorsChecked = sailorsField?.checked ?? false;
 
-    if (!smsField?.checked && !sailorsField?.checked) {
+    if (!smsChecked && !sailorsChecked) {
       this.logger.warn("At least one SMS opt-in checkbox must be selected.");
       missingRequiredField = true;
     }
@@ -26211,7 +26236,7 @@ class MobileCommons {
     this.logger.log("Prepared data for Mobile Commons submission:\n", Object.fromEntries(multipartData.entries()), "\nCustom Fields:\n", customFields); // Determine the opt-in path based on the current page
 
     const pageId = engrid_ENGrid.getPageID().toString();
-    const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths['default'];
+    const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths["default"];
     multipartData.append("opt_in_path_id", optInPath);
     this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
     this.wasCalled = true;
@@ -26232,16 +26257,16 @@ class MobileCommons {
     });
     this._form.submitPromise = ret;
     return ret;
-  }
+  } // removed the circular signal.addEventListener("abort", ...) call
+  // and the always-truthy `if (signal)` guard.
+
 
   fetchTimeOut(url, params) {
     const abort = new AbortController();
-    const signal = abort.signal;
     params = _objectSpread(_objectSpread({}, params), {}, {
-      signal
+      signal: abort.signal
     });
     const promise = fetch(url, params);
-    if (signal) signal.addEventListener("abort", () => abort.abort());
     const timeout = setTimeout(() => abort.abort(), this.timeout * 1000);
     return promise.finally(() => clearTimeout(timeout));
   }
@@ -26277,11 +26302,11 @@ _defineProperty(MobileCommons, "fieldMapping", {
   "person[country]": {
     name: "supporter.country"
   },
-  "no_fundraising_ask": {
+  no_fundraising_ask: {
     name: "supporter.questions.1495752",
     custom: true
   },
-  "sailors_for_the_sea_sms": {
+  sailors_for_the_sea_sms: {
     name: "supporter.questions.2156746",
     custom: true
   }
