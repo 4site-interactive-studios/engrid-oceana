@@ -284,7 +284,7 @@ export default class MobileCommons {
     const pageId = ENGrid.getPageID().toString();
     const optInPath =
       this.options.opt_in_paths[pageId] || this.options.opt_in_paths["default"];
-    multipartData.append("opt_in_path", optInPath);
+    multipartData.append("opt_in_path[]", optInPath);
     this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
 
     this.wasCalled = true;

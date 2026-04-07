@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Thursday, April 2, 2026 @ 09:34:48 ET
+ *  Date: Tuesday, April 7, 2026 @ 10:26:16 ET
  *  By: nick
  *  ENGrid styles: v0.24.0
  *  ENGrid scripts: v0.24.3
@@ -26237,7 +26237,7 @@ class MobileCommons {
 
     const pageId = engrid_ENGrid.getPageID().toString();
     const optInPath = this.options.opt_in_paths[pageId] || this.options.opt_in_paths["default"];
-    multipartData.append("opt_in_path", optInPath);
+    multipartData.append("opt_in_path[]", optInPath);
     this.logger.log(`Using opt-in path: ${optInPath} for page ID: ${pageId}`);
     this.wasCalled = true;
     const ret = this.fetchTimeOut(this.endpoint, {
