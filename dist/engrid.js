@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, April 17, 2026 @ 17:58:42 ET
+ *  Date: Monday, May 4, 2026 @ 13:42:26 ET
  *  By: fernando
  *  ENGrid styles: v0.25.0
- *  ENGrid scripts: v0.25.0
+ *  ENGrid scripts: v0.25.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -21585,6 +21585,7 @@ class SupporterHub {
             return;
         this.logger.log("Enabled");
         this.watch();
+        this.preventDuplicateSubmits();
     }
     shoudRun() {
         return ("pageJson" in window &&
@@ -21648,6 +21649,21 @@ class SupporterHub {
                 });
             }
         }, 300);
+    }
+    // The supporter hub does not properly handle or prevent duplicate submits, so we add a listener to prevent this.
+    preventDuplicateSubmits() {
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".en__submit button");
+            if (!btn)
+                return;
+            if (btn.dataset.busy) {
+                e.stopImmediatePropagation();
+                e.preventDefault();
+                return;
+            }
+            btn.dataset.busy = "true";
+            setTimeout(() => delete btn.dataset.busy, 10000);
+        }, true);
     }
 }
 
@@ -24466,7 +24482,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.25.0";
+const AppVersion = "0.25.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires
