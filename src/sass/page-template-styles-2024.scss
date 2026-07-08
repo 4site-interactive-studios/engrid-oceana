@@ -847,16 +847,16 @@
   }
 
   /*Checkbox **/
-  input[type="checkbox"]:checked + label:before {
+  input[type="checkbox"]:not([class^="pbo"]):checked + label:before {
     background-color: var(--checkbox_background-color_checked);
     border-color: var(--checkbox_border-color_checked);
     color: var(--checkbox_color_checked);
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'%3E%3Cpath d='M9 21.035l-9-8.638 2.791-2.87 6.156 5.874 12.21-12.436 2.843 2.817z' style='fill:%230686e5'/%3E%3C/svg%3E");
   }
 
-  input.en__field__input--checkbox:checked
+  input.en__field__input--checkbox:not([class^="pbo"]):checked
     + label.en__field__label.en__field__label--item,
-  input.en__field__input--checkbox
+  input.en__field__input--checkbox:not([class^="pbo"])
     + label.en__field__label.en__field__label--item {
     font-weight: 500;
     font-family: var(--theme-typography-default-font-family);
@@ -871,7 +871,7 @@
     margin-left: 0px;
   }
 
-  .en__field__input--checkbox:checked + .en__field__label::after {
+  .en__field__input--checkbox:not([class^="pbo"]):checked + .en__field__label::after {
     content: "✓";
     position: absolute;
     left: -28px;
@@ -881,7 +881,7 @@
     font-size: 0.99936rem;
   }
 
-  .en__field__input--checkbox + .en__field__label:before {
+  .en__field__input--checkbox:not([class^="pbo"]) + .en__field__label:before {
     height: 2rem;
     width: 2rem;
     top: 0;
@@ -1049,7 +1049,7 @@
       }
     }
   }
-  .en__field__element--checkbox .en__field__item {
+  .en__field__element--checkbox:not([class^="pbo"]) .en__field__item {
     width: 100%;
   }
 
