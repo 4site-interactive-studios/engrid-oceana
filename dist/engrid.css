@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Saturday, July 11, 2026 @ 12:33:35 ET
+ *  Date: Sunday, August 16, 2026 @ 19:22:46 ET
  *  By: fernando
- *  ENGrid styles: v0.25.11
- *  ENGrid scripts: v0.25.11
+ *  ENGrid styles: v0.27.3
+ *  ENGrid scripts: v0.27.4
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -2565,23 +2565,14 @@ input[disabled],input[readonly],select[disabled],textarea[disabled],textarea[rea
 body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:not([data-engrid-currency-symbol-updated=true]) label{
   color:#0000 !important;
 }
-.en__field__error__alert{
-  color:var(--error__color);
-  font-family:var(--p_font-family);
-  font-size:max(75%, 10px);
-  font-weight:var(--p_font-weight);
-  line-height:var(--p_line-height);
-  order:3;
-}
-
-.en__field__error--hidden-by-a11y{
-  display:none !important;
-}
-
 .engrid__sr-only{
   clip:rect(0 0 0 0);
+  border:0;
+  clip-path:inset(50%);
   height:1px;
+  margin:-1px;
   overflow:hidden;
+  padding:0;
   position:absolute;
   white-space:nowrap;
   width:1px;
@@ -2596,18 +2587,27 @@ body[data-engrid-live-currency=active] .en__field--donationAmt .en__field__item:
   .apple-pay-button,.apple-pay-button-white-with-line{
     -apple-pay-button-style:white-outline;
   }
-  .en__field__input.en__field__input--radio[value=applepay]+label{
-    border-width:0 !important;
-  }
-  .en__field__input.en__field__input--radio[value=applepay]:checked+label{
-    background-color:initial !important;
-  }
-  .en__field__input.en__field__input--radio[value=applepay]:checked+label .apple-pay-button{
-    -apple-pay-button-style:inherit !important;
-  }
 }
 @supports not (-webkit-appearance:-apple-pay-button){
   .apple-pay-button,.apple-pay-container,.en__field__input.en__field__input--radio[value=applepay]+label{
+    display:none;
+  }
+}
+@supports (-webkit-appearance:-apple-pay-button){
+  .apple-pay-container{
+    margin-top:2rem;
+    width:100%;
+  }
+  .apple-pay-container .apple-pay-button{
+    cursor:pointer;
+    display:block;
+    height:45px;
+    width:100%;
+  }
+  body:not(#en__pagebuilder):not([data-engrid-apple-pay-available=true]) .apple-pay-container,body:not(#en__pagebuilder):not([data-engrid-payment-type=applepay]) .apple-pay-container{
+    display:none;
+  }
+  body:not(#en__pagebuilder)[data-engrid-apple-pay-available=false] .en__field__input.en__field__input--radio[value=applepay]+label,body:not(#en__pagebuilder)[data-engrid-apple-pay-available=true][data-engrid-payment-type=applepay] .en__submit{
     display:none;
   }
 }
@@ -4791,7 +4791,7 @@ body:not(#en__pagebuilder) img:not([src]):not([srcset]){
 #goMonthly h1{
   margin-top:0;
 }
-#goMonthly h1 .upsell_suggestion{
+#goMonthly h1 .upsell_suggestion,#goMonthly h1 .upsell_suggestion_frequency{
   font-weight:700;
 }
 #goMonthly .upsellOtherAmountLabel p{
@@ -6297,7 +6297,7 @@ body[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   [data-engrid-layout=centercenter1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
   }
-  [data-engrid-layout=centercenter1col][data-engrid-embedded] [class*=page-backgroundImage]{
+  [data-engrid-layout=centercenter1col][data-engrid-embedded] [class*=page-backgroundImage],[data-engrid-layout=centercenter1col][data-engrid-use-body-banner-background]:not(#en__pagebuilder) .body-banner{
     display:none !important;
   }
 }
@@ -6477,7 +6477,7 @@ body[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   [data-engrid-layout=centerleft1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
   }
-  [data-engrid-layout=centerleft1col][data-engrid-embedded] [class*=page-backgroundImage]{
+  [data-engrid-layout=centerleft1col][data-engrid-embedded] [class*=page-backgroundImage],[data-engrid-layout=centerleft1col][data-engrid-use-body-banner-background]:not(#en__pagebuilder) .body-banner{
     display:none !important;
   }
 }
@@ -6555,7 +6555,7 @@ body[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   [data-engrid-layout=centerright1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
   }
-  [data-engrid-layout=centerright1col][data-engrid-embedded] [class*=page-backgroundImage]{
+  [data-engrid-layout=centerright1col][data-engrid-embedded] [class*=page-backgroundImage],[data-engrid-layout=centerright1col][data-engrid-use-body-banner-background]:not(#en__pagebuilder) .body-banner{
     display:none !important;
   }
 }
@@ -6608,7 +6608,7 @@ body[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   [data-engrid-layout=leftleft1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
   }
-  [data-engrid-layout=leftleft1col][data-engrid-embedded] [class*=page-backgroundImage]{
+  [data-engrid-layout=leftleft1col][data-engrid-embedded] [class*=page-backgroundImage],[data-engrid-layout=leftleft1col][data-engrid-use-body-banner-background]:not(#en__pagebuilder) .body-banner{
     display:none !important;
   }
 }
@@ -6686,7 +6686,7 @@ body[data-engrid-embedded]:not(#en__pagebuilder) .hideif-iframe{
   [data-engrid-layout=rightright1col]:not(#en__pagebuilder) .page-backgroundImage{
     grid-row:page-start /  content-footerSpacer-end;
   }
-  [data-engrid-layout=rightright1col][data-engrid-embedded] [class*=page-backgroundImage]{
+  [data-engrid-layout=rightright1col][data-engrid-embedded] [class*=page-backgroundImage],[data-engrid-layout=rightright1col][data-engrid-use-body-banner-background]:not(#en__pagebuilder) .body-banner{
     display:none !important;
   }
 }
