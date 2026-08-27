@@ -17,7 +17,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, August 16, 2026 @ 19:23:19 ET
+ *  Date: Thursday, August 27, 2026 @ 00:31:37 ET
  *  By: fernando
  *  ENGrid styles: v0.27.3
  *  ENGrid scripts: v0.27.4
@@ -27109,12 +27109,29 @@ const customScript = function (App, Frequency) {
     const tippyInstance = attriubtion._tippy;
 
     if (tippyInstance) {
+      const attributionContainer = attriubtion.closest(".media-with-attribution");
       tippyInstance.setProps({
         allowHTML: true,
         theme: "oceana",
         placement: "left-end",
         arrow: "<div class='custom-tooltip-arrow'></div>",
-        trigger: "click mouseenter focus"
+        trigger: "click mouseenter focus",
+        popperOptions: {
+          modifiers: [{
+            // Keep the tooltip inside the bounds of the
+            // .media-with-attribution container, even on small screens
+            name: "preventOverflow",
+            options: {
+              boundary: attributionContainer,
+              altAxis: true
+            }
+          }, {
+            name: "flip",
+            options: {
+              boundary: attributionContainer
+            }
+          }]
+        }
       });
     }
   }

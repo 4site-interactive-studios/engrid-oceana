@@ -19,7 +19,7 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Sunday, August 16, 2026 @ 19:23:19 ET
+ *  Date: Thursday, August 27, 2026 @ 00:31:37 ET
  *  By: fernando
  *  ENGrid styles: v0.27.3
  *  ENGrid scripts: v0.27.4
@@ -9701,6 +9701,9 @@ body[data-engrid-debug]:before{
   top:auto !important;
   transform:rotate(-90deg) !important;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .media-with-attribution .tippy-box[data-theme~=oceana]{
+  max-width:100% !important;
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"] [src*=w55c].hide{
   clip:rect(0 0 0 0);
   border:0;
@@ -9854,7 +9857,7 @@ body[data-engrid-debug]:before{
   justify-content:center;
   line-height:16px;
   width:28px;
-  z-index:100;
+  z-index:10000;
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-page-background=image] .page-backgroundImage figure.media-with-attribution figattribution:before{
   background-image:url(https://aaf1a18515da0e792f78-c27fdabe952dfc357fe25ebf5c8897ee.ssl.cf5.rackcdn.com/1997/oceana-media-attribution.png);

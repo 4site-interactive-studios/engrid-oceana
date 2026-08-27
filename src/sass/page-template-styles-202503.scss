@@ -630,6 +630,12 @@
     }
   }
 
+  // Keep the media attribution tooltip within the bounds of its
+  // .media-with-attribution container on smaller screens
+  .media-with-attribution .tippy-box[data-theme~="oceana"] {
+    max-width: 100% !important;
+  }
+
   /* Hides Ad Tracking Pixels */
   [src*="w55c"].hide {
     // display: none;
@@ -852,7 +858,9 @@
   &[data-engrid-page-background="image"] {
     .page-backgroundImage figure.media-with-attribution {
       figattribution {
-        z-index: 100;
+        // Must be higher than the tippy tooltip popper (z-index: 9999) so
+        // the icon stays on top of the tooltip when they overlap
+        z-index: 10000;
         width: 28px;
         height: 28px;
         border-radius: 50%;

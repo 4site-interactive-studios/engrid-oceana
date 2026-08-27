@@ -79,12 +79,34 @@ export const customScript = function (App, Frequency) {
   if (attriubtion) {
     const tippyInstance = attriubtion._tippy;
     if (tippyInstance) {
+      const attributionContainer = attriubtion.closest(
+        ".media-with-attribution"
+      );
       tippyInstance.setProps({
         allowHTML: true,
         theme: "oceana",
         placement: "left-end",
         arrow: "<div class='custom-tooltip-arrow'></div>",
         trigger: "click mouseenter focus",
+        popperOptions: {
+          modifiers: [
+            {
+              // Keep the tooltip inside the bounds of the
+              // .media-with-attribution container, even on small screens
+              name: "preventOverflow",
+              options: {
+                boundary: attributionContainer,
+                altAxis: true,
+              },
+            },
+            {
+              name: "flip",
+              options: {
+                boundary: attributionContainer,
+              },
+            },
+          ],
+        },
       });
     }
   }
