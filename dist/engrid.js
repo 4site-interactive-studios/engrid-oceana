@@ -17,10 +17,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 28, 2026 @ 10:07:16 ET
+ *  Date: Friday, August 28, 2026 @ 11:13:24 ET
  *  By: fernando
  *  ENGrid styles: v0.28.0
- *  ENGrid scripts: v0.28.0
+ *  ENGrid scripts: v0.28.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -10909,6 +10909,19 @@ const I18nDefaults = {
         "translateFields.select": "Select",
         "translateFields.recipientTo": "To:",
         "a11y.errorSummary": "There are {count} errors: {messages}.",
+        // InputPlaceholders component defaults
+        "placeholders.firstName": "First Name",
+        "placeholders.lastName": "Last Name",
+        "placeholders.emailAddress": "Email Address",
+        "placeholders.phoneNumber": "Phone Number",
+        "placeholders.phoneNumberOptional": "Phone Number (Optional)",
+        "placeholders.phoneNumber2Optional": "000-000-0000 (Optional)",
+        "placeholders.country": "Country",
+        "placeholders.address1": "Street Address",
+        "placeholders.address2": "Apt., Ste., Bldg.",
+        "placeholders.city": "City",
+        "placeholders.region": "Region",
+        "placeholders.postcode": "ZIP Code",
     },
     es: {
         "rememberMe.label": "Recuérdame",
@@ -10923,6 +10936,19 @@ const I18nDefaults = {
         "translateFields.select": "Seleccione",
         "translateFields.recipientTo": "Para:",
         "a11y.errorSummary": "Hay {count} errores: {messages}.",
+        // InputPlaceholders component defaults
+        "placeholders.firstName": "Nombre",
+        "placeholders.lastName": "Apellidos",
+        "placeholders.emailAddress": "Correo electrónico",
+        "placeholders.phoneNumber": "Teléfono",
+        "placeholders.phoneNumberOptional": "Teléfono (opcional)",
+        "placeholders.phoneNumber2Optional": "000-000-0000 (opcional)",
+        "placeholders.country": "País",
+        "placeholders.address1": "Calle y número",
+        "placeholders.address2": "Depto., Piso, Edif.",
+        "placeholders.city": "Ciudad",
+        "placeholders.region": "Provincia/Estado",
+        "placeholders.postcode": "Código Postal",
     },
 };
 
@@ -15407,6 +15433,9 @@ class InputHasValueAndFocus {
 
 class InputPlaceholders {
     constructor() {
+        // NOTE: for selectors listed in selectorToI18nKey below, these English
+        // strings are shadowed by the i18n dictionary — edit
+        // interfaces/i18n-options.ts ("placeholders.*" keys) instead of here.
         this.defaultPlaceholders = {
             "input#en__field_supporter_firstName": "First Name",
             "input#en__field_supporter_lastName": "Last Name",
@@ -15452,10 +15481,30 @@ class InputPlaceholders {
             "input#en__field_supporter_billingRegion": "Billing Region",
             "input#en__field_supporter_billingPostcode": "Billing Postal Code",
         };
+        // Maps the default-placeholder selectors to i18n dictionary keys, so the
+        // built-in strings follow the page language. Selectors the client overrides
+        // via the Placeholders option are never translated.
+        this.selectorToI18nKey = {
+            "input#en__field_supporter_firstName": "placeholders.firstName",
+            "input#en__field_supporter_lastName": "placeholders.lastName",
+            "input#en__field_supporter_emailAddress": "placeholders.emailAddress",
+            "input#en__field_supporter_phoneNumber": "placeholders.phoneNumberOptional",
+            ".en__mandatory input#en__field_supporter_phoneNumber": "placeholders.phoneNumber",
+            ".i-required input#en__field_supporter_phoneNumber": "placeholders.phoneNumber",
+            "input#en__field_supporter_phoneNumber2": "placeholders.phoneNumber2Optional",
+            "input#en__field_supporter_country": "placeholders.country",
+            "input#en__field_supporter_address1": "placeholders.address1",
+            "input#en__field_supporter_address2": "placeholders.address2",
+            "input#en__field_supporter_city": "placeholders.city",
+            "input#en__field_supporter_region": "placeholders.region",
+            "input#en__field_supporter_postcode": "placeholders.postcode",
+        };
+        this.customSelectors = new Set();
         if (this.shouldRun()) {
             // If there's a Placeholders option, merge it with the default placeholders
             const placeholders = engrid_ENGrid.getOption("Placeholders");
             if (placeholders) {
+                this.customSelectors = new Set(Object.keys(placeholders));
                 this.defaultPlaceholders = Object.assign(Object.assign({}, this.defaultPlaceholders), placeholders);
             }
             this.run();
@@ -15467,8 +15516,17 @@ class InputPlaceholders {
     run() {
         Object.keys(this.defaultPlaceholders).forEach((selector) => {
             if (selector in this.defaultPlaceholders)
-                this.addPlaceholder(selector, this.defaultPlaceholders[selector]);
+                this.addPlaceholder(selector, this.resolvePlaceholder(selector));
         });
+    }
+    // Built-in placeholder strings follow the page language; client-provided
+    // Placeholders options always win.
+    resolvePlaceholder(selector) {
+        const key = this.selectorToI18nKey[selector];
+        if (key && !this.customSelectors.has(selector)) {
+            return engrid_ENGrid.t(key);
+        }
+        return this.defaultPlaceholders[selector];
     }
     addPlaceholder(selector, placeholder) {
         const fieldEl = document.querySelector(selector);
@@ -16727,7 +16785,20 @@ class TranslateFields {
                     ? simplecountriesSelect.cloneNode(true)
                     : null;
                 if (field instanceof HTMLInputElement && field.placeholder != "") {
-                    if (!fieldLabel || fieldLabel.innerHTML == field.placeholder) {
+                    // Translate the placeholder when it mirrors the label (the common
+                    // case). Compare normalized visible text so template whitespace and
+                    // required-marker markup don't break the match. Order matters:
+                    // trim before stripping the marker, or labels like "Name *\n"
+                    // keep the asterisk.
+                    const labelText = ((fieldLabel === null || fieldLabel === void 0 ? void 0 : fieldLabel.textContent) || "")
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .replace(/\s*\*$/, "");
+                    const placeholderText = field.placeholder
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .replace(/\s*\*$/, "");
+                    if (!fieldLabel || labelText === placeholderText) {
                         field.dataset.original = field.placeholder;
                         field.placeholder = translation;
                     }
@@ -27111,7 +27182,7 @@ class PreferredPaymentMethod {
 }
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/version.js
-const AppVersion = "0.28.0";
+const AppVersion = "0.28.1";
 
 ;// CONCATENATED MODULE: ./node_modules/@4site/engrid-scripts/dist/index.js
  // Runs first so it can change the DOM markup before any markup dependent code fires

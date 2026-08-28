@@ -19,10 +19,10 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Friday, August 28, 2026 @ 10:07:16 ET
+ *  Date: Friday, August 28, 2026 @ 11:13:24 ET
  *  By: fernando
  *  ENGrid styles: v0.28.0
- *  ENGrid scripts: v0.28.0
+ *  ENGrid scripts: v0.28.1
  *
  *  Created by 4Site Studios
  *  Come work with us or join our team, we would love to hear from you
@@ -8689,6 +8689,7 @@ body[data-engrid-debug]:before{
   --click-to-expand__copy-area_height:193px;
   --click-to-expand__cta-image_height:22px;
   --click-to-expand__cta-image_width:100%;
+  --click-to-expand__cta-label:"Read More";
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"] [src*=w55c].hide,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .body-bannerOverlay,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .body-footer,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .body-footerOutside,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .body-header,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .body-headerOutside,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .content-preFooter,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .page-alert,[data-engrid-theme=oceana][data-engrid-theme-version="2024"]#en__pagebuilder .page-backgroundImageOverlay{
   clip:rect(0 0 0 0);
@@ -9088,6 +9089,9 @@ body[data-engrid-debug]:before{
     width:calc(100% - 680px);
   }
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="2024"][data-engrid-locale^=es-]{
+  --click-to-expand__cta-label:"Leer Más";
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"]:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   margin-bottom:1em;
 }
@@ -9103,7 +9107,7 @@ body[data-engrid-debug]:before{
   transform:rotate(-90deg);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="2024"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta:after{
-  content:"Read More";
+  content:var(--click-to-expand__cta-label);
   font-weight:700;
   left:20px;
   position:relative;
@@ -9253,6 +9257,7 @@ body[data-engrid-debug]:before{
   --click-to-expand__copy-area_height:200px;
   --click-to-expand__cta-image_height:23px;
   --click-to-expand__cta-image_width:100%;
+  --click-to-expand__cta-label:"Read More";
   --recurring-frequency__button_font-size:1.5rem;
   --recurring-frequency__button_padding:70px 0px 14px;
   --premium__image_max-height:100px;
@@ -9405,6 +9410,9 @@ body[data-engrid-debug]:before{
   max-height:500px;
   object-fit:cover;
 }
+[data-engrid-theme=oceana][data-engrid-theme-version="202503"][data-engrid-locale^=es-]{
+  --click-to-expand__cta-label:"Leer Más";
+}
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder) .click-to-expand:not(.expanded){
   margin-bottom:1em;
 }
@@ -9420,7 +9428,7 @@ body[data-engrid-debug]:before{
   transform:rotate(-90deg);
 }
 [data-engrid-theme=oceana][data-engrid-theme-version="202503"]:not(#en__pagebuilder) .click-to-expand:not(.expanded) .click-to-expand-cta:after{
-  content:"Read More";
+  content:var(--click-to-expand__cta-label);
   font-weight:400;
   left:20px;
   position:relative;

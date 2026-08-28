@@ -224,6 +224,12 @@
   --click-to-expand__copy-area_height: 200px;
   --click-to-expand__cta-image_height: 23px;
   --click-to-expand__cta-image_width: 100%;
+  --click-to-expand__cta-label: "Read More";
+
+  // Spanish locale: swap the click-to-expand CTA label
+  &[data-engrid-locale^="es-"] {
+    --click-to-expand__cta-label: "Leer Más";
+  }
 
   &:not(#en__pagebuilder) .click-to-expand:not(.expanded) {
     margin-bottom: 1em;
@@ -243,7 +249,7 @@
       }
 
       &:after {
-        content: "Read More";
+        content: var(--click-to-expand__cta-label);
         position: relative;
         left: 20px;
         font-weight: 400;
