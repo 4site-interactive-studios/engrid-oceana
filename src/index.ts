@@ -14,6 +14,9 @@ import "./sass/main.scss";
 import { customScript } from "./scripts/main";
 import DonationLightboxForm from "./scripts/donation-lightbox-form";
 import MobileCommons from "./scripts/mobilecommons";
+import { initNsgAmountGuard } from "./scripts/nsg-amount-guard";
+
+initNsgAmountGuard();
 
 const options: Options = {
   applePay: false,

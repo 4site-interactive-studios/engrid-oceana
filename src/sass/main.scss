@@ -22,6 +22,20 @@
 @import "./page-template-styles-2024";
 @import "./page-template-styles-202503";
 
+// ENgrid keeps the amount labels transparent until its JS finishes. Show them as soon as
+// nsg-amount-guard.ts has filled in EN's "[$]" tokens.
+body:not(#en__pagebuilder):not([data-engrid-js-loading="finished"]) {
+  .en__field--donationAmt[data-early-labels] .en__field__item label.en__field__label--item {
+    color: var(--donation-amount__button_color) !important;
+  }
+  &.radio-to-buttons_donationAmt,
+  .radio-to-buttons_donationAmt {
+    .en__field--donationAmt[data-early-labels] input:checked + label.en__field__label--item {
+      color: var(--donation-amount__button_color_checked) !important;
+    }
+  }
+}
+
 [data-engrid-theme="oceana"][data-engrid-subtheme="multistep"] {
   @import "./multistep";
 }

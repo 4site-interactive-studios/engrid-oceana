@@ -19,8 +19,8 @@
  *
  *  ENGRID PAGE TEMPLATE ASSETS
  *
- *  Date: Tuesday, November 3, 2026 @ 13:02:26 ET
- *  By: nick
+ *  Date: Wednesday, November 18, 2026 @ 18:01:36 ET
+ *  By: fernando
  *  ENGrid styles: v0.28.3
  *  ENGrid scripts: v0.28.7
  *
@@ -10401,6 +10401,13 @@ body[data-engrid-debug]:before{
   [data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__c2c__survey__rating button,[data-engrid-theme=oceana][data-engrid-theme-version="202503"] .en__contact__detail .en__button{
     font-size:1.7rem;
   }
+}
+
+body:not(#en__pagebuilder):not([data-engrid-js-loading=finished]) .en__field--donationAmt[data-early-labels] .en__field__item label.en__field__label--item{
+  color:var(--donation-amount__button_color) !important;
+}
+body:not(#en__pagebuilder):not([data-engrid-js-loading=finished]) .radio-to-buttons_donationAmt .en__field--donationAmt[data-early-labels] input:checked+label.en__field__label--item,body:not(#en__pagebuilder):not([data-engrid-js-loading=finished]).radio-to-buttons_donationAmt .en__field--donationAmt[data-early-labels] input:checked+label.en__field__label--item{
+  color:var(--donation-amount__button_color_checked) !important;
 }
 
 [data-engrid-theme=oceana][data-engrid-subtheme=multistep]{
